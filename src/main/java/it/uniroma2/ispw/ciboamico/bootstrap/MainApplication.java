@@ -42,6 +42,17 @@ public final class MainApplication extends Application {
 
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");
+
+        // Modalità demo: genera snapshot PNG (flag ciboamico.demo) oppure
+        // naviga con pause per la registrazione dello schermo (flag ciboamico.demorun).
+        if (System.getProperty("ciboamico.demo") != null
+                || System.getProperty("ciboamico.demorun") != null) {
+            new Thread(() -> {
+                // attende che la scena sia visibile e la cattura schermo sia partita
+                try { Thread.sleep(4000); } catch (InterruptedException ignored) { }
+                DemoDriver.run();
+            }).start();
+        }
     }
 
     public static void main(String[] args) {

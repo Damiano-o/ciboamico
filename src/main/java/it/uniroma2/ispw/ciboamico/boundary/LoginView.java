@@ -37,6 +37,7 @@ public class LoginView {
         password.setPromptText("password");
         Label messaggio = new Label();
         Button login = new Button("Accedi");
+        login.setId("btn-login");
 
         login.setOnAction(e -> {
             try {

@@ -40,6 +40,7 @@ public class AdminView {
         Label messaggio = new Label();
 
         Button aggiorna = new Button("Ricette in attesa");
+        aggiorna.setId("btn-attesa");
         aggiorna.setOnAction(e -> {
             List<RicettaBean> ricette = controller.ricetteInAttesa();
             attesa.getItems().setAll(ricette.stream()

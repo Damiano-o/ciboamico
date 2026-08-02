@@ -42,6 +42,7 @@ public class ListaSpesaView {
         Label messaggio = new Label();
 
         Button calcola = new Button("Calcola ingredienti mancanti");
+        calcola.setId("btn-calcola");
         calcola.setOnAction(e -> {
             List<ProdottoBean> mancanti =
                     controller.calcolaMancanze(utente.getEmail(), nomeRicetta.getText());

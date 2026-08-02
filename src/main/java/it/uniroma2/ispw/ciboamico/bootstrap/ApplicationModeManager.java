@@ -17,6 +17,7 @@ public final class ApplicationModeManager {
     public static final String MODE_DEMO = "DEMO";
 
     private String activeMode = MODE_DEMO; // default: demo in-memory (milestone M1)
+    private DAOFactory factory;            // cache: stessa istanza per tutte le view
 
     private ApplicationModeManager() { }
 
@@ -35,14 +36,18 @@ public final class ApplicationModeManager {
             throw new IllegalArgumentException("Modalità sconosciuta: " + mode);
         }
         this.activeMode = mode;
+        this.factory = null; // invalidate cache on mode switch
     }
 
-    /** Factory della modalità attiva (Abstract Factory). */
+    /** Factory della modalità attiva (Abstract Factory) — cache condivisa. */
     public DAOFactory getDAOFactory() {
-        return switch (activeMode) {
-            case MODE_JDBC -> new JDBCDAOFactory();
-            case MODE_FS -> new FSDAOFactory();
-            default -> new DemoDAOFactory();
-        };
+        if (factory == null) {
+            factory = switch (activeMode) {
+                case MODE_JDBC -> new JDBCDAOFactory();
+                case MODE_FS -> new FSDAOFactory();
+                default -> new DemoDAOFactory();
+            };
+        }
+        return factory;
     }
 }

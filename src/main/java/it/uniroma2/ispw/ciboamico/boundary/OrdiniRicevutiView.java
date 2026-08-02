@@ -46,6 +46,7 @@ public class OrdiniRicevutiView {
         Label messaggio = new Label();
 
         Button aggiorna = new Button("Visualizza ordini");
+        aggiorna.setId("btn-ordini");
         aggiorna.setOnAction(e -> {
             List<OrdineBean> ordini = controller.visualizzaOrdiniRicevuti(utente.getEmail());
             elenco.getItems().setAll(ordini.stream()

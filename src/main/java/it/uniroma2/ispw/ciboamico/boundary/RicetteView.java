@@ -41,6 +41,7 @@ public class RicetteView {
         Label messaggio = new Label();
 
         Button trova = new Button("Trova ricette");
+        trova.setId("btn-trova");
         trova.setOnAction(e -> {
             List<RicettaBean> ricette = controller.findCompatible(utente.getEmail());
             if (ricette.isEmpty()) {

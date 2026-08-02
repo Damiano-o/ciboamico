@@ -23,15 +23,19 @@ public class HomeView {
         Label ruolo = new Label(utente != null ? "Ruolo: " + utente.getRuoloAttivo() : "");
 
         Button inventario = new Button("Dispensa e inventario");
+        inventario.setId("btn-inventario");
         inventario.setOnAction(e -> Navigator.getInstance().switchTo("inventario"));
 
         Button ricette = new Button("Trova ricette compatibili");
+        ricette.setId("btn-ricette");
         ricette.setOnAction(e -> Navigator.getInstance().switchTo("ricette"));
 
         Button listaSpesa = new Button("Lista della spesa");
+        listaSpesa.setId("btn-lista");
         listaSpesa.setOnAction(e -> Navigator.getInstance().switchTo("lista-spesa"));
 
         Button marketplace = new Button("Marketplace locale");
+        marketplace.setId("btn-market");
         marketplace.setOnAction(e -> Navigator.getInstance().switchTo("marketplace"));
 
         Button logout = new Button("Esci");

@@ -48,6 +48,7 @@ public class InventarioView {
         Label messaggio = new Label();
         Button aggiungi = new Button("Aggiungi prodotto");
         Button aggiorna = new Button("Aggiorna elenco");
+        aggiorna.setId("btn-aggiorna-inventario");
         ListView<String> elenco = new ListView<>();
         ListView<String> scadenzaAvviso = new ListView<>();
 

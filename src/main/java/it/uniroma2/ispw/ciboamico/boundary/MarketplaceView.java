@@ -47,6 +47,7 @@ public class MarketplaceView {
         Label messaggio = new Label();
 
         Button aggiorna = new Button("Aggiorna catalogo");
+        aggiorna.setId("btn-catalogo");
         aggiorna.setOnAction(e -> {
             List<Prodotto> prodotti = prodottoDAO.findAll();
             elenco.getItems().setAll(prodotti.stream()
@@ -56,6 +57,7 @@ public class MarketplaceView {
         });
 
         Button ordina = new Button("Ordina");
+        ordina.setId("btn-ordina");
         ordina.setOnAction(e -> {
             try {
                 // id simbolico del prodotto = hash del nome (coerente con DAO demo)
