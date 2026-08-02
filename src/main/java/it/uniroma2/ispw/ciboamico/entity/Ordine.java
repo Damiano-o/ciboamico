@@ -23,6 +23,12 @@ public class Ordine {
     private final OrdineSubject subject = new OrdineSubject();
 
     public Ordine(Long idOrdine, Utente compratore, Utente venditore) {
+        if (compratore == null || venditore == null) {
+            throw new IllegalArgumentException("Compratore e venditore sono obbligatori");
+        }
+        if (compratore.getEmail().equals(venditore.getEmail())) {
+            throw new IllegalArgumentException("Un utente non può acquistare il proprio prodotto (autoacquisto vietato)");
+        }
         this.idOrdine = idOrdine;
         this.compratore = compratore;
         this.venditore = venditore;

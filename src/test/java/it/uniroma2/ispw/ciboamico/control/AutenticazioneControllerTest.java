@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.control;
 
+import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.RuoloCliente;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
@@ -47,6 +48,32 @@ class AutenticazioneControllerTest {
 
         assertNotNull(bean);
         assertEquals("user@cibo.it", bean.getEmail());
+    }
+
+    @Test
+    void testLoginConBean() {
+        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        utente.aggiungiRuolo(new RuoloCliente());
+        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
+
+        AutenticazioneBean bean = new AutenticazioneBean();
+        bean.setEmail("user@cibo.it");
+        bean.setPassword("password123");
+        UtenteBean risultato = controller.login(bean);
+
+        assertNotNull(risultato);
+        assertEquals("user@cibo.it", risultato.getEmail());
+    }
+
+    @Test
+    void testLoginBeanEmailNonValida() {
+        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        utente.aggiungiRuolo(new RuoloCliente());
+        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
+        AutenticazioneBean bean = new AutenticazioneBean();
+        bean.setEmail("user_at_cibo.it");   // formato errato
+        bean.setPassword("password123");
+        assertThrows(IllegalArgumentException.class, () -> controller.login(bean));
     }
 
     @Test

@@ -55,4 +55,11 @@ class OrdineTest {
         assertThrows(IllegalStateException.class,
                 () -> ordine.cambiaStato(StatoOrdineEnum.ANNULLATO));
     }
+
+    @Test
+    void testAutoAcquistoVietato() {
+        Utente stesso = compratore(); // stesso utente compra il proprio prodotto
+        assertThrows(IllegalArgumentException.class,
+                () -> new Ordine(1L, stesso, stesso));
+    }
 }

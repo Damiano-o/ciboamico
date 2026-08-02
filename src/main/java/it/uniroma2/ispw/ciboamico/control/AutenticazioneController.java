@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.control;
 
+import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
@@ -20,6 +21,13 @@ public class AutenticazioneController {
 
     public AutenticazioneController(DAOFactory factory) {
         this.utenteDAO = factory.getUtenteDAO();
+    }
+
+    public UtenteBean login(AutenticazioneBean bean) {
+        if (bean == null || bean.getEmail() == null || !bean.isEmailValida()) {
+            throw new IllegalArgumentException("Email non valida");
+        }
+        return login(bean.getEmail(), bean.getPassword());
     }
 
     public UtenteBean login(String email, String password) {
