@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS ruoli (
 CREATE TABLE IF NOT EXISTS prodotti (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome                VARCHAR(120) NOT NULL,
-    prezzo              DECIMAL(10,2) NOT NULL,   -- BR-06: > 0
-    quantita_disponibile INT NOT NULL DEFAULT 0,  -- BR-03: >= 0
+    prezzo              DECIMAL(10,2) NOT NULL CONSTRAINT chk_prezzo CHECK (prezzo > 0),   -- BR-06
+    quantita_disponibile INT NOT NULL DEFAULT 0 CONSTRAINT chk_quantita CHECK (quantita_disponibile >= 0),  -- BR-03
     scadenza            DATE NOT NULL,            -- BR-01: non nel passato
     unita               VARCHAR(20) NOT NULL,
     venditore_email     VARCHAR(120) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS inventario (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     utente_email VARCHAR(120) NOT NULL,
     nome        VARCHAR(120) NOT NULL,
-    quantita    INT NOT NULL,        -- > 0
+    quantita    INT NOT NULL CONSTRAINT chk_inv_quantita CHECK (quantita > 0),
     scadenza    DATE NOT NULL,
     posizione   VARCHAR(120),
     unita       VARCHAR(20) NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS ordini (
     id              BIGINT PRIMARY KEY,
     compratore_email VARCHAR(120) NOT NULL,
     venditore_email  VARCHAR(120) NOT NULL,
-    stato           VARCHAR(20) NOT NULL,  -- CREATO/CONFERMATO/IN_CONSEGNA/CONSEGNATO/ANNULLATO
+    stato           VARCHAR(20) NOT NULL CONSTRAINT chk_stato CHECK (stato IN ('CREATO','CONFERMATO','IN_CONSEGNA','CONSEGNATO','ANNULLATO')),  -- BR-04
     totale          DECIMAL(10,2) NOT NULL DEFAULT 0,
     FOREIGN KEY (compratore_email) REFERENCES utenti(email),
     FOREIGN KEY (venditore_email)  REFERENCES utenti(email)
@@ -110,3 +110,17 @@ INSERT INTO ruoli (email, ruolo, stato) VALUES
     ('marco@cibo.it', 'VENDITORE', 'APPROVATO'),
     ('anna@cibo.it',  'NUTRIZIONISTA', 'APPROVATO'),
     ('admin@cibo.it', 'AMMINISTRATORE', 'APPROVATO');
+
+-- ------------------------------------------------------------
+-- Voci d'ordine (completezza del Model: Ordine compone + VoceOrdine)
+-- Anche se il DAO salva oggi solo stato+totale, lo schema è pronto
+-- per l'intera aggregazione (coerenza Model <-> DB).
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS voci_ordine (
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ordine_id    BIGINT NOT NULL,
+    prodotto_nome VARCHAR(120) NOT NULL,
+    quantita     INT NOT NULL CONSTRAINT chk_voce_quantita CHECK (quantita > 0),
+    prezzo_snapshot DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (ordine_id) REFERENCES ordini(id) ON DELETE CASCADE
+);
