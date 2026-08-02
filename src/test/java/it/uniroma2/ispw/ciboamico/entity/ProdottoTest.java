@@ -19,23 +19,26 @@ class ProdottoTest {
 
     @Test
     void testValidaPrezzo() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        RuoloVenditore venditore = venditoreApprovato();
         assertThrows(IllegalArgumentException.class,
-                () -> new Prodotto("Pane", -1.50, 10, LocalDate.now().plusDays(5),
-                        UnitaEnum.PEZZI, venditoreApprovato()));
+                () -> new Prodotto("Pane", -1.50, 10, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
     void testValidaQuantita() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        RuoloVenditore venditore = venditoreApprovato();
         assertThrows(IllegalArgumentException.class,
-                () -> new Prodotto("Pane", 2.0, -5, LocalDate.now().plusDays(5),
-                        UnitaEnum.PEZZI, venditoreApprovato()));
+                () -> new Prodotto("Pane", 2.0, -5, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
     void testValidaScadenzaPassata() {
+        RuoloVenditore venditore = venditoreApprovato();
         assertThrows(IllegalArgumentException.class,
                 () -> new Prodotto("Pane", 2.0, 5, LocalDate.now().minusDays(1),
-                        UnitaEnum.PEZZI, venditoreApprovato()));
+                        UnitaEnum.PEZZI, venditore));
     }
 
     @Test

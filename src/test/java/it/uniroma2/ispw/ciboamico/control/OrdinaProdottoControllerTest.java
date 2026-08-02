@@ -41,8 +41,9 @@ class OrdinaProdottoControllerTest {
     @Test
     void testSubmitOrdineSenzaSessione() {
         SessionManager.getInstance().logout();
+        OrdineBean bean = new OrdineBean();
         assertThrows(IllegalStateException.class,
-                () -> controller.submitOrdine(new OrdineBean()));
+                () -> controller.submitOrdine(bean));
     }
 
     @Test

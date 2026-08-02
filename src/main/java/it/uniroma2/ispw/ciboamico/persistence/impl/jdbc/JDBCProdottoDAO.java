@@ -7,7 +7,6 @@ import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

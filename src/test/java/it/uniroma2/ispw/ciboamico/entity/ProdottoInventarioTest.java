@@ -40,8 +40,9 @@ class ProdottoInventarioTest {
 
     @Test
     void testQuantitaNonValida() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
         assertThrows(IllegalArgumentException.class,
-                () -> new ProdottoInventario("Latte", 0, LocalDate.now().plusDays(5),
+                () -> new ProdottoInventario("Latte", 0, scadenza,
                         "Frigo", UnitaEnum.PEZZI, null));
     }
 }

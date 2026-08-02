@@ -89,8 +89,9 @@ class InventarioCatalogoControllerTest {
     @Test
     void testPubblicaProdottoVenditoreNonApprovato() {
         loginVenditore(false); // IN_ATTESA
+        ProdottoBean bean = beanValido();
         assertThrows(IllegalStateException.class,
-                () -> catalogoController.pubblicaProdotto(beanValido()));
+                () -> catalogoController.pubblicaProdotto(bean));
     }
 
     @Test
@@ -112,8 +113,9 @@ class InventarioCatalogoControllerTest {
 
     @Test
     void testPubblicaProdottoUtenteNonLoggato() {
+        ProdottoBean bean = beanValido();
         assertThrows(IllegalStateException.class,
-                () -> catalogoController.pubblicaProdotto(beanValido()));
+                () -> catalogoController.pubblicaProdotto(bean));
     }
 
     @Test
