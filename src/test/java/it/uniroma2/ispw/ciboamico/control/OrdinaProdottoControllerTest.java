@@ -1,0 +1,77 @@
+package it.uniroma2.ispw.ciboamico.control;
+
+import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
+import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Test UC-04 OrdinaProdottoController: verifica che il VENDITORE sia risolto
+ * dal prodotto (non dall'utente loggato) — regressione del bug fix 2026-08-02.
+ */
+class OrdinaProdottoControllerTest {
+
+    private DemoDAOFactory factory;
+    private OrdinaProdottoController controller;
+
+    @BeforeEach
+    void setup() {
+        factory = new DemoDAOFactory();
+        controller = new OrdinaProdottoController(factory);
+        // Utente loggato = compratore
+        UtenteBean bean = new UtenteBean();
+        bean.setUsername("Mario");
+        bean.setEmail("mario@cibo.it");
+        SessionManager.getInstance().setLoggedUser(bean);
+    }
+
+    @AfterEach
+    void cleanup() {
+        SessionManager.getInstance().logout();
+    }
+
+    @Test
+    void testSubmitOrdineSenzaSessione() {
+        SessionManager.getInstance().logout();
+        assertThrows(IllegalStateException.class,
+                () -> controller.submitOrdine(new OrdineBean()));
+    }
+
+    @Test
+    void testSubmitOrdineProdottoNonTrovato() {
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine(999L); // non esiste nel catalogo demo
+        assertThrows(IllegalStateException.class, () -> controller.submitOrdine(bean));
+    }
+
+    @Test
+    void testSubmitOrdineVenditoreDalProdotto() {
+        // Venditore con back-reference all'Utente
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
+
+        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
+                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Pomodori".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+
+        OrdineBean risultato = controller.submitOrdine(bean);
+
+        assertNotNull(risultato);
+        assertNotNull(risultato.getIdOrdine());
+        assertEquals("CREATO", risultato.getStato());
+        assertEquals(2.0, risultato.getTotale(), 1e-9);
+    }
+}
