@@ -51,8 +51,10 @@ class ProdottoInventarioTest {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
         ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        assertEquals(a, b);           // identità = nome+scadenza+posizione
+        assertEquals(a, a);            // branch this == o
+        assertEquals(a, b);            // identità = nome+scadenza+posizione
         assertEquals(a.hashCode(), b.hashCode());
+        assertNotEquals(a, "non-un-prodotto");  // branch instanceof false
     }
 
     @Test
