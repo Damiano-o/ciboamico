@@ -14,11 +14,14 @@
 
 ```bash
 mvn compile          # compila
-mvn test             # esegue i test (21 test)
+mvn test             # esegue i test (79 test)
 mvn jacoco:report    # report coverage (target/site/jacoco)
 mvn verify           # test + quality gate JaCoCo ≥ 80%
-mvn javafx:run       # avvia l'app JavaFX (in produzione)
+mvn javafx:run       # avvia l'app JavaFX (modalità DEMO con dati seed)
 ```
+
+Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
+`anna@cibo.it`, `admin@cibo.it` — password `password123`.
 
 ## 🏗️ Architettura
 
