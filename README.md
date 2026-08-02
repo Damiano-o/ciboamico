@@ -25,7 +25,7 @@ Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
 
 ## 🏗️ Architettura
 
-- **BCE** (Boundary-Control-Entity): 11 Boundary ↔ 11 Control (1:1 con UC) ↔ Entity
+- **BCE** (Boundary-Control-Entity): 10 Boundary JavaFX ↔ 9 Controller (1:1 con UC) ↔ Entity
 - **Bean/DTO**: unico canale Boundary→Control (mai Entity verso la GUI)
 - **Pattern GoF**: Abstract Factory (DAO), Singleton (SessionManager, ApplicationModeManager), Strategy (matching ricette), Facade (motore ricette), Observer (notifiche ordine), Adapter (OpenFoodFacts)
 - **Persistenza doppia**: JDBC (MySQL) ↔ FS (JSON) ↔ Demo — switch via `ApplicationModeManager` (NFR-01)
