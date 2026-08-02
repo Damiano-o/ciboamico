@@ -47,10 +47,19 @@ public class JDBCRicettaDAO implements RicettaDAO {
                 + "VALUES (?, ?, ?, 'demo')";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, ricetta.getNome());
-            ps.setString(2, ricetta.getIstruzioni());
-            ps.setString(3, ricetta.getStato().name());
-            ps.executeUpdate();
+            conn.setAutoCommit(false);
+            try {
+                ps.setString(1, ricetta.getNome());
+                ps.setString(2, ricetta.getIstruzioni());
+                ps.setString(3, ricetta.getStato().name());
+                ps.executeUpdate();
+                conn.commit();
+            } catch (SQLException tex) {
+                conn.rollback();
+                throw tex;
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return ricetta;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio ricetta", e);

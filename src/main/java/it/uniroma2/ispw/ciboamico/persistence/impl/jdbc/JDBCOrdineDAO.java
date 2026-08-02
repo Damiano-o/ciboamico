@@ -23,12 +23,21 @@ public class JDBCOrdineDAO implements OrdineDAO {
                 + "VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE stato = VALUES(stato), totale = VALUES(totale)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, ordine.getIdOrdine());
-            ps.setString(2, ordine.getCompratore().getEmail());
-            ps.setString(3, ordine.getVenditore().getEmail());
-            ps.setString(4, ordine.getStato().name());
-            ps.setDouble(5, ordine.getTotale());
-            ps.executeUpdate();
+            conn.setAutoCommit(false);
+            try {
+                ps.setLong(1, ordine.getIdOrdine());
+                ps.setString(2, ordine.getCompratore().getEmail());
+                ps.setString(3, ordine.getVenditore().getEmail());
+                ps.setString(4, ordine.getStato().name());
+                ps.setDouble(5, ordine.getTotale());
+                ps.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return ordine;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio ordine", e);

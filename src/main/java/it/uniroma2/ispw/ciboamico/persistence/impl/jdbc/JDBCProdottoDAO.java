@@ -56,14 +56,23 @@ public class JDBCProdottoDAO implements ProdottoDAO {
                 + "venditore_zona, venditore_recapito) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, prodotto.getNome());
-            ps.setDouble(2, prodotto.getPrezzo());
-            ps.setInt(3, prodotto.getQuantitaDisponibile());
-            ps.setDate(4, Date.valueOf(prodotto.getScadenza()));
-            ps.setString(5, prodotto.getUnita().name());
-            ps.setString(6, prodotto.getVenditore() != null ? prodotto.getVenditore().getZona() : null);
-            ps.setString(7, prodotto.getVenditore() != null ? prodotto.getVenditore().getRecapito() : null);
-            ps.executeUpdate();
+            conn.setAutoCommit(false);
+            try {
+                ps.setString(1, prodotto.getNome());
+                ps.setDouble(2, prodotto.getPrezzo());
+                ps.setInt(3, prodotto.getQuantitaDisponibile());
+                ps.setDate(4, Date.valueOf(prodotto.getScadenza()));
+                ps.setString(5, prodotto.getUnita().name());
+                ps.setString(6, prodotto.getVenditore() != null ? prodotto.getVenditore().getZona() : null);
+                ps.setString(7, prodotto.getVenditore() != null ? prodotto.getVenditore().getRecapito() : null);
+                ps.executeUpdate();
+                conn.commit();
+            } catch (SQLException tex) {
+                conn.rollback();
+                throw tex;
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return prodotto;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio prodotto", e);
@@ -101,13 +110,22 @@ public class JDBCProdottoDAO implements ProdottoDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, utenteEmail);
-            ps.setString(2, prodotto.getNome());
-            ps.setInt(3, prodotto.getQuantita());
-            ps.setDate(4, Date.valueOf(prodotto.getScadenza()));
-            ps.setString(5, prodotto.getPosizione());
-            ps.setString(6, prodotto.getUnita().name());
-            ps.executeUpdate();
+            conn.setAutoCommit(false);
+            try {
+                ps.setString(1, utenteEmail);
+                ps.setString(2, prodotto.getNome());
+                ps.setInt(3, prodotto.getQuantita());
+                ps.setDate(4, Date.valueOf(prodotto.getScadenza()));
+                ps.setString(5, prodotto.getPosizione());
+                ps.setString(6, prodotto.getUnita().name());
+                ps.executeUpdate();
+                conn.commit();
+            } catch (SQLException tex) {
+                conn.rollback();
+                throw tex;
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return prodotto;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio inventario", e);

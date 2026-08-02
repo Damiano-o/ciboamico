@@ -40,10 +40,19 @@ public class JDBCUtenteDAO implements UtenteDAO {
                 + "ON DUPLICATE KEY UPDATE nome = VALUES(nome)";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, utente.getNome());
-            ps.setString(2, utente.getEmail());
-            ps.setString(3, utente.getPasswordHash());
-            ps.executeUpdate();
+            conn.setAutoCommit(false);
+            try {
+                ps.setString(1, utente.getNome());
+                ps.setString(2, utente.getEmail());
+                ps.setString(3, utente.getPasswordHash());
+                ps.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return utente;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio utente", e);
