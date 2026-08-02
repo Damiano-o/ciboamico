@@ -1,0 +1,50 @@
+% ============================================================
+% 9. Exception Handling & Persistence
+% ============================================================
+\chapter{Exception Handling and Persistence}\label{ch:exceptions}
+
+\section{Exception Handling}
+
+Exceptions are modelled as a \emph{domain-specific} hierarchy that never
+exposes physical persistence failures to the view layer:
+
+\begin{itemize}
+    \item \texttt{DAOException} (runtime): wraps physical failures such as
+    \texttt{SQLException} raised by the JDBC layer, converting them into a
+    domain-abstraction error at the DAO boundary;
+    \item \texttt{IllegalArgumentException} / \texttt{IllegalStateException}:
+    validation and business-rule violations raised by entities and controllers
+    (e.g.\ invalid quantity, non-approved vendor, invalid order transition).
+\end{itemize}
+
+This design guarantees that the application flow is never interrupted by
+leaked technical exceptions, and that every failure is reported through a
+controlled, domain-meaningful message.
+
+\section{Persistence}
+
+The system supports \textbf{three persistence modes} (NFR-01), selected at
+startup through the \texttt{ApplicationModeManager} and the
+\texttt{DAOFactory} (Abstract Factory):
+
+\begin{table}[H]
+\centering
+\caption{Persistence modes.}
+\label{tab:persistence}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Mode} & \textbf{Technology} & \textbf{Use} \\
+\midrule
+JDBC & MySQL (prepared statements, NFR-02) & production \\
+File system & JSON via Gson (local-date adapters) & portable persistence \\
+Demo & in-memory maps & tests and demo \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every DAO (utente, prodotto, ricetta, ordine) is defined by an interface and
+implemented three times; the factory guarantees that the whole family is
+coherent. Password storage uses a one-way SHA-256 hash with a fixed salt
+(NFR-03). The physical schema of the database is intentionally minimal: the
+evaluation focuses on the interaction between controllers, entities and the
+DAO layer.
