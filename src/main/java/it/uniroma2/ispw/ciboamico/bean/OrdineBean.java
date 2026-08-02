@@ -1,0 +1,26 @@
+package it.uniroma2.ispw.ciboamico.bean;
+
+/**
+ * Bean/DTO per l'ordine — scambiato tra MarketplaceView e OrdinaProdottoController.
+ */
+public class OrdineBean {
+
+    private Long idOrdine;
+    private Double totale;
+    private String stato;
+    private String compratoreId;
+    private String venditoreId;
+
+    public OrdineBean() { }
+
+    public Long getIdOrdine() { return idOrdine; }
+    public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }
+    public Double getTotale() { return totale; }
+    public void setTotale(Double totale) { this.totale = totale; }
+    public String getStato() { return stato; }
+    public void setStato(String stato) { this.stato = stato; }
+    public String getCompratoreId() { return compratoreId; }
+    public void setCompratoreId(String compratoreId) { this.compratoreId = compratoreId; }
+    public String getVenditoreId() { return venditoreId; }
+    public void setVenditoreId(String venditoreId) { this.venditoreId = venditoreId; }
+}
