@@ -34,9 +34,10 @@ the code.
 \node[draw,ellipse,fill=white] at (6,4.5) {UC-05 Publish Product};
 \node[draw,ellipse,fill=white] at (6,3) {UC-06 Manage Received Orders};
 \node[draw,ellipse,fill=white] at (9.5,8) {UC-07 Create Recipe};
-\node[draw,ellipse,fill=white] at (9.5,6) {UC-08 Approve Vendor};
-\node[draw,ellipse,fill=white] at (9.5,4) {UC-09 Approve Recipe};
-\node[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 View Order History};
+
+ode[draw,ellipse,fill=white] at (9.5,5) {UC-08 Manage Pending Approvals};
+
+ode[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Manage Platform Catalogue};
 \node[draw,ellipse,fill=white] at (3,2.5) {UC-11 Authenticate};
 % include relationships
 \draw[->,dashed] (3,6) -- (3,7.5);       % UC-03 includes UC-02
@@ -49,8 +50,7 @@ the code.
 \draw[->] (-1.8,7) -- (5.2,4.9);
 \draw[->] (-1.8,7) -- (5.2,3.4);
 \draw[->] (-1.8,1) -- (8.7,7.8);
-\draw[->] (-1.8,9.5) -- (8.7,6.2);
-\draw[->] (-1.8,9.5) -- (8.7,4.3);
+\draw[->] (-1.8,9.5) -- (8.7,5.3);
 \draw[->] (-1.8,4) -- (2.2,2.9);
 \draw[->] (15,5) -- (12.5,6);
 \draw[->] (15,2) -- (11,3.5);
@@ -142,17 +142,16 @@ recipe with at least two ingredients (BR-05); (2) the System creates the
 recipe in \emph{PROPOSED} state; (3) the System stores the recipe.
 \textbf{Extensions:} 1a fewer than two ingredients.
 
-\subsection*{UC-08 Approve Vendor}
-\textbf{Actors:} Administrator. \textbf{Pre:} a vendor request exists.
-\textbf{MSS:} (1) the Administrator selects a vendor; (2) the System changes
-the vendor state to \emph{APPROVED} or \emph{SUSPENDED}; (3) the System stores
-the change. \textbf{Extensions:} 1a vendor not found.
-
-\subsection*{UC-09 Approve Recipe}
-\textbf{Actors:} Administrator. \textbf{Pre:} a recipe in \emph{PROPOSED}
-state exists. \textbf{MSS:} (1) the System presents the proposed recipes;
-(2) the Administrator approves or rejects a recipe; (3) the System stores the
-new state. \textbf{Post:} approved recipes enter the matching engine.
+\subsection*{UC-08 Manage Pending Approvals}
+	extbf{Actors:} Administrator. 	extbf{Pre:} administrator authenticated.
+	extbf{MSS:} (1)~the Administrator requests the pending approvals;
+(2)~the System retrieves the categorised list of pending vendor registrations
+and recipes in \emph{PROPOSED} state; (3)~the Administrator selects a pending
+item; (4)~the System presents its details; (5)~the Administrator approves,
+suspends or rejects the item; (6)~the System updates the state, notifies the
+interested actor and confirms. 	extbf{Extensions:} 2a empty queue; 5a
+rejection/suspension returns to step 2. 	extbf{Post:} item status updated
+(APPROVED/SUSPENDED for vendors, APPROVED/REJECTED for recipes).
 
 \subsection*{UC-11 Authenticate}
 \textbf{Actors:} any primary actor. \textbf{MSS:} (1) the Actor provides
