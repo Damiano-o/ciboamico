@@ -1,34 +1,35 @@
-package it.uniroma2.ispw.ciboamico.bootstrap;
+package it.uniroma2.ispw.ciboamico.boundary;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
+import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
+import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
+import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 /**
  * Boundary JavaFX — Login (UC-11).
  * La view NON conosce le Entity: scambia solo String/Bean con il controller.
+ * Dopo il login naviga alla Home via Navigator (Bean-only).
  */
-public class LoginView extends Application {
+public class LoginView {
 
     private final AutenticazioneController controller;
 
     public LoginView() {
-        this.controller = new AutenticazioneController(ApplicationModeManager.getInstance().getDAOFactory());
+        this.controller = new AutenticazioneController(
+                ApplicationModeManager.getInstance().getDAOFactory());
     }
 
     public LoginView(DAOFactory factory) {
         this.controller = new AutenticazioneController(factory);
     }
 
-    @Override
-    public void start(Stage stage) {
+    public Parent build() {
         Label titolo = new Label("CiboAmico — Accedi");
         TextField email = new TextField();
         email.setPromptText("email");
@@ -39,21 +40,16 @@ public class LoginView extends Application {
 
         login.setOnAction(e -> {
             try {
-                controller.login(email.getText(), password.getText());
-                messaggio.setText("Benvenuto!");
+                UtenteBean utente = controller.login(email.getText(), password.getText());
+                messaggio.setText("Benvenuto, " + utente.getUsername() + "!");
+                Navigator.getInstance().switchTo("home");
             } catch (IllegalArgumentException ex) {
                 messaggio.setText("Credenziali non valide");
             }
         });
 
         VBox root = new VBox(10, titolo, email, password, login, messaggio);
-        Scene scene = new Scene(root, 300, 200);
-        stage.setTitle("CiboAmico");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+        root.setPrefSize(900, 640);
+        return root;
     }
 }
