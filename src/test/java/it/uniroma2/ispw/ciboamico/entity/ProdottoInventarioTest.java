@@ -45,4 +45,20 @@ class ProdottoInventarioTest {
                 () -> new ProdottoInventario("Latte", 0, scadenza,
                         "Frigo", UnitaEnum.PEZZI, null));
     }
+
+    @Test
+    void testEqualsStessoContenuto() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        assertEquals(a, b);           // identità = nome+scadenza+posizione
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    void testEqualsDiverso() {
+        ProdottoInventario a = prodotto("Latte", LocalDate.now().plusDays(5));
+        ProdottoInventario b = prodotto("Pasta", LocalDate.now().plusDays(5));
+        assertNotEquals(a, b);
+    }
 }

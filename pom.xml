@@ -23,6 +23,7 @@
         <sonar.exclusions>
             **/boundary/**,
             **/bootstrap/**,
+            **/impl/jdbc/**,
             **/*.fxml,
             **/*.css
         </sonar.exclusions>

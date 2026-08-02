@@ -30,6 +30,14 @@ class UtenteRicettaTest {
     }
 
     @Test
+    void testNomeRuoliConcreti() {
+        assertEquals("AMMINISTRATORE", new RuoloAmministratore().getNomeRuolo());
+        assertEquals("CLIENTE", new RuoloCliente().getNomeRuolo());
+        assertEquals("NUTRIZIONISTA", new RuoloNutrizionista().getNomeRuolo());
+        assertEquals("VENDITORE", new RuoloVenditore("RM", "tel").getNomeRuolo());
+    }
+
+    @Test
     void testRicettaHaAlmenoDueIngredienti() {
         RuoloNutrizionista nutrizionista = new RuoloNutrizionista();
         Ricetta r = new Ricetta("Pasta al pomodoro", "bollire", nutrizionista);
