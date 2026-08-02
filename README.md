@@ -14,7 +14,7 @@
 
 ```bash
 mvn compile          # compila
-mvn test             # esegue i test (79 test)
+mvn test             # esegue i test (82 test)
 mvn jacoco:report    # report coverage (target/site/jacoco)
 mvn verify           # test + quality gate JaCoCo ≥ 80%
 mvn javafx:run       # avvia l'app JavaFX (modalità DEMO con dati seed)
