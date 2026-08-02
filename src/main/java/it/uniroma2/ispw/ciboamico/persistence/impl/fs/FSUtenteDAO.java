@@ -1,7 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.fs;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 

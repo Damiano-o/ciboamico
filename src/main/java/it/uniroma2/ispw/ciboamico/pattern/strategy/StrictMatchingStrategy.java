@@ -4,7 +4,6 @@ import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.Ricetta;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Strategy concreta: solo ricette 100% compatibili (tutti gli ingredienti disponibili).
@@ -15,7 +14,7 @@ public class StrictMatchingStrategy implements MatchingStrategy {
     public List<Ricetta> match(List<ProdottoInventario> inventario, List<Ricetta> ricette) {
         return ricette.stream()
                 .filter(r -> ricettaCompatibile(r, inventario))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean ricettaCompatibile(Ricetta ricetta, List<ProdottoInventario> inventario) {

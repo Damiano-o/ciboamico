@@ -29,10 +29,13 @@ public class ApprovazioneController {
     /** UC-08: approva/sospende un venditore (cambia stato ruolo). */
     public void approvaVenditore(String emailVenditore, boolean approva) {
         Utente utente = utenteDAO.findByEmail(emailVenditore);
-        if (utente == null || !utente.haRuolo(RuoloVenditore.class)) {
+        if (utente == null) {
             throw new IllegalArgumentException("Venditore non trovato");
         }
         RuoloVenditore ruolo = utente.getRuolo(RuoloVenditore.class);
+        if (ruolo == null) {
+            throw new IllegalArgumentException("Venditore non trovato");
+        }
         ruolo.setStato(approva ? StatoVenditoreEnum.APPROVATO : StatoVenditoreEnum.SOSPESO);
         utenteDAO.save(utente);
     }

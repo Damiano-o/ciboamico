@@ -28,10 +28,9 @@ class InventarioCatalogoControllerTest {
 
     @BeforeEach
     void setup() {
-        DemoDAOFactory factory = new DemoDAOFactory();
+        factory = new DemoDAOFactory();
         inventarioController = new GestisciInventarioController(factory);
         catalogoController = new GestisciCatalogoVenditoreController(factory);
-        this.factory = factory;
     }
 
     @AfterEach
@@ -120,6 +119,6 @@ class InventarioCatalogoControllerTest {
 
     @Test
     void testUnitaEnumValori() {
-        assertTrue(UnitaEnum.valueOf("GRAMMI") == UnitaEnum.GRAMMI);
+        assertSame(UnitaEnum.GRAMMI, UnitaEnum.valueOf("GRAMMI"));
     }
 }

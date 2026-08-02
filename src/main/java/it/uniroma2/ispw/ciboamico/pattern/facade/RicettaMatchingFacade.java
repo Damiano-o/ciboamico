@@ -7,7 +7,6 @@ import it.uniroma2.ispw.ciboamico.pattern.strategy.MatchingStrategy;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.SubstitutionMatchingStrategy;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Facade (GoF): interfaccia unica al motore di matching ricette.
@@ -29,7 +28,7 @@ public class RicettaMatchingFacade {
     public List<RicettaBean> getRecipes(List<ProdottoInventario> inventario, List<Ricetta> ricette) {
         return strategy.match(inventario, ricette).stream()
                 .map(this::toBean)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private RicettaBean toBean(Ricetta r) {
@@ -38,9 +37,9 @@ public class RicettaMatchingFacade {
         bean.setIstruzioni(r.getIstruzioni());
         bean.setStato(r.getStato().name());
         bean.setIngredientiNomi(r.getIngredienti().stream()
-                .map(i -> i.getProdotto().getNome()).collect(Collectors.toList()));
+                .map(i -> i.getProdotto().getNome()).toList());
         bean.setDosi(r.getIngredienti().stream()
-                .map(i -> i.getQuantita()).collect(Collectors.toList()));
+                .map(i -> i.getQuantita()).toList());
         return bean;
     }
 }

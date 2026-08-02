@@ -14,7 +14,7 @@ public class RicettaBean {
     private List<Double> dosi = new ArrayList<>();
     private String stato;
 
-    public RicettaBean() { }
+    public RicettaBean() { /* costruttore no-arg richiesto dai DAO/Gson */ }
 
     public boolean haAlmenoDueIngredienti() {
         return ingredientiNomi != null && ingredientiNomi.size() >= 2;

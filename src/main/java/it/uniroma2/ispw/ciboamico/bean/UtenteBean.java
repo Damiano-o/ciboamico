@@ -9,7 +9,7 @@ public class UtenteBean {
     private String email;
     private String ruoloAttivo;
 
-    public UtenteBean() { }
+    public UtenteBean() { /* costruttore no-arg richiesto dai DAO/Gson */ }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

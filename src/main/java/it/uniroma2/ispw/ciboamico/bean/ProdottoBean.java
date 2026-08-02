@@ -15,7 +15,7 @@ public class ProdottoBean {
     private String posizione;
     private String unitaMisura;
 
-    public ProdottoBean() { }
+    public ProdottoBean() { /* costruttore no-arg richiesto dai DAO/Gson */ }
 
     public boolean datiObbligatoriPresenti() {
         return nome != null && !nome.isBlank()

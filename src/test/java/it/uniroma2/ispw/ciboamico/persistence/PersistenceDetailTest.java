@@ -27,10 +27,10 @@ class PersistenceDetailTest {
             Path dir = Path.of("data");
             if (Files.exists(dir)) {
                 try (var stream = Files.list(dir)) {
-                    stream.forEach(f -> { try { Files.deleteIfExists(f); } catch (IOException ignored) { } });
+                    stream.forEach(f -> { try { Files.deleteIfExists(f); } catch (IOException ignored) { /* pulizia best-effort: se fallisce, il test successivo gestisce */ } });
                 }
             }
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) { /* pulizia best-effort: se fallisce, il test successivo gestisce */ }
     }
 
     private RuoloVenditore venditore() {

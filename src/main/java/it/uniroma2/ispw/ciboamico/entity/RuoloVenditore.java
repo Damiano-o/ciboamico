@@ -22,6 +22,9 @@ public class RuoloVenditore extends Ruolo {
     public String getRecapito() { return recapito; }
     public StatoVenditoreEnum getStato() { return stato; }
 
+    @Override
+    public String getNomeRuolo() { return "VENDITORE"; }
+
     /** Utente proprietario di questo ruolo (set quando il ruolo è aggiunto all'Utente). */
     public Utente getUtente() { return utente; }
     void setUtente(Utente utente) { this.utente = utente; }

@@ -4,7 +4,6 @@ import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.Ricetta;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Strategy concreta (elemento innovativo D-01): trova ricette anche se manca
@@ -20,7 +19,7 @@ public class SubstitutionMatchingStrategy implements MatchingStrategy {
     public List<Ricetta> match(List<ProdottoInventario> inventario, List<Ricetta> ricette) {
         return ricette.stream()
                 .filter(r -> ricettaCompatibileConSostituzione(r, inventario))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean ricettaCompatibileConSostituzione(Ricetta ricetta, List<ProdottoInventario> inventario) {

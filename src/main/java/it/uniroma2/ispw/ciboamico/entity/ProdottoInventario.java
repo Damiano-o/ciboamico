@@ -41,6 +41,21 @@ public class ProdottoInventario implements Comparable<ProdottoInventario> {
         return this.scadenza.compareTo(altro.scadenza);
     }
 
+    /** Coerente con compareTo: l'identità è data da nome+scadenza+posizione. */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProdottoInventario altro)) return false;
+        return nome.equals(altro.nome)
+                && scadenza.equals(altro.scadenza)
+                && posizione.equals(altro.posizione);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(nome, scadenza, posizione);
+    }
+
     public String getNome() { return nome; }
     public int getQuantita() { return quantita; }
     public LocalDate getScadenza() { return scadenza; }

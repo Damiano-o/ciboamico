@@ -11,7 +11,7 @@ public class OrdineBean {
     private String compratoreId;
     private String venditoreId;
 
-    public OrdineBean() { }
+    public OrdineBean() { /* costruttore no-arg richiesto dai DAO/Gson */ }
 
     public Long getIdOrdine() { return idOrdine; }
     public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }

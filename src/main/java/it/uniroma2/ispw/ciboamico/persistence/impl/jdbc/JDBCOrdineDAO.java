@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class JDBCOrdineDAO implements OrdineDAO {
 
+    private static final String COL_COMPRATORE = "compratore_email";
+    private static final String COL_VENDITORE = "venditore_email";
+
     @Override
     public Ordine save(Ordine ordine) {
         String sql = "INSERT INTO ordini (id, compratore_email, venditore_email, stato, totale) "
@@ -41,8 +44,8 @@ public class JDBCOrdineDAO implements OrdineDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Ordine o = new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString("compratore_email"), ""),
-                            new Utente("v", rs.getString("venditore_email"), ""));
+                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
+                            new Utente("v", rs.getString(COL_VENDITORE), ""));
                     o.ripristinaStato(StatoOrdineEnum.valueOf(rs.getString("stato")));
                     return o;
                 }

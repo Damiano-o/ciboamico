@@ -56,9 +56,13 @@ public class GestisciCatalogoVenditoreController {
             throw new IllegalStateException("Utente non autenticato");
         }
         Utente utente = utenteDAO.findByEmail(sessione.getEmail());
-        if (utente == null || !utente.haRuolo(RuoloVenditore.class)) {
+        if (utente == null) {
             throw new IllegalStateException("Venditore non trovato");
         }
-        return utente.getRuolo(RuoloVenditore.class);
+        RuoloVenditore ruolo = utente.getRuolo(RuoloVenditore.class);
+        if (ruolo == null) {
+            throw new IllegalStateException("Venditore non trovato");
+        }
+        return ruolo;
     }
 }

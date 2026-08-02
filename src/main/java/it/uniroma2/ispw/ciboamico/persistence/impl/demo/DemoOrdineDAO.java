@@ -3,7 +3,6 @@ package it.uniroma2.ispw.ciboamico.persistence.impl.demo;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

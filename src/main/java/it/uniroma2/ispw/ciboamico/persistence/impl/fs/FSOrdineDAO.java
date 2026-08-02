@@ -1,7 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.fs;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
