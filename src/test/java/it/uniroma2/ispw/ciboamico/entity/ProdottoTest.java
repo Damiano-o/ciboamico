@@ -36,9 +36,9 @@ class ProdottoTest {
     @Test
     void testValidaScadenzaPassata() {
         RuoloVenditore venditore = venditoreApprovato();
+        LocalDate scaduta = LocalDate.now().minusDays(1);
         assertThrows(IllegalArgumentException.class,
-                () -> new Prodotto("Pane", 2.0, 5, LocalDate.now().minusDays(1),
-                        UnitaEnum.PEZZI, venditore));
+                () -> new Prodotto("Pane", 2.0, 5, scaduta, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
