@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import org.junit.jupiter.api.Test;
 
@@ -75,7 +76,7 @@ class OrdineControllerTest {
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         factory.getOrdineDAO().save(ordine);
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(InvalidStateTransitionException.class,
                 () -> controller.aggiornaStato(1L, StatoOrdineEnum.CONSEGNATO)); // da CREATO non valido
     }
 

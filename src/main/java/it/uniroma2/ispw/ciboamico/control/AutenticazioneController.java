@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
+import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
@@ -25,18 +26,18 @@ public class AutenticazioneController {
 
     public UtenteBean login(AutenticazioneBean bean) {
         if (bean == null || bean.getEmail() == null || !bean.isEmailValida()) {
-            throw new IllegalArgumentException("Email non valida");
+            throw new AutenticazioneException("Email non valida");
         }
         return login(bean.getEmail(), bean.getPassword());
     }
 
     public UtenteBean login(String email, String password) {
         if (email == null || !email.matches("^[\\w.+-]+@[\\w-]+\\.[\\w.]+$")) {
-            throw new IllegalArgumentException("Email non valida");
+            throw new AutenticazioneException("Email non valida");
         }
         Utente utente = utenteDAO.findByEmail(email);
         if (utente == null || !utente.getPasswordHash().equals(hash(password))) {
-            throw new IllegalArgumentException("Credenziali non valide");
+            throw new AutenticazioneException("Credenziali non valide");
         }
 
         UtenteBean bean = new UtenteBean();

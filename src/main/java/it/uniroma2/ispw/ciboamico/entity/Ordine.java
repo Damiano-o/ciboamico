@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import java.time.ZoneId;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,10 +26,10 @@ public class Ordine {
 
     public Ordine(Long idOrdine, Utente compratore, Utente venditore) {
         if (compratore == null || venditore == null) {
-            throw new IllegalArgumentException("Compratore e venditore sono obbligatori");
+            throw new BusinessValidationException("Compratore e venditore sono obbligatori");
         }
         if (compratore.getEmail().equals(venditore.getEmail())) {
-            throw new IllegalArgumentException("Un utente non può acquistare il proprio prodotto (autoacquisto vietato)");
+            throw new BusinessValidationException("Un utente non può acquistare il proprio prodotto (autoacquisto vietato)");
         }
         this.idOrdine = idOrdine;
         this.compratore = compratore;
@@ -61,7 +63,7 @@ public class Ordine {
             default -> false;
         };
         if (!valida) {
-            throw new IllegalStateException(
+            throw new InvalidStateTransitionException(
                     "Transizione non valida da " + stato + " a " + nuovoStato + " (BR-04)");
         }
         this.stato = nuovoStato;

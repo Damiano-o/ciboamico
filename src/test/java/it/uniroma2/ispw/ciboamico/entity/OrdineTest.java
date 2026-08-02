@@ -3,6 +3,8 @@ package it.uniroma2.ispw.ciboamico.entity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -52,14 +54,14 @@ class OrdineTest {
         ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
         ordine.cambiaStato(StatoOrdineEnum.IN_CONSEGNA);
         // IN_CONSEGNA → ANNULLATO non è previsto (solo CONSEGNATO)
-        assertThrows(IllegalStateException.class,
+        assertThrows(InvalidStateTransitionException.class,
                 () -> ordine.cambiaStato(StatoOrdineEnum.ANNULLATO));
     }
 
     @Test
     void testAutoAcquistoVietato() {
         Utente stesso = compratore(); // stesso utente compra il proprio prodotto
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Ordine(1L, stesso, stesso));
     }
 }

@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 import it.uniroma2.ispw.ciboamico.entity.RuoloCliente;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
@@ -73,14 +74,14 @@ class AutenticazioneControllerTest {
         AutenticazioneBean bean = new AutenticazioneBean();
         bean.setEmail("user_at_cibo.it");   // formato errato
         bean.setPassword("password123");
-        assertThrows(IllegalArgumentException.class, () -> controller.login(bean));
+        assertThrows(AutenticazioneException.class, () -> controller.login(bean));
     }
 
     @Test
     void testLoginInvalidEmail() {
         AutenticazioneController controller =
                 new AutenticazioneController(mock(DAOFactory.class));
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(AutenticazioneException.class,
                 () -> controller.login("user_at_cibo.it", "password123"));
     }
 
@@ -90,7 +91,7 @@ class AutenticazioneControllerTest {
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(AutenticazioneException.class,
                 () -> controller.login("user@cibo.it", "wrong"));
     }
 }

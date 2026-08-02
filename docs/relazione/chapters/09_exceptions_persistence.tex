@@ -12,14 +12,23 @@ exposes physical persistence failures to the view layer:
     \item \texttt{DAOException} (runtime): wraps physical failures such as
     \texttt{SQLException} raised by the JDBC layer, converting them into a
     domain-abstraction error at the DAO boundary;
-    \item \texttt{IllegalArgumentException} / \texttt{IllegalStateException}:
-    validation and business-rule violations raised by entities and controllers
-    (e.g.\ invalid quantity, non-approved vendor, invalid order transition).
+    \item \texttt{BusinessValidationException} (runtime, base of the business
+    branch): raised by entities and controllers for business-rule and
+    validation violations (e.g.\ invalid quantity, non-approved vendor,
+    self-purchase of one's own product);
+    \item \texttt{InvalidStateTransitionException} (extends
+    \texttt{BusinessValidationException}): raised when an order state
+    transition violates the state machine (BR-04);
+    \item \texttt{AutenticazioneException} (extends
+    \texttt{BusinessValidationException}): raised for malformed e-mail or
+    invalid credentials during authentication (UC-11).
 \end{itemize}
 
-This design guarantees that the application flow is never interrupted by
-leaked technical exceptions, and that every failure is reported through a
-controlled, domain-meaningful message.
+This small, domain-specific hierarchy gives the presentation layer an
+expressive oracle: each view catches exactly the domain error it needs
+(e.g.\ a credential failure), while technical persistence failures are
+wrapped by \texttt{DAOException} and never leak to the view. The automated
+tests assert the most specific exception type, avoiding weak oracles.
 
 \section{Persistence}
 
@@ -35,16 +44,19 @@ startup through the \texttt{ApplicationModeManager} and the
 \toprule
 \textbf{Mode} & \textbf{Technology} & \textbf{Use} \\
 \midrule
-JDBC & MySQL (prepared statements, NFR-02) & production \\
+JDBC & MySQL (prepared statements, NFR-02; transactional saves) & production \\
 File system & JSON via Gson (local-date adapters) & portable persistence \\
-Demo & in-memory maps & tests and demo \\
+Demo & in-memory maps (shared factory instance) & tests and demo \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Every DAO (utente, prodotto, ricetta, ordine) is defined by an interface and
-implemented three times; the factory guarantees that the whole family is
-coherent. Password storage uses a one-way SHA-256 hash with a fixed salt
+implemented three times; the \texttt{DAOFactory} guarantees that the whole
+family is coherent and selected at runtime. The JDBC implementations use
+\texttt{PreparedStatement} (NFR-02) and wrap each write in an explicit
+transaction (auto-commit off, \texttt{commit}/\texttt{rollback}), improving
+robustness. Password storage uses a one-way SHA-256 hash with a fixed salt
 (NFR-03). The physical schema of the database is intentionally minimal: the
 evaluation focuses on the interaction between controllers, entities and the
 DAO layer.
