@@ -107,6 +107,17 @@
                         <goals><goal>prepare-agent</goal></goals>
                     </execution>
                     <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals><goal>report</goal></goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>jacoco-check</id>
                         <goals><goal>check</goal></goals>
                         <configuration>
