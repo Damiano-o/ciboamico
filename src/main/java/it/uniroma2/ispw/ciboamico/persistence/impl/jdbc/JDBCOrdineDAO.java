@@ -67,8 +67,8 @@ public class JDBCOrdineDAO implements OrdineDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     risultati.add(new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString("compratore_email"), ""),
-                            new Utente("v", rs.getString("venditore_email"), "")));
+                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
+                            new Utente("v", rs.getString(COL_VENDITORE), "")));
                 }
             }
             return risultati;
@@ -88,8 +88,8 @@ public class JDBCOrdineDAO implements OrdineDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     risultati.add(new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString("compratore_email"), ""),
-                            new Utente("v", rs.getString("venditore_email"), "")));
+                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
+                            new Utente("v", rs.getString(COL_VENDITORE), "")));
                 }
             }
             return risultati;

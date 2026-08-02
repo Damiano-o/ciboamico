@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import java.time.ZoneId;
 import java.time.LocalDate;
 
 /**
@@ -23,7 +24,7 @@ public class Prodotto {
         if (quantitaDisponibile < 0) {
             throw new IllegalArgumentException("La quantità non può essere negativa (BR-03)");
         }
-        if (scadenza.isBefore(LocalDate.now())) {
+        if (scadenza.isBefore(LocalDate.now(ZoneId.systemDefault()))) {
             throw new IllegalArgumentException("Un prodotto scaduto non può essere venduto (BR-01)");
         }
         this.nome = nome;

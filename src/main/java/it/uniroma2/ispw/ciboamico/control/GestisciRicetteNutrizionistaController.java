@@ -13,6 +13,7 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
+import java.time.ZoneId;
 import java.time.LocalDate;
 
 /**
@@ -39,7 +40,7 @@ public class GestisciRicetteNutrizionistaController {
         Ricetta ricetta = new Ricetta(bean.getNome(), bean.getIstruzioni(), autore);
         for (int i = 0; i < bean.getIngredientiNomi().size(); i++) {
             Prodotto p = new Prodotto(bean.getIngredientiNomi().get(i), 1.0, 100,
-                    LocalDate.now().plusYears(1), UnitaEnum.GRAMMI, null);
+                    LocalDate.now(ZoneId.systemDefault()).plusYears(1), UnitaEnum.GRAMMI, null);
             double dose = i < bean.getDosi().size() ? bean.getDosi().get(i) : 1.0;
             ricetta.aggiungiIngrediente(new Ingrediente(p, dose, UnitaEnum.GRAMMI));
         }

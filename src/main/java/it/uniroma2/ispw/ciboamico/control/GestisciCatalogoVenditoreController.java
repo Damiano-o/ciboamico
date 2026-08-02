@@ -8,6 +8,7 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
+import java.time.ZoneId;
 import java.time.LocalDate;
 
 /**
@@ -39,7 +40,7 @@ public class GestisciCatalogoVenditoreController {
                 bean.getNome(),
                 bean.getPrezzo(),
                 bean.getQuantita().intValue(),
-                bean.getScadenza() != null ? bean.getScadenza() : LocalDate.now().plusYears(1),
+                bean.getScadenza() != null ? bean.getScadenza() : LocalDate.now(ZoneId.systemDefault()).plusYears(1),
                 UnitaEnum.valueOf(bean.getUnitaMisura()),
                 venditore);
         prodottoDAO.save(prodotto);

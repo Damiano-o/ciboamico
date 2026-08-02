@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import java.time.ZoneId;
 import java.time.LocalDate;
 
 /**
@@ -20,7 +21,7 @@ public class ProdottoInventario implements Comparable<ProdottoInventario> {
         if (quantita <= 0) {
             throw new IllegalArgumentException("La quantità deve essere > 0");
         }
-        if (scadenza.isBefore(LocalDate.now())) {
+        if (scadenza.isBefore(LocalDate.now(ZoneId.systemDefault()))) {
             throw new IllegalArgumentException("La scadenza non può essere nel passato");
         }
         this.nome = nome;
@@ -33,7 +34,7 @@ public class ProdottoInventario implements Comparable<ProdottoInventario> {
 
     /** FR-03: prodotto in scadenza se mancano <= 3 giorni. */
     public boolean inScadenza() {
-        return scadenza.isBefore(LocalDate.now().plusDays(3));
+        return scadenza.isBefore(LocalDate.now(ZoneId.systemDefault()).plusDays(3));
     }
 
     @Override

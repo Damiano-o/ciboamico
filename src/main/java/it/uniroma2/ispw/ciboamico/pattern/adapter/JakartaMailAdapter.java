@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.pattern.adapter;
 
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -21,9 +22,8 @@ public class JakartaMailAdapter {
             return false;
         }
         // In produzione: Transport.send(message) verso il server SMTP configurato
-        LOG.info("[MAIL-STUB] A: " + destinatarioEmail
-                + " | Ordine " + ordine.getIdOrdine()
-                + " | " + messaggio);
+        LOG.log(Level.INFO, "[MAIL-STUB] A: {0} | Ordine {1} | {2}",
+                new Object[]{destinatarioEmail, ordine.getIdOrdine(), messaggio});
         return true;
     }
 }

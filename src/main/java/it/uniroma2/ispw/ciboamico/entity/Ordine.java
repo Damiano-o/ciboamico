@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import java.time.ZoneId;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Ordine {
         this.idOrdine = idOrdine;
         this.compratore = compratore;
         this.venditore = venditore;
-        this.data = LocalDateTime.now();
+        this.data = LocalDateTime.now(ZoneId.systemDefault());
         this.stato = StatoOrdineEnum.CREATO;
     }
 

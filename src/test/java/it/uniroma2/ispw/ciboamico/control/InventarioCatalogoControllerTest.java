@@ -2,7 +2,6 @@ package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
 import it.uniroma2.ispw.ciboamico.entity.StatoVenditoreEnum;
 import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
