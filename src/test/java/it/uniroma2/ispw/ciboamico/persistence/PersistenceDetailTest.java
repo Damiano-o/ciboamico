@@ -84,7 +84,7 @@ class PersistenceDetailTest {
     void testStatoEnum() {
         assertEquals("IN_ATTESA", StatoVenditoreEnum.IN_ATTESA.name());
         assertEquals("APPROVATA", StatoRicettaEnum.APPROVATA.name());
-        assertEquals("CONSEGNATO", StatoOrdineEnum.CONSEGNATO.name());
+        assertEquals("DELIVERED", StatoOrdineEnum.DELIVERED.name());
     }
 
     @Test
