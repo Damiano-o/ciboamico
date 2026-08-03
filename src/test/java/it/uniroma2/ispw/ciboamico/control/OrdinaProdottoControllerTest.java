@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import org.junit.jupiter.api.AfterEach;
@@ -74,5 +75,48 @@ class OrdinaProdottoControllerTest {
         assertNotNull(risultato.getIdOrdine());
         assertEquals("CREATO", risultato.getStato());
         assertEquals(2.0, risultato.getTotale(), 1e-9);
+    }
+
+    @Test
+    void testSubmitOrdineRiduceDisponibilita() {
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv);
+
+        Prodotto prodotto = new Prodotto("Mele", 1.5, 3,
+                LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Mele".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+
+        controller.submitOrdine(bean);
+        assertEquals(2, prodotto.getQuantitaDisponibile());
+    }
+
+    @Test
+    void testAcquistoQuantitaEccessivaLanciaEccezione() {
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv);
+
+        // Un solo pezzo disponibile
+        Prodotto prodotto = new Prodotto("Uova", 3.0, 1,
+                LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        // Prima acquisto: consuma l'unico pezzo disponibile
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Uova".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+        controller.submitOrdine(bean);
+
+        // Secondo acquisto: quantità non più disponibile (estensione 2a)
+        OrdineBean bean2 = new OrdineBean();
+        bean2.setIdOrdine((long) "Uova".hashCode());
+        bean2.setCompratoreId("mario@cibo.it");
+        assertThrows(BusinessValidationException.class,
+                () -> controller.submitOrdine(bean2));
     }
 }
