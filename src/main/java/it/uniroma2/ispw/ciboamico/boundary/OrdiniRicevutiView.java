@@ -38,11 +38,11 @@ public class OrdiniRicevutiView {
         idOrdine.setPromptText("ID ordine");
         ComboBox<String> nuovoStato = new ComboBox<>();
         nuovoStato.getItems().addAll(
-                StatoOrdineEnum.CONFERMATO.name(),
-                StatoOrdineEnum.IN_CONSEGNA.name(),
-                StatoOrdineEnum.CONSEGNATO.name(),
-                StatoOrdineEnum.ANNULLATO.name());
-        nuovoStato.setValue(StatoOrdineEnum.CONFERMATO.name());
+                StatoOrdineEnum.CONFIRMED.name(),
+                StatoOrdineEnum.IN_DELIVERY.name(),
+                StatoOrdineEnum.DELIVERED.name(),
+                StatoOrdineEnum.ANNULLED.name());
+        nuovoStato.setValue(StatoOrdineEnum.CONFIRMED.name());
         Label messaggio = new Label();
 
         Button aggiorna = new Button("Visualizza ordini");

@@ -24,7 +24,7 @@ public class OrdinaProdottoController {
     }
 
     /**
-     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATO + notifica.
+     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
      */
     public OrdineBean submitOrdine(OrdineBean bean) {
         UtenteBean utente = SessionManager.getInstance().getLoggedUser();
@@ -36,6 +36,11 @@ public class OrdinaProdottoController {
         if (prodotto == null) {
             throw new IllegalStateException("Prodotto non disponibile (2.c)");
         }
+
+        // Estensione 2a (out of stock): la Entity verifica la quantità richiesta
+        // e riduce la disponibilità — BusinessValidationException se insufficiente.
+        prodotto.riduciDisponibilita(1);
+        prodottoDAO.update(prodotto);
 
         // Costruzione ordine singolo diretto (D-03)
         // Il venditore è risolto dal PRODOTTO acquistato: risalgo all'Utente

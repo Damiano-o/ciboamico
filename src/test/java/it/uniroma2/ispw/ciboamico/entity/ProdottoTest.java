@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -45,8 +46,16 @@ class ProdottoTest {
     void testRiduciDisponibilita() {
         Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditoreApprovato());
-        assertTrue(p.riduciDisponibilita(3));
+        p.riduciDisponibilita(3);
         assertEquals(2, p.getQuantitaDisponibile());
-        assertFalse(p.riduciDisponibilita(10));
+    }
+
+    @Test
+    void testRiduciDisponibilitaQuantitaEccessiva() {
+        Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
+                UnitaEnum.PEZZI, venditoreApprovato());
+        assertThrows(BusinessValidationException.class,
+                () -> p.riduciDisponibilita(10));
+        assertEquals(5, p.getQuantitaDisponibile());
     }
 }

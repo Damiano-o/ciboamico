@@ -22,11 +22,11 @@ public class GestisciOrdiniRicevutiController {
         this.ordineDAO = factory.getOrdineDAO();
     }
 
-    /** UC-06 MSS: recupera ordini CREATO/CONFERMATO del venditore (Bean-only). */
+    /** UC-06 MSS: recupera ordini CREATED/CONFIRMED del venditore (Bean-only). */
     public List<OrdineBean> visualizzaOrdiniRicevuti(String emailVenditore) {
         return ordineDAO.findByVenditore(emailVenditore).stream()
-                .filter(o -> o.getStato() == StatoOrdineEnum.CREATO
-                        || o.getStato() == StatoOrdineEnum.CONFERMATO)
+                .filter(o -> o.getStato() == StatoOrdineEnum.CREATED
+                        || o.getStato() == StatoOrdineEnum.CONFIRMED)
                 .map(this::aBean)
                 .toList();
     }
