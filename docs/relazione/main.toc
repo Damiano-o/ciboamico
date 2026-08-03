@@ -22,21 +22,21 @@
 \contentsline {section}{\numberline {5.1}UC-04 Order a Product (exemplary template)}{12}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Other Use Cases (summary)}{13}{section.5.2}%
 \contentsline {chapter}{\numberline {6}Storyboards}{15}{chapter.6}%
-\contentsline {section}{\numberline {6.1}State of the system}{15}{section.6.1}%
-\contentsline {chapter}{\numberline {7}Design}{16}{chapter.7}%
-\contentsline {section}{\numberline {7.1}BCE Architecture (VOPC)}{16}{section.7.1}%
-\contentsline {section}{\numberline {7.2}GoF Patterns}{16}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Activity Diagram (UC-04)}{17}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Sequence Diagram (UC-04)}{18}{section.7.4}%
-\contentsline {section}{\numberline {7.5}State Diagram (Ordine, BR-04)}{18}{section.7.5}%
-\contentsline {chapter}{\numberline {8}Testing}{19}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Strategy}{19}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Coverage}{19}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Regression testing}{20}{section.8.3}%
-\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{21}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Exception Handling}{21}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Persistence}{21}{section.9.2}%
-\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{23}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Public Links}{23}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Conclusions}{23}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Future Work}{23}{section.10.3}%
+\contentsline {section}{\numberline {6.1}State of the system}{16}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Design}{17}{chapter.7}%
+\contentsline {section}{\numberline {7.1}BCE Architecture (VOPC)}{17}{section.7.1}%
+\contentsline {section}{\numberline {7.2}GoF Patterns}{17}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Activity Diagram (UC-04)}{18}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Sequence Diagram (UC-04)}{19}{section.7.4}%
+\contentsline {section}{\numberline {7.5}State Diagram (Ordine, BR-04)}{19}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Testing}{20}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Strategy}{20}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Coverage}{20}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Regression testing}{21}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{22}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Exception Handling}{22}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Persistence}{22}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{24}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Public Links}{24}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Conclusions}{24}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Future Work}{24}{section.10.3}%
