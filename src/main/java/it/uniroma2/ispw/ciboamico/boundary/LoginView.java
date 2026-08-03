@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
+import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.scene.Parent;
@@ -44,7 +45,7 @@ public class LoginView {
                 UtenteBean utente = controller.login(email.getText(), password.getText());
                 messaggio.setText("Benvenuto, " + utente.getUsername() + "!");
                 Navigator.getInstance().switchTo("home");
-            } catch (IllegalArgumentException ex) {
+            } catch (AutenticazioneException ex) {
                 messaggio.setText("Credenziali non valide");
             }
         });

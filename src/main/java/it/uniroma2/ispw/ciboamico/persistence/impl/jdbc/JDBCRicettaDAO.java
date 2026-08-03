@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.entity.Ricetta;
 import it.uniroma2.ispw.ciboamico.entity.RuoloNutrizionista;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;

@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.StatoOrdineEnum;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
@@ -52,11 +53,10 @@ public class JDBCOrdineDAO implements OrdineDAO {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Ordine o = new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
-                            new Utente("v", rs.getString(COL_VENDITORE), ""));
-                    o.ripristinaStato(StatoOrdineEnum.valueOf(rs.getString("stato")));
-                    return o;
+                    return mappaOrdine(rs.getLong("id"),
+                            rs.getString(COL_COMPRATORE),
+                            rs.getString(COL_VENDITORE),
+                            rs.getString("stato"));
                 }
                 return null;
             }
@@ -75,9 +75,10 @@ public class JDBCOrdineDAO implements OrdineDAO {
             ps.setString(1, venditoreEmail);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    risultati.add(new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
-                            new Utente("v", rs.getString(COL_VENDITORE), "")));
+                    risultati.add(mappaOrdine(rs.getLong("id"),
+                            rs.getString(COL_COMPRATORE),
+                            rs.getString(COL_VENDITORE),
+                            rs.getString("stato")));
                 }
             }
             return risultati;
@@ -96,14 +97,27 @@ public class JDBCOrdineDAO implements OrdineDAO {
             ps.setString(1, compratoreEmail);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    risultati.add(new Ordine(rs.getLong("id"),
-                            new Utente("c", rs.getString(COL_COMPRATORE), ""),
-                            new Utente("v", rs.getString(COL_VENDITORE), "")));
+                    risultati.add(mappaOrdine(rs.getLong("id"),
+                            rs.getString(COL_COMPRATORE),
+                            rs.getString(COL_VENDITORE),
+                            rs.getString("stato")));
                 }
             }
             return risultati;
         } catch (SQLException e) {
             throw new DAOException("Errore lettura ordini compratore", e);
+        }
+    }
+
+    private Ordine mappaOrdine(Long id, String compratoreEmail, String venditoreEmail, String stato) {
+        try {
+            Ordine o = new Ordine(id,
+                    new Utente("c", compratoreEmail, ""),
+                    new Utente("v", venditoreEmail, ""));
+            o.ripristinaStato(StatoOrdineEnum.valueOf(stato));
+            return o;
+        } catch (BusinessValidationException e) {
+            throw new DAOException("Dati ordine corrotti in persistenza: " + e.getMessage(), e);
         }
     }
 }

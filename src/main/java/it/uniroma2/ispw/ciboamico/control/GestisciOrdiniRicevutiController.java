@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.StatoOrdineEnum;
+import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
@@ -41,7 +42,8 @@ public class GestisciOrdiniRicevutiController {
     }
 
     /** UC-06 MSS: valida transizione (BR-04), aggiorna, notifica observer. */
-    public OrdineBean aggiornaStato(Long idOrdine, String nuovoStato) {
+    public OrdineBean aggiornaStato(Long idOrdine, String nuovoStato)
+            throws InvalidStateTransitionException {
         Ordine ordine = ordineDAO.findById(idOrdine);
         if (ordine == null) {
             throw new IllegalArgumentException("Ordine non trovato");

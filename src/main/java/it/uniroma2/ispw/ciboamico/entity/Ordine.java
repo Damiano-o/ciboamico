@@ -24,7 +24,8 @@ public class Ordine {
     private final List<VoceOrdine> voci = new ArrayList<>();
     private final OrdineSubject subject = new OrdineSubject();
 
-    public Ordine(Long idOrdine, Utente compratore, Utente venditore) {
+    public Ordine(Long idOrdine, Utente compratore, Utente venditore)
+            throws BusinessValidationException {
         if (compratore == null || venditore == null) {
             throw new BusinessValidationException("Compratore e venditore sono obbligatori");
         }
@@ -53,7 +54,8 @@ public class Ordine {
      * CONFIRMED → IN_DELIVERY | ANNULLED
      * IN_DELIVERY → DELIVERED
      */
-    public void cambiaStato(StatoOrdineEnum nuovoStato) {
+    public void cambiaStato(StatoOrdineEnum nuovoStato)
+            throws InvalidStateTransitionException {
         boolean valida = switch (stato) {
             case CREATED -> nuovoStato == StatoOrdineEnum.CONFIRMED
                     || nuovoStato == StatoOrdineEnum.ANNULLED;

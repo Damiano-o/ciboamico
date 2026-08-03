@@ -24,14 +24,14 @@ public class AutenticazioneController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    public UtenteBean login(AutenticazioneBean bean) {
+    public UtenteBean login(AutenticazioneBean bean) throws AutenticazioneException {
         if (bean == null || bean.getEmail() == null || !bean.isEmailValida()) {
             throw new AutenticazioneException("Email non valida");
         }
         return login(bean.getEmail(), bean.getPassword());
     }
 
-    public UtenteBean login(String email, String password) {
+    public UtenteBean login(String email, String password) throws AutenticazioneException {
         if (email == null || !email.matches("^[\\w.+-]+@[\\w-]+\\.[\\w.]+$")) {
             throw new AutenticazioneException("Email non valida");
         }

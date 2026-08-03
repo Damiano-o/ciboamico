@@ -19,7 +19,8 @@ public class Prodotto {
     private final RuoloVenditore venditore;
 
     public Prodotto(String nome, double prezzo, int quantitaDisponibile,
-                    LocalDate scadenza, UnitaEnum unita, RuoloVenditore venditore) {
+                    LocalDate scadenza, UnitaEnum unita, RuoloVenditore venditore)
+            throws BusinessValidationException {
         if (prezzo <= 0) {
             throw new BusinessValidationException("Il prezzo deve essere maggiore di 0 (BR-06)");
         }
@@ -43,7 +44,7 @@ public class Prodotto {
      * quantità richiesta supera quella disponibile lancia una
      * BusinessValidationException (estensione 2a UC-04, out of stock).
      */
-    public void riduciDisponibilita(int quantita) {
+    public void riduciDisponibilita(int quantita) throws BusinessValidationException {
         if (quantita > quantitaDisponibile) {
             throw new BusinessValidationException(
                     "Quantità richiesta non disponibile: richieste " + quantita
@@ -59,7 +60,7 @@ public class Prodotto {
     public UnitaEnum getUnita() { return unita; }
     public RuoloVenditore getVenditore() { return venditore; }
 
-    public void setPrezzo(double prezzo) {
+    public void setPrezzo(double prezzo) throws BusinessValidationException {
         if (prezzo <= 0) throw new BusinessValidationException("Prezzo non valido (BR-06)");
         this.prezzo = prezzo;
     }

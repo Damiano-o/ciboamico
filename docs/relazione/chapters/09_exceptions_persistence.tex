@@ -12,7 +12,7 @@ exposes physical persistence failures to the view layer:
     \item \texttt{DAOException} (runtime): wraps physical failures such as
     \texttt{SQLException} raised by the JDBC layer, converting them into a
     domain-abstraction error at the DAO boundary;
-    \item \texttt{BusinessValidationException} (runtime, base of the business
+    \item \texttt{BusinessValidationException} (checked, base of the business
     branch): raised by entities and controllers for business-rule and
     validation violations (e.g.\ invalid quantity, non-approved vendor,
     self-purchase of one's own product);

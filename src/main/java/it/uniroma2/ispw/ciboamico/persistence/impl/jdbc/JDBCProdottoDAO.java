@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
@@ -153,12 +154,16 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     private Prodotto mappa(ResultSet rs) throws SQLException {
         RuoloVenditore venditore = new RuoloVenditore(
                 rs.getString("venditore_zona"), rs.getString("venditore_recapito"));
-        return new Prodotto(
-                rs.getString("nome"),
-                rs.getDouble("prezzo"),
-                rs.getInt("quantita_disponibile"),
-                rs.getDate("scadenza").toLocalDate(),
-                UnitaEnum.valueOf(rs.getString("unita")),
-                venditore);
+        try {
+            return new Prodotto(
+                    rs.getString("nome"),
+                    rs.getDouble("prezzo"),
+                    rs.getInt("quantita_disponibile"),
+                    rs.getDate("scadenza").toLocalDate(),
+                    UnitaEnum.valueOf(rs.getString("unita")),
+                    venditore);
+        } catch (BusinessValidationException e) {
+            throw new DAOException("Dati prodotto corrotti in persistenza: " + e.getMessage(), e);
+        }
     }
 }

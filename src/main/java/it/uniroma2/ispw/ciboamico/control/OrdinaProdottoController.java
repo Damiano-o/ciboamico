@@ -4,6 +4,7 @@ import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import java.util.List;
 import it.uniroma2.ispw.ciboamico.pattern.observer.VenditoreNotifier;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
@@ -42,7 +43,8 @@ public class OrdinaProdottoController {
     /**
      * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
      */
-    public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente) {
+    public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente)
+            throws BusinessValidationException {
         if (utente == null) {
             throw new IllegalStateException("Utente non autenticato");
         }

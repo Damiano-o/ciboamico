@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
@@ -28,7 +29,8 @@ public class GestisciCatalogoVenditoreController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    public ProdottoBean pubblicaProdotto(ProdottoBean bean) {
+    public ProdottoBean pubblicaProdotto(ProdottoBean bean)
+            throws BusinessValidationException {
         RuoloVenditore venditore = risolviVenditoreCorrente();
         if (venditore.getStato() != StatoVenditoreEnum.APPROVATO) {
             throw new IllegalStateException("Venditore non approvato (1.a, BR-02)");

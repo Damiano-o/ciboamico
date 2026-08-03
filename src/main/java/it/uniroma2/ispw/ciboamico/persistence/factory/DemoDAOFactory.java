@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
@@ -35,11 +36,15 @@ public class DemoDAOFactory extends DAOFactory {
 
     /** Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO). */
     public void seedDemoData() {
-        seed();
+        try {
+            seed();
+        } catch (BusinessValidationException e) {
+            throw new IllegalStateException("Seed demo corrotto", e);
+        }
     }
 
     /** Carica dati dimostrativi: 4 utenti (tutti i ruoli), prodotti, ricette. */
-    private void seed() {
+    private void seed() throws BusinessValidationException {
         // Utente client
         Utente mario = new Utente("Mario", "mario@cibo.it", hash("password123"));
         mario.aggiungiRuolo(new RuoloCliente());
