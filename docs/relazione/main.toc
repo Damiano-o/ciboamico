@@ -33,11 +33,13 @@
 \contentsline {chapter}{\numberline {8}Testing}{21}{chapter.8}%
 \contentsline {section}{\numberline {8.1}Strategy}{21}{section.8.1}%
 \contentsline {section}{\numberline {8.2}Coverage}{21}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Regression testing}{22}{section.8.3}%
-\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{23}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Exception Handling}{23}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Persistence}{23}{section.9.2}%
-\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{25}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Public Links}{25}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Conclusions}{25}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Future Work}{25}{section.10.3}%
+\contentsline {section}{\numberline {8.3}Test Classes and Covered Rules}{22}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Running the tests}{22}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Regression testing}{23}{section.8.5}%
+\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{24}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Exception Handling}{24}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Persistence}{24}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{26}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Public Links}{26}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Conclusions}{26}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Future Work}{26}{section.10.3}%

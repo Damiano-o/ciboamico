@@ -14,7 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test OrdinaProdottoController (UC-04), GestisciOrdiniRicevutiController (UC-06)
  * e GestisciListaSpesaController (UC-03).
- */
+ 
+ * @author Michele Damiano
+*/
 class OrdineControllerTest {
 
     private DemoDAOFactory factory() { return new DemoDAOFactory(); }
@@ -46,6 +48,7 @@ class OrdineControllerTest {
 
     @Test
     void testVisualizzaOrdiniRicevuti() {
+
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
@@ -54,8 +57,18 @@ class OrdineControllerTest {
         List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
 
         assertEquals(1, ricevuti.size());
-        assertEquals(StatoOrdineEnum.CREATED.name(), ricevuti.get(0).getStato());
     }
+    @Test
+    void testVisualizzaOrdiniRicevutiParte2() {
+        DemoDAOFactory factory = factory();
+        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
+        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
+        factory.getOrdineDAO().save(ordine);
+
+        List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
+
+        assertEquals(1, ricevuti.size());
+        assertEquals(StatoOrdineEnum.CREATED.name(), ricevuti.get(0).getStato());}
 
     @Test
     void testAggiornaStatoOrdine() {

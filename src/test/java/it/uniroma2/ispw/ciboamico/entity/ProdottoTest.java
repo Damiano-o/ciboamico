@@ -9,7 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità (BR-03).
- */
+ 
+ * @author Michele Damiano
+*/
 class ProdottoTest {
 
     private RuoloVenditore venditoreApprovato() {
@@ -52,10 +54,17 @@ class ProdottoTest {
 
     @Test
     void testRiduciDisponibilitaQuantitaEccessiva() {
+
         Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditoreApprovato());
         assertThrows(BusinessValidationException.class,
                 () -> p.riduciDisponibilita(10));
-        assertEquals(5, p.getQuantitaDisponibile());
     }
+    @Test
+    void testRiduciDisponibilitaQuantitaEccessivaParte2() {
+        Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
+                UnitaEnum.PEZZI, venditoreApprovato());
+        assertThrows(BusinessValidationException.class,
+                () -> p.riduciDisponibilita(10));
+        assertEquals(5, p.getQuantitaDisponibile());}
 }

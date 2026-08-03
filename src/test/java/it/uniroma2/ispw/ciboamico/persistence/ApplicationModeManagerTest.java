@@ -7,8 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test ApplicationModeManager: switch modalità e factory corretta.
- */
+ 
+ * @author Michele Damiano
+*/
 class ApplicationModeManagerTest {
+
+    @org.junit.jupiter.api.AfterEach
+    void resetModalita() {
+        ApplicationModeManager.getInstance().setActiveMode(ApplicationModeManager.MODE_DEMO);
+    }
 
     @Test
     void testDefaultDemo() {
@@ -18,11 +25,17 @@ class ApplicationModeManagerTest {
 
     @Test
     void testSwitchModalita() {
+
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         manager.setActiveMode(ApplicationModeManager.MODE_FS);
         assertEquals(ApplicationModeManager.MODE_FS, manager.getActiveMode());
-        assertNotNull(manager.getDAOFactory());
     }
+    @Test
+    void testSwitchModalitaParte2() {
+        ApplicationModeManager manager = ApplicationModeManager.getInstance();
+        manager.setActiveMode(ApplicationModeManager.MODE_FS);
+        assertEquals(ApplicationModeManager.MODE_FS, manager.getActiveMode());
+        assertNotNull(manager.getDAOFactory());}
 
     @Test
     void testModalitaNonValida() {

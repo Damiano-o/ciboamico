@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test UC-04 OrdinaProdottoController: verifica che il VENDITORE sia risolto
  * dal prodotto (non dall'utente loggato) — regressione del bug fix 2026-08-02.
- */
+ 
+ * @author Michele Damiano
+*/
 class OrdinaProdottoControllerTest {
 
     private DemoDAOFactory factory;
@@ -62,6 +64,65 @@ class OrdinaProdottoControllerTest {
 
     @Test
     void testSubmitOrdineVenditoreDalProdotto() {
+
+        // Venditore con back-reference all'Utente
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
+
+        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
+                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Pomodori".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+
+        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
+
+        assertNotNull(risultato);
+    }
+    @Test
+    void testSubmitOrdineVenditoreDalProdottoParte2() {
+        // Venditore con back-reference all'Utente
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
+
+        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
+                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Pomodori".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+
+        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
+
+        assertNotNull(risultato);
+        assertNotNull(risultato.getIdOrdine());}
+    @Test
+    void testSubmitOrdineVenditoreDalProdottoParte3() {
+        // Venditore con back-reference all'Utente
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
+
+        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
+                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setIdOrdine((long) "Pomodori".hashCode());
+        bean.setCompratoreId("mario@cibo.it");
+
+        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
+
+        assertNotNull(risultato);
+        assertNotNull(risultato.getIdOrdine());
+        assertEquals("CREATED", risultato.getStato());}
+    @Test
+    void testSubmitOrdineVenditoreDalProdottoParte4() {
         // Venditore con back-reference all'Utente
         Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");
@@ -80,8 +141,7 @@ class OrdinaProdottoControllerTest {
         assertNotNull(risultato);
         assertNotNull(risultato.getIdOrdine());
         assertEquals("CREATED", risultato.getStato());
-        assertEquals(2.0, risultato.getTotale(), 1e-9);
-    }
+        assertEquals(2.0, risultato.getTotale(), 1e-9);}
 
     @Test
     void testSubmitOrdineRiduceDisponibilita() {
