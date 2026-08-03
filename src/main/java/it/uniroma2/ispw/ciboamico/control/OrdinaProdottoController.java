@@ -24,7 +24,7 @@ public class OrdinaProdottoController {
     }
 
     /**
-     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATO + notifica.
+     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
      */
     public OrdineBean submitOrdine(OrdineBean bean) {
         UtenteBean utente = SessionManager.getInstance().getLoggedUser();

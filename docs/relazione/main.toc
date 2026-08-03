@@ -25,18 +25,19 @@
 \contentsline {section}{\numberline {6.1}State of the system}{16}{section.6.1}%
 \contentsline {chapter}{\numberline {7}Design}{17}{chapter.7}%
 \contentsline {section}{\numberline {7.1}BCE Architecture (VOPC)}{17}{section.7.1}%
-\contentsline {section}{\numberline {7.2}GoF Patterns}{17}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Activity Diagram (UC-04)}{18}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Sequence Diagram (UC-04)}{19}{section.7.4}%
-\contentsline {section}{\numberline {7.5}State Diagram (Ordine, BR-04)}{19}{section.7.5}%
-\contentsline {chapter}{\numberline {8}Testing}{20}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Strategy}{20}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Coverage}{20}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Regression testing}{21}{section.8.3}%
-\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{22}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Exception Handling}{22}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Persistence}{22}{section.9.2}%
-\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{24}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Public Links}{24}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Conclusions}{24}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Future Work}{24}{section.10.3}%
+\contentsline {section}{\numberline {7.2}Design-Level Class Diagram}{18}{section.7.2}%
+\contentsline {section}{\numberline {7.3}GoF Patterns}{18}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Activity Diagram (UC-04)}{19}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Sequence Diagram (UC-04)}{19}{section.7.5}%
+\contentsline {section}{\numberline {7.6}State Diagram (Ordine, BR-04)}{20}{section.7.6}%
+\contentsline {chapter}{\numberline {8}Testing}{21}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Strategy}{21}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Coverage}{21}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Regression testing}{22}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{23}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Exception Handling}{23}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Persistence}{23}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{25}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Public Links}{25}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Conclusions}{25}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Future Work}{25}{section.10.3}%

@@ -30,16 +30,16 @@ class PatternTest {
     void testVenditoreNotifier() {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new VenditoreNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO); // non deve lanciare
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED); // non deve lanciare
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
     void testUtenteNotifier() {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new UtenteNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test

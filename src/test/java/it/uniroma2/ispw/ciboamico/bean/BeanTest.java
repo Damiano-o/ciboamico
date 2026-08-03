@@ -60,13 +60,13 @@ class BeanTest {
         OrdineBean bean = new OrdineBean();
         bean.setIdOrdine(5L);
         bean.setTotale(10.0);
-        bean.setStato("CREATO");
+        bean.setStato("CREATED");
         bean.setCompratoreId("c1");
         bean.setVenditoreId("v1");
 
         assertEquals(5L, bean.getIdOrdine());
         assertEquals(10.0, bean.getTotale());
-        assertEquals("CREATO", bean.getStato());
+        assertEquals("CREATED", bean.getStato());
         assertEquals("c1", bean.getCompratoreId());
         assertEquals("v1", bean.getVenditoreId());
     }

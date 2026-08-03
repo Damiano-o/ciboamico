@@ -73,7 +73,7 @@ class OrdinaProdottoControllerTest {
 
         assertNotNull(risultato);
         assertNotNull(risultato.getIdOrdine());
-        assertEquals("CREATO", risultato.getStato());
+        assertEquals("CREATED", risultato.getStato());
         assertEquals(2.0, risultato.getTotale(), 1e-9);
     }
 
