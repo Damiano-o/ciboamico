@@ -94,22 +94,39 @@ UC-11 & LoginView & AutenticazioneController & Utente \\
 \begin{tikzpicture}
 \tikzstyle{inst}=[rectangle,draw,minimum width=1.6cm,minimum height=0.6cm]
 \node[inst] (c) {Client};
-\node[inst,right of=c,xshift=2.2cm] (b) {MarketplaceView};
-\node[inst,right of=b,xshift=2.2cm] (ctl) {OrdinaProdottoController};
-\node[inst,right of=ctl,xshift=2.2cm] (e) {Ordine};
-\node[inst,right of=e,xshift=2.2cm] (dao) {OrdineDAO};
-\draw[dashed] (c)--(c.south)+(0,-4); \draw[dashed] (b)--(b.south)+(0,-4);
-\draw[dashed] (ctl)--(ctl.south)+(0,-4); \draw[dashed] (e)--(e.south)+(0,-4);
-\draw[dashed] (dao)--(dao.south)+(0,-4);
-% sync messages
-\draw[->] (c.south)+(0,-0.4) -- (b.south)+(0,-0.6) node[midway,above]{\scriptsize order(product)};
+\node[inst,right of=c,xshift=1.8cm] (b) {MarketplaceView};
+\node[inst,right of=b,xshift=1.8cm] (ctl) {OrdinaProdottoController};
+\node[inst,right of=ctl,xshift=1.8cm] (pr) {Prodotto};
+\node[inst,right of=pr,xshift=1.8cm] (e) {Ordine};
+\node[inst,right of=e,xshift=1.8cm] (pdao) {ProdottoDAO};
+\node[inst,right of=pdao,xshift=1.8cm] (odao) {OrdineDAO};
+\node[inst,right of=odao,xshift=1.8cm] (not) {VenditoreNotifier};
+\draw[dashed] (c)--(c.south)+(0,-4.2); \draw[dashed] (b)--(b.south)+(0,-4.2);
+\draw[dashed] (ctl)--(ctl.south)+(0,-4.2); \draw[dashed] (pr)--(pr.south)+(0,-4.2);
+\draw[dashed] (e)--(e.south)+(0,-4.2); \draw[dashed] (pdao)--(pdao.south)+(0,-4.2);
+\draw[dashed] (odao)--(odao.south)+(0,-4.2); \draw[dashed] (not)--(not.south)+(0,-4.2);
+% sync messages (full arrows)
+\draw[->] (c.south)+(0,-0.4) -- (b.south)+(0,-0.6) node[midway,above]{\scriptsize click(Ordina)};
 \draw[->] (b.south)+(0,-0.9) -- (ctl.south)+(0,-1.2) node[midway,above]{\scriptsize submitOrdine(bean)};
-\draw[->] (ctl.south)+(0,-1.5) -- (e.south)+(0,-1.8) node[midway,above]{\scriptsize new Ordine()};
-\draw[->] (ctl.south)+(0,-2.2) -- (dao.south)+(0,-2.6) node[midway,above]{\scriptsize save(ordine)};
-\draw[->] (dao.south)+(0,-3.0) -- (ctl.south)+(0,-2.9) node[midway,above]{\scriptsize ordine};
-\draw[->] (ctl.south)+(0,-3.4) -- (b.south)+(0,-3.2) node[midway,above]{\scriptsize OrdineBean};
+\draw[->] (ctl.south)+(0,-1.5) -- (pdao.south)+(0,-1.7) node[midway,above]{\scriptsize findById(id)};
+\draw[->] (pdao.south)+(0,-2.0) -- (ctl.south)+(0,-2.1) node[midway,above]{\scriptsize prodotto};
+\draw[->] (ctl.south)+(0,-2.4) -- (pr.south)+(0,-2.6) node[midway,above]{\scriptsize riduciDisponibilita(1)};
+% exception: BusinessValidationException risale alla boundary
+\draw[->,red] (pr.south)+(0,-3.0) -- (ctl.south)+(0,-3.1) node[midway,above]{\scriptsize \textcolor{red}{BusinessValidationException}};
+\draw[->,red] (ctl.south)+(0,-3.4) -- (b.south)+(0,-3.2) node[midway,above]{\scriptsize \textcolor{red}{ex}};
+% transaction: update + save
+\draw[->] (ctl.south)+(0,-3.9) -- (pdao.south)+(0,-4.0) node[midway,above]{\scriptsize update(prodotto)};
+\draw[->] (ctl.south)+(0,-4.3) -- (e.south)+(0,-4.6) node[midway,above]{\scriptsize new Ordine() /* CREATED */};
+\draw[->] (ctl.south)+(0,-5.0) -- (odao.south)+(0,-5.3) node[midway,above]{\scriptsize save(ordine)};
+\draw[->] (odao.south)+(0,-5.7) -- (ctl.south)+(0,-5.6) node[midway,above]{\scriptsize commit()};
+% return bean (dashed)
+\draw[->,dashed] (ctl.south)+(0,-6.1) -- (b.south)+(0,-6.0) node[midway,above]{\scriptsize OrdineBean};
+% async notification (open arrow)
+\draw[->>,dashed] (ctl.south)+(0,-6.5) -- (not.south)+(0,-6.9) node[midway,above]{\scriptsize notificaVenditore()};
 \end{tikzpicture}
-\caption{Sequence diagram of UC-04 (synchronous calls, full arrows).}
+\caption{Sequence diagram of UC-04: synchronous calls (full arrows), return
+bean (dashed), exception propagation (red), async Observer notification
+(open arrow).}
 \label{fig:sequence}
 \end{figure}
 

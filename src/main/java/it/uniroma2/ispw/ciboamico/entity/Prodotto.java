@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+
 import java.time.ZoneId;
 import java.time.LocalDate;
 
@@ -35,12 +37,19 @@ public class Prodotto {
         this.venditore = venditore;
     }
 
-    public boolean riduciDisponibilita(int quantita) {
+    /**
+     * Riduce la disponibilità verificando l'invariante di business (BR-03).
+     * Information Expert: la Entity protegge le proprie invarianti; se la
+     * quantità richiesta supera quella disponibile lancia una
+     * BusinessValidationException (estensione 2a UC-04, out of stock).
+     */
+    public void riduciDisponibilita(int quantita) {
         if (quantita > quantitaDisponibile) {
-            return false;
+            throw new BusinessValidationException(
+                    "Quantità richiesta non disponibile: richieste " + quantita
+                            + ", disponibili " + quantitaDisponibile + " (BR-03)");
         }
         quantitaDisponibile -= quantita;
-        return true;
     }
 
     public String getNome() { return nome; }

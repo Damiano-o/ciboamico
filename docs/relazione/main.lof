@@ -1,0 +1,16 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Use-case diagram (grey UC-10 excluded from evaluation).}}{12}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Minimal storyboards (colour theme): login, pantry with expiry warning, marketplace.}}{15}{figure.caption.19}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Activity diagram of UC-04 (simplified).}}{17}{figure.caption.21}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Sequence diagram of UC-04: synchronous calls (full arrows), return bean (dashed), exception propagation (red), async Observer notification (open arrow).}}{18}{figure.caption.22}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces State diagram of Ordine (trigger / behaviour, guards mutually exclusive per BR-04).}}{18}{figure.caption.23}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

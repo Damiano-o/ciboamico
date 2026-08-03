@@ -37,6 +37,11 @@ public class OrdinaProdottoController {
             throw new IllegalStateException("Prodotto non disponibile (2.c)");
         }
 
+        // Estensione 2a (out of stock): la Entity verifica la quantità richiesta
+        // e riduce la disponibilità — BusinessValidationException se insufficiente.
+        prodotto.riduciDisponibilita(1);
+        prodottoDAO.update(prodotto);
+
         // Costruzione ordine singolo diretto (D-03)
         // Il venditore è risolto dal PRODOTTO acquistato: risalgo all'Utente
         // proprietario del ruolo Venditore (whole-part bidirezionale) — fix da
