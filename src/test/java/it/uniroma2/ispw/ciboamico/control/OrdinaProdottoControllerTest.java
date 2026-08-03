@@ -39,19 +39,25 @@ class OrdinaProdottoControllerTest {
         SessionManager.getInstance().logout();
     }
 
+    private UtenteBean utenteBean() {
+        UtenteBean b = new UtenteBean();
+        b.setUsername("Mario");
+        b.setEmail("mario@cibo.it");
+        return b;
+    }
+
     @Test
-    void testSubmitOrdineSenzaSessione() {
-        SessionManager.getInstance().logout();
+    void testSubmitOrdineUtenteNull() {
         OrdineBean bean = new OrdineBean();
         assertThrows(IllegalStateException.class,
-                () -> controller.submitOrdine(bean));
+                () -> controller.submitOrdine(bean, null));
     }
 
     @Test
     void testSubmitOrdineProdottoNonTrovato() {
         OrdineBean bean = new OrdineBean();
         bean.setIdOrdine(999L); // non esiste nel catalogo demo
-        assertThrows(IllegalStateException.class, () -> controller.submitOrdine(bean));
+        assertThrows(IllegalStateException.class, () -> controller.submitOrdine(bean, utenteBean()));
     }
 
     @Test
@@ -69,7 +75,7 @@ class OrdinaProdottoControllerTest {
         bean.setIdOrdine((long) "Pomodori".hashCode());
         bean.setCompratoreId("mario@cibo.it");
 
-        OrdineBean risultato = controller.submitOrdine(bean);
+        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
 
         assertNotNull(risultato);
         assertNotNull(risultato.getIdOrdine());
@@ -91,7 +97,7 @@ class OrdinaProdottoControllerTest {
         bean.setIdOrdine((long) "Mele".hashCode());
         bean.setCompratoreId("mario@cibo.it");
 
-        controller.submitOrdine(bean);
+        controller.submitOrdine(bean, utenteBean());
         assertEquals(2, prodotto.getQuantitaDisponibile());
     }
 
@@ -110,13 +116,13 @@ class OrdinaProdottoControllerTest {
         OrdineBean bean = new OrdineBean();
         bean.setIdOrdine((long) "Uova".hashCode());
         bean.setCompratoreId("mario@cibo.it");
-        controller.submitOrdine(bean);
+        controller.submitOrdine(bean, utenteBean());
 
         // Secondo acquisto: quantità non più disponibile (estensione 2a)
         OrdineBean bean2 = new OrdineBean();
         bean2.setIdOrdine((long) "Uova".hashCode());
         bean2.setCompratoreId("mario@cibo.it");
         assertThrows(BusinessValidationException.class,
-                () -> controller.submitOrdine(bean2));
+                () -> controller.submitOrdine(bean2, utenteBean()));
     }
 }

@@ -31,13 +31,22 @@ public class GestisciOrdiniRicevutiController {
                 .toList();
     }
 
+    /** UC-06 MSS: stati aggiornabili dal venditore come stringhe (Bean-only). */
+    public List<String> getStatiAggiornabili() {
+        return List.of(
+                StatoOrdineEnum.CONFIRMED.name(),
+                StatoOrdineEnum.IN_DELIVERY.name(),
+                StatoOrdineEnum.DELIVERED.name(),
+                StatoOrdineEnum.ANNULLED.name());
+    }
+
     /** UC-06 MSS: valida transizione (BR-04), aggiorna, notifica observer. */
-    public OrdineBean aggiornaStato(Long idOrdine, StatoOrdineEnum nuovoStato) {
+    public OrdineBean aggiornaStato(Long idOrdine, String nuovoStato) {
         Ordine ordine = ordineDAO.findById(idOrdine);
         if (ordine == null) {
             throw new IllegalArgumentException("Ordine non trovato");
         }
-        ordine.cambiaStato(nuovoStato); // lancia IllegalStateException se non valida
+        ordine.cambiaStato(StatoOrdineEnum.valueOf(nuovoStato)); // IllegalStateException se non valida
         ordineDAO.save(ordine);
         return aBean(ordine);
     }

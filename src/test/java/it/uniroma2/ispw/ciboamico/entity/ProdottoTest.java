@@ -22,7 +22,7 @@ class ProdottoTest {
     void testValidaPrezzo() {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", -1.50, 10, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
@@ -30,7 +30,7 @@ class ProdottoTest {
     void testValidaQuantita() {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", 2.0, -5, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
@@ -38,7 +38,7 @@ class ProdottoTest {
     void testValidaScadenzaPassata() {
         RuoloVenditore venditore = venditoreApprovato();
         LocalDate scaduta = LocalDate.now().minusDays(1);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", 2.0, 5, scaduta, UnitaEnum.PEZZI, venditore));
     }
 

@@ -64,7 +64,7 @@ class OrdineControllerTest {
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         factory.getOrdineDAO().save(ordine);
 
-        OrdineBean aggiornato = controller.aggiornaStato(1L, StatoOrdineEnum.CONFIRMED);
+        OrdineBean aggiornato = controller.aggiornaStato(1L, "CONFIRMED");
 
         assertEquals(StatoOrdineEnum.CONFIRMED.name(), aggiornato.getStato());
     }
@@ -77,7 +77,7 @@ class OrdineControllerTest {
         factory.getOrdineDAO().save(ordine);
 
         assertThrows(InvalidStateTransitionException.class,
-                () -> controller.aggiornaStato(1L, StatoOrdineEnum.DELIVERED)); // da CREATED non valido
+                () -> controller.aggiornaStato(1L, "DELIVERED")); // da CREATED non valido
     }
 
     @Test

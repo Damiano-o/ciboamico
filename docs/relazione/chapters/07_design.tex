@@ -11,8 +11,9 @@ CiboAmico follows the \textbf{Boundary--Control--Entity} pattern. The VOPC
     \item each use case owns exactly \textbf{one application controller};
     \item boundaries exchange data with controllers \textbf{exclusively via
     beans (DTO)}: no entity reaches the view;
-    \item controllers are \textbf{stateless} and resolve the current user from
-    the session singleton;
+    \item controllers are \textbf{stateless}: the current user is passed as a
+    parameter by the view, which resolves it from the session singleton
+    (SessionManager);
     \item business logic resides in the entities.
 \end{itemize}
 
