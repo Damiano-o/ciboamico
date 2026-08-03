@@ -41,5 +41,6 @@
 \contentsline {section}{\numberline {9.2}Persistence}{24}{section.9.2}%
 \contentsline {chapter}{\numberline {10}Public Links and Conclusions}{26}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Public Links}{26}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Conclusions}{26}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Future Work}{26}{section.10.3}%
+\contentsline {section}{\numberline {10.2}Work Allocation Matrix}{26}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Conclusions}{27}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Future Work}{27}{section.10.4}%
