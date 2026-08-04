@@ -130,5 +130,6 @@ Chapter~\ref{ch:links}.
 Every defect found during the NotebookLM-assisted verification was fixed with
 a dedicated regression test. In particular, the order controller now resolves
 the vendor from the product's whole-part back-reference, and the purchase flow
-(UC-04) is covered by three targeted tests asserting state transitions
-(BR-04).
+(UC-04) is covered by five targeted tests (unauthenticated user, product not
+found, vendor resolution from the product, stock reduction, and over-request
+rejection) asserting the business rules (BR-03/BR-04).
