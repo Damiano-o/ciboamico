@@ -14,7 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SonarCloud: esclusioni componenti grafiche per non falsare le metriche
-             (le Boundary JavaFX richiedono display; viste minimali non testate) -->
+             (le Boundary JavaFX richiedono display; viste minimali non testate).
+             NOTA (verifica NotebookLM): il layer di persistenza (DAO/JDBC) è codice
+             applicativo valutato → NON escluso, deve avere zero code smell. -->
         <sonar.projectKey>ciboamico</sonar.projectKey>
         <sonar.organization>ciboamico-ispw</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -23,13 +25,9 @@
         <sonar.exclusions>
             **/boundary/**,
             **/bootstrap/**,
-            **/impl/jdbc/**,
             **/*.fxml,
             **/*.css
         </sonar.exclusions>
-        <sonar.coverage.exclusions>
-            **/impl/jdbc/**
-        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>

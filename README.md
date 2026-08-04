@@ -17,7 +17,14 @@ mvn compile          # compila
 mvn test             # esegue i test (82 test)
 mvn jacoco:report    # report coverage (target/site/jacoco)
 mvn verify           # test + quality gate JaCoCo ≥ 80%
-mvn javafx:run       # avvia l'app JavaFX (modalità DEMO con dati seed)
+mvn javafx:run       # avvia l'app GUI JavaFX (modalità DEMO con dati seed)
+```
+
+Doppia interfaccia (Abstract Factory `ViewFactory`):
+
+```bash
+mvn javafx:run              # GUI (default)
+mvn exec:java -Dexec.mainClass="it.uniroma2.ispw.ciboamico.bootstrap.MainCLI"   # CLI
 ```
 
 Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,

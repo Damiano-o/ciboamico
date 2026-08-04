@@ -24,6 +24,38 @@ The DAO JDBC implementations require a real MySQL instance and the JavaFX
 boundaries require a display; they are excluded from the automated coverage
 and covered by manual tests (documented in the repository).
 
+\section{Breaking Coverage}
+
+La suite segue la classificazione teorica della \emph{Breaking Coverage}
+[Falessi]: ogni test viene categorizzato in base a cosa accadrebbe se un bug
+fosse introdotto nel codice coperto.
+
+\begin{description}
+    \item[Optimistic Coverage] La suite passa al 100\% sulla riga coperta
+    ma un difetto latente non verrebbe rilevato: il test \texttt{OrdineTest}
+    verifica la macchina a stati \texttt{cambiaStato} (BR-04) ma il metodo
+    \texttt{ripristinaStato} (usato dai DAO per il caricamento) esegue
+    l'assegnazione senza validazione: un test che guardasse solo la riga
+    dell'assegnazione passerebbe anche con una transizione invalida salvata
+    in persistenza.
+    \item[Pessimistic Coverage] Il test fallisce pur essendo il codice
+    corretto, perché forza un input irraggiungibile nell'uso reale:
+    \texttt{OrdineTest} tenta la transizione \texttt{DELIVERED}\textrightarrow
+    \texttt{CREATED}, che nessun flusso applicativo pu\`o generare
+    (\texttt{assertThrows(InvalidStateTransitionException)}): il test \`e
+    volutamente pessimista per certificare la guardia della macchina a stati.
+    \item[Impossible Coverage] Linee che gestiscono condizioni eccezionali
+    non riproducibili in ambiente di test: la connessione SMTP
+    (\texttt{JakartaMailAdapter}), le chiamate HTTP a servizi esterni
+    (\texttt{OpenFoodFactsAdapter}) e il driver MySQL JDBC richiedono
+    infrastruttura reale; sono escluse dalle metriche e coperte da test
+    manuali (documentati nel repository), mantenendo la copertura automatica
+    rappresentativa della sola logica applicativa.
+\end{description}
+
+Ogni classe di test \`e annotata con l'autore
+(\texttt{@author}) per la tracciabilit\`a individuale.
+
 \section{Coverage}
 
 \begin{table}[H]

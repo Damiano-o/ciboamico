@@ -16,7 +16,7 @@ public final class Navigator {
 
     private static Navigator instance;
     private Stage stage;
-    private final Map<String, ViewFactory> registry = new HashMap<>();
+    private final Map<String, ViewBuilder> registry = new HashMap<>();
 
     private Navigator() { }
 
@@ -31,13 +31,13 @@ public final class Navigator {
         this.stage = stage;
     }
 
-    public void register(String viewName, ViewFactory factory) {
+    public void register(String viewName, ViewBuilder factory) {
         registry.put(viewName, factory);
     }
 
     /** Cambia schermata: crea la Scene la prima volta, poi sostituisce la root. */
     public void switchTo(String viewName) {
-        ViewFactory factory = registry.get(viewName);
+        ViewBuilder factory = registry.get(viewName);
         if (factory == null) {
             throw new IllegalArgumentException("View non registrata: " + viewName);
         }

@@ -20,10 +20,7 @@ public final class MainApplication extends Application {
     @Override
     public void start(Stage stage) {
         // In modalità DEMO carica i dati seed (utenti, prodotti, ricette).
-        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
-                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
-            demo.seedDemoData();
-        }
+        seedDemoDataSeNecessario();
 
         Navigator navigator = Navigator.getInstance();
         navigator.init(stage);
@@ -59,5 +56,14 @@ public final class MainApplication extends Application {
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
         launch(args);
+    }
+
+    /** Seed DEMO condiviso tra GUI e CLI (doppia interfaccia). */
+    public static void seedDemoDataSeNecessario() {
+        ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
+        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
+                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
+            demo.seedDemoData();
+        }
     }
 }

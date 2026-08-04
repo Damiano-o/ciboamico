@@ -67,9 +67,15 @@ and persistence layer (DAOFactory with Demo/FS/JDBC concrete factories).}
 \begin{itemize}
     \item \textbf{Singleton} -- \texttt{SessionManager},
     \texttt{ApplicationModeManager}: single session and application mode;
-    \item \textbf{Abstract Factory} -- \texttt{DAOFactory} with
+    \item \textbf{Abstract Factory (DAO)} -- \texttt{DAOFactory} with
     \texttt{DemoDAOFactory}, \texttt{FSDAOFactory}, \texttt{JDBCDAOFactory}:
     coherent family of DAOs switchable at startup (NFR-01);
+    \item \textbf{Abstract Factory (View)} -- \texttt{ViewFactory} (classe
+    astratta con \texttt{getFactory()} statico, integra Singleton): sceglie a
+    runtime la famiglia di boundary \texttt{JavaFXViewFactory} (GUI) oppure
+    \texttt{CLIViewFactory} (CLI); i prodotti astratti sono le interfacce
+    \texttt{IView} (\texttt{display()}). I controller applicativi restano
+    invariati (doppia interfaccia, criterio d'esame);
     \item \textbf{Strategy} -- \texttt{StrictMatchingStrategy},
     \texttt{SubstitutionMatchingStrategy}: interchangeable matching algorithms;
     \item \textbf{Facade} -- \texttt{RicettaMatchingFacade}: single entry
@@ -82,6 +88,42 @@ and persistence layer (DAOFactory with Demo/FS/JDBC concrete factories).}
     \item \textbf{Whole-Part} -- \texttt{Utente} aggregates \texttt{Ruolo}
     (dynamic role metamorfosi, D-02).
 \end{itemize}
+
+\subsection{Doppia interfaccia CLI/GUI}
+Il sistema espone due famiglie di boundary (requisito del corso): la GUI
+JavaFX e una CLI testuale. Entrambe implementano \texttt{IView.display()}
+(scambio esclusivo di Bean con i controller). All'avvio
+\texttt{ViewFactory.configure(\"gui\"|\"cli\")} seleziona la family e
+\texttt{ViewFactory.getFactory()} (Singleton) restituisce la factory concreta:
+\begin{itemize}
+    \item \texttt{JavaFXViewFactory} -- delega al \texttt{Navigator}
+    (\texttt{switchTo}) le schermate già registrate;
+    \item \texttt{CLIViewFactory} -- viste testuali (\texttt{Scanner}) con
+    menu ruolo-aware: login (UC-11), inventario (UC-01), ricette (UC-02),
+    lista spesa (UC-05), marketplace (UC-06), catalogo venditore (UC-07),
+    crea ricetta (UC-08), admin (UC-09/UC-12), ordini (UC-10).
+\end{itemize}
+Entry point: \texttt{Main [gui|cli]} (default gui).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=1.6cm]
+\tikzstyle{absf}=[rectangle,draw,double,minimum width=3.2cm,minimum height=0.8cm]
+\tikzstyle{conf}=[rectangle,draw,minimum width=3.2cm,minimum height=0.8cm]
+\tikzstyle{prod}=[rectangle,draw,dashed,minimum width=3.2cm,minimum height=0.8cm]
+\node (vf) [absf] {\texttt{ViewFactory} (abstract)};
+\node (fx) [conf, below left=of vf] {\texttt{JavaFXViewFactory}};
+\node (cli) [conf, below right=of vf] {\texttt{CLIViewFactory}};
+\node (view) [prod, below=of fx, xshift=1.6cm, align=center] {\texttt{<<interface>> IView}\\ \texttt{+ display()}};
+\draw[->] (vf) -- (fx);
+\draw[->] (vf) -- (cli);
+\draw[->, dashed] (fx) -- node[right,font=\scriptsize]{create} (view);
+\draw[->, dashed] (cli) -- node[right,font=\scriptsize]{create} (view);
+\node[right=2.8cm of vf, font=\scriptsize, align=left] {\texttt{+ getFactory() : ViewFactory}\\ \texttt{+ configure(String family)}};
+\end{tikzpicture}
+\caption{Abstract Factory delle view: doppia interfaccia CLI/GUI.}
+\label{fig:view-factory}
+\end{figure}
 
 \section{Activity Diagram (UC-04)}
 
