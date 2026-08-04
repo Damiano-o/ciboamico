@@ -13,4 +13,8 @@ public interface OrdineDAO {
     Ordine findById(Long id);
     List<Ordine> findByVenditore(String venditoreEmail);
     List<Ordine> findByCompratore(String compratoreEmail);
+
+    /** Prossimo id disponibile per un nuovo ordine (Information Expert: il DAO
+     *  possiede i dati di persistenza e genera gli identificativi). */
+    long getNextId();
 }

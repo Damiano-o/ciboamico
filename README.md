@@ -34,7 +34,7 @@ Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
 
 - **BCE** (Boundary-Control-Entity): 10 Boundary JavaFX ↔ 9 Controller (1:1 con UC) ↔ Entity
 - **Bean/DTO**: unico canale Boundary→Control (mai Entity verso la GUI)
-- **Pattern GoF**: Abstract Factory (DAO), Singleton (SessionManager, ApplicationModeManager), Strategy (matching ricette), Facade (motore ricette), Observer (notifiche ordine), Adapter (OpenFoodFacts)
+- **Pattern GoF**: Abstract Factory (DAO), Singleton (SessionManager, ApplicationModeManager), Lazy Initialization + caching (OrdineLazyFactory), Strategy (matching ricette), Facade (motore ricette), Observer (notifiche ordine), Adapter (OpenFoodFacts)
 - **Persistenza doppia**: JDBC (MySQL) ↔ FS (JSON) ↔ Demo — switch via `ApplicationModeManager` (NFR-01)
 - **Whole-Part**: `Utente` aggrega `Ruolo` (metamorfosi dinamica dei ruoli)
 

@@ -4,6 +4,7 @@ import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +29,8 @@ class OrdinaProdottoControllerTest {
     @BeforeEach
     void setup() {
         factory = new DemoDAOFactory();
+        OrdineLazyFactory.reset();
+        OrdineLazyFactory.getInstance(factory);
         controller = new OrdinaProdottoController(factory);
         // Utente loggato = compratore
         UtenteBean bean = new UtenteBean();
@@ -38,6 +41,7 @@ class OrdinaProdottoControllerTest {
 
     @AfterEach
     void cleanup() {
+        OrdineLazyFactory.reset();
         SessionManager.getInstance().logout();
     }
 

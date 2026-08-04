@@ -47,6 +47,14 @@ public class FSOrdineDAO implements OrdineDAO {
     }
 
     @Override
+    public long getNextId() {
+        return carica().stream()
+                .mapToLong(Ordine::getIdOrdine)
+                .max()
+                .orElse(0L) + 1L;
+    }
+
+    @Override
     public Ordine findById(Long id) {
         return carica().stream().filter(o -> o.getIdOrdine().equals(id)).findFirst().orElse(null);
     }

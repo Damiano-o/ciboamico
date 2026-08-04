@@ -6,6 +6,7 @@ import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import java.util.List;
+import it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory;
 import it.uniroma2.ispw.ciboamico.pattern.observer.VenditoreNotifier;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
@@ -40,13 +41,6 @@ public class OrdinaProdottoController {
                 .toList();
     }
 
-    private long ultimoId = 0;
-
-    /** Genera un id ordine univoco per il processo (stateless rispetto all'utente). */
-    private synchronized long ordineId() {
-        return System.currentTimeMillis() + (++ultimoId);
-    }
-
     /**
      * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
      */
@@ -79,7 +73,8 @@ public class OrdinaProdottoController {
                 ? prodotto.getVenditore().getUtente()
                 : compratore;
 
-        Ordine ordine = new Ordine(ordineId(), compratore, venditore);
+        // L'id è assegnato dal DAO (Information Expert) tramite la LazyFactory con cache
+        Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(compratore, venditore);
         ordine.subscribe(new VenditoreNotifier()); // Observer: notifica venditore
 
         VoceOrdine voce = new VoceOrdine(prodotto, 1);

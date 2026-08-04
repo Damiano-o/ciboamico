@@ -19,6 +19,18 @@ public class JDBCOrdineDAO implements OrdineDAO {
     private static final String COL_VENDITORE = "venditore_email";
 
     @Override
+    public long getNextId() {
+        String sql = "SELECT COALESCE(MAX(id), 0) + 1 FROM ordini";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getLong(1) : 1L;
+        } catch (SQLException e) {
+            throw new DAOException("Errore generazione id ordine", e);
+        }
+    }
+
+    @Override
     public Ordine save(Ordine ordine) {
         String sql = "INSERT INTO ordini (id, compratore_email, venditore_email, stato, totale) "
                 + "VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE stato = VALUES(stato), totale = VALUES(totale)";

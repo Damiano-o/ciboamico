@@ -68,6 +68,10 @@ and persistence layer (DAOFactory with Demo/FS/JDBC concrete factories).}
 \begin{itemize}
     \item \textbf{Singleton} -- \texttt{SessionManager},
     \texttt{ApplicationModeManager}: single session and application mode;
+    \item \textbf{Lazy Initialization + caching} -- \texttt{OrdineLazyFactory}
+    (Singleton with holder idiom): creates orders assigning the id from the
+    DAO (Information Expert) and keeps an in-RAM cache of the session orders
+    (pattern valued by De Angelis in the reference 30/30 projects);
     \item \textbf{Abstract Factory (DAO)} -- \texttt{DAOFactory} with
     \texttt{DemoDAOFactory}, \texttt{FSDAOFactory}, \texttt{JDBCDAOFactory}:
     coherent family of DAOs switchable at startup (NFR-01);
@@ -202,7 +206,7 @@ no fork/join in this UC.}
 \draw[->,red] (ctl.south)+(0,-3.6) -- (b.south)+(0,-3.5) node[midway,above]{\scriptsize \textcolor{red}{ex}};
 % transaction: setAutoCommit(false) + update + save + commit/rollback
 \draw[->] (ctl.south)+(0,-3.9) -- (pdao.south)+(0,-4.0) node[midway,above]{\scriptsize update(prodotto)};
-\draw[->] (ctl.south)+(0,-4.3) -- (e.south)+(0,-4.4) node[midway,above]{\scriptsize new Ordine(bean, compratore, venditore)};
+\draw[->] (ctl.south)+(0,-4.3) -- (e.south)+(0,-4.4) node[midway,above]{\scriptsize OrdineLazyFactory.newOrdine(compratore, venditore)};
 \draw[->] (ctl.south)+(0,-4.6) -- (odao.south)+(0,-4.7) node[midway,above]{\scriptsize save(ordine)};
 \draw[->] (odao.south)+(0,-5.1) -- (ctl.south)+(0,-5.2) node[midway,above]{\scriptsize commit()/rollback()};
 % return bean (dashed)
