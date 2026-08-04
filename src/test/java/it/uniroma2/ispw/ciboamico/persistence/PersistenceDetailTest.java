@@ -42,19 +42,7 @@ class PersistenceDetailTest {
     }
 
     @Test
-    void testProdottoFindById() {
-
-        FSProdottoDAO dao = new FSProdottoDAO();
-        Prodotto p = new Prodotto("Pomodori", 2.0, 50, LocalDate.now().plusDays(7),
-                UnitaEnum.GRAMMI, venditore());
-        dao.save(p);
-
-        Prodotto trovato = dao.findById((long) p.getNome().hashCode());
-
-        assertNotNull(trovato);
-    }
-    @Test
-    void testProdottoFindByIdParte2() {
+    void testProdottoFindById() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         Prodotto p = new Prodotto("Pomodori", 2.0, 50, LocalDate.now().plusDays(7),
                 UnitaEnum.GRAMMI, venditore());
@@ -66,19 +54,7 @@ class PersistenceDetailTest {
         assertEquals("Pomodori", trovato.getNome());}
 
     @Test
-    void testInventarioFSSaveAndFind() {
-
-        FSProdottoDAO dao = new FSProdottoDAO();
-        ProdottoInventario pi = new ProdottoInventario("Latte", 2,
-                LocalDate.now().plusDays(10), "Frigo", UnitaEnum.LITRI, null);
-        dao.saveInventario("anna@cibo.it", pi);
-
-        List<ProdottoInventario> inventario = dao.findInventario("anna@cibo.it");
-
-        assertEquals(1, inventario.size());
-    }
-    @Test
-    void testInventarioFSSaveAndFindParte2() {
+    void testInventarioFSSaveAndFind() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         ProdottoInventario pi = new ProdottoInventario("Latte", 2,
                 LocalDate.now().plusDays(10), "Frigo", UnitaEnum.LITRI, null);
@@ -90,64 +66,7 @@ class PersistenceDetailTest {
         assertEquals("Latte", inventario.get(0).getNome());}
 
     @Test
-    void testFactoryConcrete() {
-
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-    }
-    @Test
-    void testFactoryConcreteParte2() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());}
-    @Test
-    void testFactoryConcreteParte3() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());
-        assertNotNull(fs.getRicettaDAO());}
-    @Test
-    void testFactoryConcreteParte4() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());
-        assertNotNull(fs.getRicettaDAO());
-        assertNotNull(fs.getOrdineDAO());}
-    @Test
-    void testFactoryConcreteParte5() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());
-        assertNotNull(fs.getRicettaDAO());
-        assertNotNull(fs.getOrdineDAO());
-
-        DAOFactory jdbc = new JDBCDAOFactory();
-        assertNotNull(jdbc.getUtenteDAO());}
-    @Test
-    void testFactoryConcreteParte6() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());
-        assertNotNull(fs.getRicettaDAO());
-        assertNotNull(fs.getOrdineDAO());
-
-        DAOFactory jdbc = new JDBCDAOFactory();
-        assertNotNull(jdbc.getUtenteDAO());
-        assertNotNull(jdbc.getProdottoDAO());}
-    @Test
-    void testFactoryConcreteParte7() {
-        DAOFactory fs = new FSDAOFactory();
-        assertNotNull(fs.getUtenteDAO());
-        assertNotNull(fs.getProdottoDAO());
-        assertNotNull(fs.getRicettaDAO());
-        assertNotNull(fs.getOrdineDAO());
-
-        DAOFactory jdbc = new JDBCDAOFactory();
-        assertNotNull(jdbc.getUtenteDAO());
-        assertNotNull(jdbc.getProdottoDAO());
-        assertNotNull(jdbc.getRicettaDAO());}
-    @Test
-    void testFactoryConcreteParte8() {
+    void testFactoryConcrete() throws Exception {
         DAOFactory fs = new FSDAOFactory();
         assertNotNull(fs.getUtenteDAO());
         assertNotNull(fs.getProdottoDAO());
@@ -161,35 +80,13 @@ class PersistenceDetailTest {
         assertNotNull(jdbc.getOrdineDAO());}
 
     @Test
-    void testStatoEnum() {
-
-        assertEquals("IN_ATTESA", StatoVenditoreEnum.IN_ATTESA.name());
-    }
-    @Test
-    void testStatoEnumParte2() {
-        assertEquals("IN_ATTESA", StatoVenditoreEnum.IN_ATTESA.name());
-        assertEquals("APPROVATA", StatoRicettaEnum.APPROVATA.name());}
-    @Test
-    void testStatoEnumParte3() {
+    void testStatoEnum() throws Exception {
         assertEquals("IN_ATTESA", StatoVenditoreEnum.IN_ATTESA.name());
         assertEquals("APPROVATA", StatoRicettaEnum.APPROVATA.name());
         assertEquals("DELIVERED", StatoOrdineEnum.DELIVERED.name());}
 
     @Test
-    void testUtenteGetRuoli() {
-
-        Utente u = new Utente("Mario", "m@cibo.it", "h");
-        u.aggiungiRuolo(new RuoloCliente());
-        assertEquals(1, u.getRuoli().size());
-    }
-    @Test
-    void testUtenteGetRuoliParte2() {
-        Utente u = new Utente("Mario", "m@cibo.it", "h");
-        u.aggiungiRuolo(new RuoloCliente());
-        assertEquals(1, u.getRuoli().size());
-        assertNotNull(u.getRuolo(RuoloCliente.class));}
-    @Test
-    void testUtenteGetRuoliParte3() {
+    void testUtenteGetRuoli() throws Exception {
         Utente u = new Utente("Mario", "m@cibo.it", "h");
         u.aggiungiRuolo(new RuoloCliente());
         assertEquals(1, u.getRuoli().size());

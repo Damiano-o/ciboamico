@@ -52,6 +52,22 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto findByNome(String nome) {
+        String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
+                + "venditore_zona, venditore_recapito FROM prodotti WHERE nome = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nome);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mappa(rs);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Errore ricerca prodotto per nome", e);
+        }
+    }
+
+    @Override
     public Prodotto save(Prodotto prodotto) {
         String sql = "INSERT INTO prodotti (nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito) VALUES (?, ?, ?, ?, ?, ?, ?)";

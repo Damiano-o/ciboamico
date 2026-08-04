@@ -29,7 +29,7 @@ class OrdineTest {
     }
 
     @Test
-    void testCalcolaTotale() {
+    void testCalcolaTotale() throws Exception {
         Prodotto pane = new Prodotto("Pane", 2.50, 10, java.time.LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditore().getRuolo(RuoloVenditore.class));
         Prodotto uovo = new Prodotto("Uovo", 0.50, 10, java.time.LocalDate.now().plusDays(20),
@@ -43,14 +43,14 @@ class OrdineTest {
     }
 
     @Test
-    void testSetStatoValid() {
+    void testSetStatoValid() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
         assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
-    void testSetStatoInvalid() {
+    void testSetStatoInvalid() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         // Sequenza valida fino a IN_DELIVERY (BR-04)
         ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
@@ -61,7 +61,7 @@ class OrdineTest {
     }
 
     @Test
-    void testAutoAcquistoVietato() {
+    void testAutoAcquistoVietato() throws Exception {
         Utente stesso = compratore(); // stesso utente compra il proprio prodotto
         assertThrows(BusinessValidationException.class,
                 () -> new Ordine(1L, stesso, stesso));

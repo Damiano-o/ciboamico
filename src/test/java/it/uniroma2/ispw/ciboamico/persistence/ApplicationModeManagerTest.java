@@ -18,38 +18,31 @@ class ApplicationModeManagerTest {
     }
 
     @Test
-    void testDefaultDemo() {
+    void testDefaultDemo() throws Exception {
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         assertEquals(ApplicationModeManager.MODE_DEMO, manager.getActiveMode());
     }
 
     @Test
-    void testSwitchModalita() {
-
-        ApplicationModeManager manager = ApplicationModeManager.getInstance();
-        manager.setActiveMode(ApplicationModeManager.MODE_FS);
-        assertEquals(ApplicationModeManager.MODE_FS, manager.getActiveMode());
-    }
-    @Test
-    void testSwitchModalitaParte2() {
+    void testSwitchModalita() throws Exception {
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         manager.setActiveMode(ApplicationModeManager.MODE_FS);
         assertEquals(ApplicationModeManager.MODE_FS, manager.getActiveMode());
         assertNotNull(manager.getDAOFactory());}
 
     @Test
-    void testModalitaNonValida() {
+    void testModalitaNonValida() throws Exception {
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         assertThrows(IllegalArgumentException.class, () -> manager.setActiveMode("XYZ"));
     }
 
     @Test
-    void testSingleton() {
+    void testSingleton() throws Exception {
         assertSame(ApplicationModeManager.getInstance(), ApplicationModeManager.getInstance());
     }
 
     @Test
-    void testConfigPropertiesEsiste() {
+    void testConfigPropertiesEsiste() throws Exception {
         // NFR-01: config.properties nelle risorse, letto all'avvio senza ricompilare
         var in = getClass().getClassLoader().getResourceAsStream("config.properties");
         assertNotNull(in, "config.properties deve esistere nelle risorse (NFR-01)");

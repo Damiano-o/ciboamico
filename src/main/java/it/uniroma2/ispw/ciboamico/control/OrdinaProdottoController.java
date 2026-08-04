@@ -40,6 +40,13 @@ public class OrdinaProdottoController {
                 .toList();
     }
 
+    private long ultimoId = 0;
+
+    /** Genera un id ordine univoco per il processo (stateless rispetto all'utente). */
+    private synchronized long ordineId() {
+        return System.currentTimeMillis() + (++ultimoId);
+    }
+
     /**
      * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
      */
@@ -48,8 +55,12 @@ public class OrdinaProdottoController {
         if (utente == null) {
             throw new IllegalStateException("Utente non autenticato");
         }
+        if (bean == null || bean.getNomeProdotto() == null || bean.getNomeProdotto().isBlank()) {
+            throw new IllegalArgumentException("Prodotto non selezionato");
+        }
 
-        Prodotto prodotto = prodottoDAO.findById(bean.getIdOrdine());
+        // La boundary seleziona il prodotto per nome (lookup esplicito, bean-only)
+        Prodotto prodotto = prodottoDAO.findByNome(bean.getNomeProdotto());
         if (prodotto == null) {
             throw new IllegalStateException("Prodotto non disponibile (2.c)");
         }
@@ -68,7 +79,7 @@ public class OrdinaProdottoController {
                 ? prodotto.getVenditore().getUtente()
                 : compratore;
 
-        Ordine ordine = new Ordine(bean.getIdOrdine(), compratore, venditore);
+        Ordine ordine = new Ordine(ordineId(), compratore, venditore);
         ordine.subscribe(new VenditoreNotifier()); // Observer: notifica venditore
 
         VoceOrdine voce = new VoceOrdine(prodotto, 1);

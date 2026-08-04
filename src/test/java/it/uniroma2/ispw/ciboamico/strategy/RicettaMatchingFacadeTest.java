@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 */
 class RicettaMatchingFacadeTest {
 
-    private Ricetta ricettaCompleta() {
+    private Ricetta ricettaCompleta() throws Exception {
         Ricetta r = new Ricetta("Pasta al pomodoro", "bollire", new RuoloNutrizionista());
         Prodotto pasta = new Prodotto("Pasta", 2.0, 100, LocalDate.now().plusDays(100),
                 UnitaEnum.GRAMMI, null);
@@ -30,45 +30,7 @@ class RicettaMatchingFacadeTest {
     }
 
     @Test
-    void testFacadeConInventarioCompleto() {
-
-        RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
-        ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
-                LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
-        ProdottoInventario pomodoro = new ProdottoInventario("Pomodoro", 5,
-                LocalDate.now().plusDays(5), "Frigo", UnitaEnum.PEZZI, null);
-
-        List<RicettaBean> beans = facade.getRecipes(List.of(pasta, pomodoro), List.of(ricettaCompleta()));
-
-        assertEquals(1, beans.size());
-    }
-    @Test
-    void testFacadeConInventarioCompletoParte2() {
-        RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
-        ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
-                LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
-        ProdottoInventario pomodoro = new ProdottoInventario("Pomodoro", 5,
-                LocalDate.now().plusDays(5), "Frigo", UnitaEnum.PEZZI, null);
-
-        List<RicettaBean> beans = facade.getRecipes(List.of(pasta, pomodoro), List.of(ricettaCompleta()));
-
-        assertEquals(1, beans.size());
-        assertEquals("Pasta al pomodoro", beans.get(0).getNome());}
-    @Test
-    void testFacadeConInventarioCompletoParte3() {
-        RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
-        ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
-                LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
-        ProdottoInventario pomodoro = new ProdottoInventario("Pomodoro", 5,
-                LocalDate.now().plusDays(5), "Frigo", UnitaEnum.PEZZI, null);
-
-        List<RicettaBean> beans = facade.getRecipes(List.of(pasta, pomodoro), List.of(ricettaCompleta()));
-
-        assertEquals(1, beans.size());
-        assertEquals("Pasta al pomodoro", beans.get(0).getNome());
-        assertEquals(2, beans.get(0).getIngredientiNomi().size());}
-    @Test
-    void testFacadeConInventarioCompletoParte4() {
+    void testFacadeConInventarioCompleto() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
                 LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
@@ -83,7 +45,7 @@ class RicettaMatchingFacadeTest {
         assertTrue(beans.get(0).haAlmenoDueIngredienti());}
 
     @Test
-    void testFacadeConSostituzione() {
+    void testFacadeConSostituzione() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         ProdottoInventario margarina = new ProdottoInventario("Margarina", 500,
                 LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
@@ -99,7 +61,7 @@ class RicettaMatchingFacadeTest {
     }
 
     @Test
-    void testFacadeSenzaRisultati() {
+    void testFacadeSenzaRisultati() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         List<RicettaBean> beans = facade.getRecipes(List.of(), List.of(ricettaCompleta()));
         assertTrue(beans.isEmpty());

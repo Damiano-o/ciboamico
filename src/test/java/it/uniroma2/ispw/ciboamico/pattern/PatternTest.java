@@ -29,7 +29,7 @@ class PatternTest {
     }
 
     @Test
-    void testVenditoreNotifier() {
+    void testVenditoreNotifier() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new VenditoreNotifier());
         ordine.cambiaStato(StatoOrdineEnum.CONFIRMED); // non deve lanciare
@@ -37,7 +37,7 @@ class PatternTest {
     }
 
     @Test
-    void testUtenteNotifier() {
+    void testUtenteNotifier() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new UtenteNotifier());
         ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
@@ -45,18 +45,7 @@ class PatternTest {
     }
 
     @Test
-    void testSessionManager() {
-
-        SessionManager manager = SessionManager.getInstance();
-        UtenteBean bean = new UtenteBean();
-        bean.setEmail("test@cibo.it");
-        bean.setUsername("Test");
-        manager.setLoggedUser(bean);
-
-        assertSame(bean, SessionManager.getInstance().getLoggedUser());
-    }
-    @Test
-    void testSessionManagerParte2() {
+    void testSessionManager() throws Exception {
         SessionManager manager = SessionManager.getInstance();
         UtenteBean bean = new UtenteBean();
         bean.setEmail("test@cibo.it");
@@ -69,19 +58,7 @@ class PatternTest {
         assertNull(SessionManager.getInstance().getLoggedUser());}
 
     @Test
-    void testRuoloVenditoreStato() {
-
-        RuoloVenditore v = new RuoloVenditore("RM", "tel");
-        assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
-    }
-    @Test
-    void testRuoloVenditoreStatoParte2() {
-        RuoloVenditore v = new RuoloVenditore("RM", "tel");
-        assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
-        v.setStato(StatoVenditoreEnum.APPROVATO);
-        assertEquals("RM", v.getZona());}
-    @Test
-    void testRuoloVenditoreStatoParte3() {
+    void testRuoloVenditoreStato() throws Exception {
         RuoloVenditore v = new RuoloVenditore("RM", "tel");
         assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
         v.setStato(StatoVenditoreEnum.APPROVATO);

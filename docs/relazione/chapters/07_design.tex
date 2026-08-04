@@ -18,7 +18,8 @@ CiboAmico follows the \textbf{Boundary--Control--Entity} pattern. The VOPC
 \end{itemize}
 
 The final model is summarised in Table~\ref{tab:vopc}. The boundary
-column reports the real JavaFX view classes; the bean column lists the DTOs
+column reports the real JavaFX/CLI view classes (two views per UC for the
+double interface requirement); the bean column lists the DTOs
 interposed between boundary and control (bean-only rule); the adapters are
 the technical boundaries that mediate the interaction with the external
 systems. The Payment Service is declared as an external actor of UC-04 for
@@ -28,21 +29,21 @@ Implementation Remarks in Chapter~\ref{ch:intro}); the email notification
 
 \begin{table}[H]
 \centering
-\caption{BCE classes (1 controller per use case).}
+\caption{BCE classes (1 controller per use case; 2 boundaries per UC for CLI+GUI double interface).}
 \label{tab:vopc}
 \begin{tabular}{@{}lllll@{}}
 \toprule
-\textbf{UC} & \textbf{Boundary} & \textbf{Bean} & \textbf{Control} & \textbf{Main Entities} \\
+\textbf{UC} & \textbf{Boundary (GUI/CLI)} & \textbf{Bean} & \textbf{Control} & \textbf{Main Entities} \\
 \midrule
-UC-01 & InventarioView & ProdottoBean & GestisciInventarioController & ProdottoInventario \\
-UC-02 & RicetteView & RicettaBean & TrovaRicetteController & Ricetta, ProdottoInventario \\
-UC-03 & ListaSpesaView & RicettaBean & GestisciListaSpesaController & Ricetta, Ingrediente \\
-UC-04 & MarketplaceView & OrdineBean & OrdinaProdottoController & Ordine, Prodotto \\
-UC-05 & CatalogoVenditoreView & ProdottoBean & GestisciCatalogoVenditoreController & Prodotto, RuoloVenditore \\
-UC-06 & OrdiniRicevutiView & OrdineBean & GestisciOrdiniRicevutiController & Ordine \\
-UC-07 & RicetteNutrizionistaView & RicettaBean & GestisciRicetteNutrizionistaController & Ricetta, RuoloNutrizionista \\
-UC-08 & AdminView & RicettaBean, UtenteBean & ApprovazioneController & RuoloVenditore, Ricetta \\
-UC-11 & LoginView & AutenticazioneBean & AutenticazioneController & Utente \\
+UC-01 & InventarioView / InventarioCLIView & ProdottoBean & GestisciInventarioController & ProdottoInventario \\
+UC-02 & RicetteView / RicetteCLIView & RicettaBean & TrovaRicetteController & Ricetta, ProdottoInventario \\
+UC-03 & ListaSpesaView / ListaSpesaCLIView & RicettaBean & GestisciListaSpesaController & Ricetta, Ingrediente \\
+UC-04 & MarketplaceView / MarketplaceCLIView & OrdineBean & OrdinaProdottoController & Ordine, Prodotto \\
+UC-05 & CatalogoVenditoreView / CatalogoVenditoreCLIView & ProdottoBean & GestisciCatalogoVenditoreController & Prodotto, RuoloVenditore \\
+UC-06 & OrdiniRicevutiView / OrdiniRicevutiCLIView & OrdineBean & GestisciOrdiniRicevutiController & Ordine \\
+UC-07 & RicetteNutrizionistaView / RicetteNutrizionistaCLIView & RicettaBean & GestisciRicetteNutrizionistaController & Ricetta, RuoloNutrizionista \\
+UC-08 & AdminView / AdminCLIView & RicettaBean, UtenteBean & ApprovazioneController & RuoloVenditore, Ricetta \\
+UC-11 & LoginView / LoginCLIView & AutenticazioneBean & AutenticazioneController & Utente \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -56,7 +57,7 @@ architectural patterns; the remaining controllers follow the same shape.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/class-diagram-core.png}
+\includegraphics[width=0.98\textwidth]{figures/class-diagram-core.jpg}
 \caption{Design-level class diagram: UC-04 core (boundary/bean/control/entity)
 and persistence layer (DAOFactory with Demo/FS/JDBC concrete factories).}
 \label{fig:classdiagram}
@@ -134,8 +135,8 @@ Entry point: \texttt{Main [gui|cli]} (default gui).
 \node[act] (s1) {Select product};
 \node[act,right of=s1,xshift=2.6cm] (s2) {Verify availability};
 \node[diamond,draw,right of=s2,xshift=2.4cm,aspect=2] (d1) {quantity available?};
-\node[act,below of=d1] (s3) {Show insufficient quantity error};
-\node[act,below of=s2,yshift=-2.4cm] (s4) {Show order summary};
+\node[act,below of=d1] (s3) {Provide insufficient quantity error};
+\node[act,below of=s2,yshift=-2.4cm] (s4) {Provide order summary};
 \node[act,right of=d1,xshift=2.2cm] (s5) {Confirm order};
 \node[diamond,draw,right of=s5,xshift=2.2cm,aspect=2] (d2) {confirmed?};
 \node[act,below of=d2] (s6) {Abort};
@@ -148,7 +149,9 @@ Entry point: \texttt{Main [gui|cli]} (default gui).
 \draw[->] (s5)--(d2); \draw[->] (d2)--node[left]{no}(s6);
 \draw[->] (d2)--node[above]{yes}(s7); \draw[->] (s7)--(s8); \draw[->] (s8)--(s9);
 \end{tikzpicture}
-\caption{Activity diagram of UC-04 (simplified).}
+\caption{Activity diagram of UC-04 (simplified). Other UCs follow the same
+pattern: action nodes (rounded rectangles), decisions (diamonds, OR-exclusive),
+no fork/join in this UC.}
 \label{fig:activity}
 \end{figure}
 
@@ -161,37 +164,55 @@ Entry point: \texttt{Main [gui|cli]} (default gui).
 \node[inst] (c) {Client};
 \node[inst,right of=c,xshift=1.8cm] (b) {MarketplaceView};
 \node[inst,right of=b,xshift=1.8cm] (ctl) {OrdinaProdottoController};
-\node[inst,right of=ctl,xshift=1.8cm] (pr) {Prodotto};
+\node[inst,right of=ctl,xshift=1.8cm] (sm) {SessionManager};
+\node[inst,right of=sm,xshift=1.8cm] (pr) {Prodotto};
 \node[inst,right of=pr,xshift=1.8cm] (e) {Ordine};
 \node[inst,right of=e,xshift=1.8cm] (pdao) {ProdottoDAO};
 \node[inst,right of=pdao,xshift=1.8cm] (odao) {OrdineDAO};
 \node[inst,right of=odao,xshift=1.8cm] (not) {VenditoreNotifier};
-\draw[dashed] (c)--(c.south)+(0,-4.2); \draw[dashed] (b)--(b.south)+(0,-4.2);
-\draw[dashed] (ctl)--(ctl.south)+(0,-4.2); \draw[dashed] (pr)--(pr.south)+(0,-4.2);
-\draw[dashed] (e)--(e.south)+(0,-4.2); \draw[dashed] (pdao)--(pdao.south)+(0,-4.2);
-\draw[dashed] (odao)--(odao.south)+(0,-4.2); \draw[dashed] (not)--(not.south)+(0,-4.2);
+% Lifelines (dashed)
+\draw[dashed] (c.south) -- +(0,-5.5);
+\draw[dashed] (b.south) -- +(0,-5.5);
+\draw[dashed] (ctl.south) -- +(0,-5.5);
+\draw[dashed] (sm.south) -- +(0,-5.5);
+\draw[dashed] (pr.south) -- +(0,-5.5);
+\draw[dashed] (e.south) -- +(0,-5.5);
+\draw[dashed] (pdao.south) -- +(0,-5.5);
+\draw[dashed] (odao.south) -- +(0,-5.5);
+\draw[dashed] (not.south) -- +(0,-5.5);
+% Activation boxes (rectangles on lifelines)
+\fill[blue!10] (ctl.south)+(0,-1.2) rectangle +(1.6,-1.8);
+\fill[blue!10] (sm.south)+(0,-1.5) rectangle +(1.6,-0.4);
+\fill[blue!10] (pr.south)+(0,-2.5) rectangle +(1.6,-0.6);
+\fill[blue!10] (ctl.south)+(0,-3.2) rectangle +(1.6,-1.2);
+\fill[blue!10] (pdao.south)+(0,-3.9) rectangle +(1.6,-0.4);
+\fill[blue!10] (e.south)+(0,-4.3) rectangle +(1.6,-0.4);
+\fill[blue!10] (odao.south)+(0,-4.8) rectangle +(1.6,-0.6);
+\fill[blue!10] (ctl.south)+(0,-5.2) rectangle +(1.6,-0.3);
 % sync messages (full arrows)
-\draw[->] (c.south)+(0,-0.4) -- (b.south)+(0,-0.6) node[midway,above]{\scriptsize click(Ordina)};
-\draw[->] (b.south)+(0,-0.9) -- (ctl.south)+(0,-1.2) node[midway,above]{\scriptsize submitOrdine(bean)};
-\draw[->] (ctl.south)+(0,-1.5) -- (pdao.south)+(0,-1.7) node[midway,above]{\scriptsize findById(id)};
-\draw[->] (pdao.south)+(0,-2.0) -- (ctl.south)+(0,-2.1) node[midway,above]{\scriptsize prodotto};
-\draw[->] (ctl.south)+(0,-2.4) -- (pr.south)+(0,-2.6) node[midway,above]{\scriptsize riduciDisponibilita(1)};
+\draw[->] (c.south)+(0,-0.4) -- (b.south)+(0,-0.5) node[midway,above]{\scriptsize clickOrdina()};
+\draw[->] (b.south)+(0,-0.8) -- (ctl.south)+(0,-1.0) node[midway,above]{\scriptsize submitOrdine(bean)};
+\draw[->] (ctl.south)+(0,-1.3) -- (sm.south)+(0,-1.4) node[midway,above]{\scriptsize getLoggedUser()};
+\draw[->,dashed] (sm.south)+(0,-1.7) -- (ctl.south)+(0,-1.8) node[midway,above]{\scriptsize UtenteBean};
+\draw[->] (ctl.south)+(0,-2.0) -- (pdao.south)+(0,-2.1) node[midway,above]{\scriptsize findById(id)};
+\draw[->,dashed] (pdao.south)+(0,-2.4) -- (ctl.south)+(0,-2.5) node[midway,above]{\scriptsize Prodotto};
+\draw[->] (ctl.south)+(0,-2.7) -- (pr.south)+(0,-2.8) node[midway,above]{\scriptsize riduciDisponibilita(1)};
 % exception: BusinessValidationException risale alla boundary
-\draw[->,red] (pr.south)+(0,-3.0) -- (ctl.south)+(0,-3.1) node[midway,above]{\scriptsize \textcolor{red}{BusinessValidationException}};
-\draw[->,red] (ctl.south)+(0,-3.4) -- (b.south)+(0,-3.2) node[midway,above]{\scriptsize \textcolor{red}{ex}};
-% transaction: update + save
+\draw[->,red] (pr.south)+(0,-3.2) -- (ctl.south)+(0,-3.3) node[midway,above]{\scriptsize \textcolor{red}{BusinessValidationException}};
+\draw[->,red] (ctl.south)+(0,-3.6) -- (b.south)+(0,-3.5) node[midway,above]{\scriptsize \textcolor{red}{ex}};
+% transaction: setAutoCommit(false) + update + save + commit/rollback
 \draw[->] (ctl.south)+(0,-3.9) -- (pdao.south)+(0,-4.0) node[midway,above]{\scriptsize update(prodotto)};
-\draw[->] (ctl.south)+(0,-4.3) -- (e.south)+(0,-4.6) node[midway,above]{\scriptsize initialize() /* new Ordine, CREATED */};
-\draw[->] (ctl.south)+(0,-5.0) -- (odao.south)+(0,-5.3) node[midway,above]{\scriptsize save(ordine)};
-\draw[->] (odao.south)+(0,-5.7) -- (ctl.south)+(0,-5.6) node[midway,above]{\scriptsize commit()};
+\draw[->] (ctl.south)+(0,-4.3) -- (e.south)+(0,-4.4) node[midway,above]{\scriptsize new Ordine(bean, compratore, venditore)};
+\draw[->] (ctl.south)+(0,-4.6) -- (odao.south)+(0,-4.7) node[midway,above]{\scriptsize save(ordine)};
+\draw[->] (odao.south)+(0,-5.1) -- (ctl.south)+(0,-5.2) node[midway,above]{\scriptsize commit()/rollback()};
 % return bean (dashed)
-\draw[->,dashed] (ctl.south)+(0,-6.1) -- (b.south)+(0,-6.0) node[midway,above]{\scriptsize OrdineBean};
+\draw[->,dashed] (ctl.south)+(0,-5.5) -- (b.south)+(0,-5.4) node[midway,above]{\scriptsize OrdineBean};
 % async notification (open arrow)
-\draw[->>,dashed] (ctl.south)+(0,-6.5) -- (not.south)+(0,-6.9) node[midway,above]{\scriptsize notificaVenditore()};
-\end{tikzpicture}
+\draw[->>,dashed] (ctl.south)+(0,-5.8) -- (not.south)+(0,-5.9) node[midway,above]{\scriptsize onStatoCambiato(ordine)}
+;\end{tikzpicture}
 \caption{Sequence diagram of UC-04: synchronous calls (full arrows), return
 bean (dashed), exception propagation (red), async Observer notification
-(open arrow).}
+(open arrow). Activation boxes on lifelines; JDBC transaction visible.}
 \label{fig:sequence}
 \end{figure}
 
@@ -213,6 +234,8 @@ bean (dashed), exception propagation (red), async Observer notification
 \draw[->] (in)--(del) node[midway,above]{\scriptsize deliver / null};
 \end{tikzpicture}
 \caption{State diagram of Ordine (trigger / behaviour, guards mutually
-exclusive per BR-04).}
+exclusive per BR-04). Implemented via GoF State Pattern in
+\texttt{Ordine.cambiaStato()}. Other entities (Ricetta, RuoloVenditore) have
+analogous state machines.}
 \label{fig:state}
 \end{figure}

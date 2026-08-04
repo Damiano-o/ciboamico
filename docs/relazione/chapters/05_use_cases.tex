@@ -24,8 +24,8 @@ the code.
 \node[draw,ellipse,fill=gray!20] at (-1.8,7) {Vendor};
 \node[draw,ellipse,fill=gray!20] at (-1.8,1) {Nutritionist};
 \node[draw,ellipse,fill=gray!20] at (-1.8,9.5) {Administrator};
-\node[draw,ellipse,fill=gray!40] at (15,5) {OpenFoodFacts};
-\node[draw,ellipse,fill=gray!40] at (15,2) {Payment Service};
+\node[draw,fill=gray!40,rounded corners] at (15,5) {OpenFoodFacts};
+\node[draw,fill=gray!40,rounded corners] at (15,2) {Payment Service};
 % Use cases
 \node[draw,ellipse,fill=white] at (3,9) {UC-01 Manage Inventory};
 \node[draw,ellipse,fill=white] at (3,7.5) {UC-02 Find Compatible Recipes};
@@ -35,14 +35,14 @@ the code.
 \node[draw,ellipse,fill=white] at (6,3) {UC-06 Manage Received Orders};
 \node[draw,ellipse,fill=white] at (9.5,8) {UC-07 Create Recipe};
 
-ode[draw,ellipse,fill=white] at (9.5,5) {UC-08 Manage Pending Approvals};
+\node[draw,ellipse,fill=white] at (9.5,5) {UC-08 Approve Vendors and Recipes};
 
-ode[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Manage Platform Catalogue};
+\node[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Browse Platform Catalogue};
 \node[draw,ellipse,fill=white] at (3,2.5) {UC-11 Authenticate};
-% include relationships
-\draw[->,dashed] (6,8.5) -- (3,8.4);     % UC-04 includes UC-11
-\draw[->,dashed] (6,4.5) -- (3,4);       % UC-05 includes UC-11
-\draw[->,dashed] (6,3) -- (3,2.5);       % UC-06 includes UC-11
+% include relationships (dashed with <<include>> stereotype)
+\draw[->,dashed] (6,8.5) -- node[above,font=\scriptsize] {\texttt{<<include>>}} (3,8.4);     % UC-04 includes UC-11
+\draw[->,dashed] (6,4.5) -- node[above,font=\scriptsize] {\texttt{<<include>>}} (3,4);       % UC-05 includes UC-11
+\draw[->,dashed] (6,3) -- node[above,font=\scriptsize] {\texttt{<<include>>}} (3,2.5);       % UC-06 includes UC-11
 % actor connections
 \draw[->] (-1.8,4) -- (2.2,9.5);
 \draw[->] (-1.8,4) -- (2.2,6.3);
@@ -50,9 +50,10 @@ ode[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Manage Platform Catalogue};
 \draw[->] (-1.8,7) -- (5.2,3.4);
 \draw[->] (-1.8,1) -- (8.7,7.8);
 \draw[->] (-1.8,9.5) -- (8.7,5.3);
-\draw[->] (15,5) -- (12.5,6);
 % Payment Service: sistema esterno collegato a UC-04 (il sistema avvia l'API)
 \draw[->] (6,8.5) -- (13.5,4); % UC-04 -> Payment Service (evitando gli altri ovali)
+% OpenFoodFacts: il sistema chiama l'API esterna per barcode lookup
+\draw[->] (6,7.5) -- (13.5,5.5); % UC-01/UC-02 -> OpenFoodFacts
 % legend
 \node[draw,fill=gray!60,text=white] at (1,11) {\footnotesize Grey = excluded from evaluation};
 \end{tikzpicture}
@@ -77,7 +78,7 @@ the buyer and the vendor; the vendor receives a notification.
 \begin{enumerate}
     \item The Client selects a product from the marketplace.
     \item The System verifies the availability of the product.
-    \item The System shows the order summary with the total price.
+    \item The System provides the order summary with the total price.
     \item The Client confirms the order.
     \item The System records the order with state \emph{CREATED}.
     \item The System notifies the vendor of the new order.
@@ -102,24 +103,23 @@ the buyer and the vendor; the vendor receives a notification.
 \subsection*{UC-01 Manage Inventory}
 \textbf{Actors:} Client. \textbf{Pre:} authenticated.
 \textbf{MSS:} (1) the Client provides product data; (2) the System validates
-the data (FR-01); (3) the System stores the product in the inventory;
+the data (FR-01); (3) the System records the product in the inventory;
 (4) the System confirms. \textbf{Extensions:} 2a missing mandatory data; 2b
 invalid quantity. \textbf{Post:} product stored and visible in the expiry-
 ordered list (FR-02).
 
 \subsection*{UC-02 Find Compatible Recipes}
 \textbf{Actors:} Client. \textbf{Pre:} inventory not empty.
-\textbf{MSS:} (1) the System retrieves the inventory; (2) the System retrieves
+\textbf{MSS:} (1) the System obtains the inventory; (2) the System obtains
 the approved recipes; (3) the System matches ingredients (strict or with
-substitutions, D-01); (4) the System presents the compatible recipes.
+substitutions, D-01); (4) the System provides the compatible recipes.
 \textbf{Post:} the client sees only the feasible recipes.
 
 \subsection*{UC-03 Compute Shopping List}
 \textbf{Actors:} Client. \textbf{Pre:} a recipe exists and is approved.
-\textbf{MSS:} (1) the Client selects a recipe; (2) the System retrieves the
+\textbf{MSS:} (1) the Client selects a recipe; (2) the System obtains the
 recipe and the inventory; (3) the System compares the recipe ingredients
-with the inventory (strict or with substitutions, D-01); (4) the System
-presents the missing ingredients with quantities. \textbf{Post:} an exact shopping list is shown
+with the inventory (strict or with substitutions, D-01); (4) the System provides the missing ingredients with quantities. \textbf{Post:} an exact shopping list is shown
 (FR-05).
 
 \subsection*{UC-05 Publish Product}
@@ -130,24 +130,23 @@ product. \textbf{Extensions:} 2a price $\leq 0$; 2b expired product.
 
 \subsection*{UC-06 Manage Received Orders}
 \textbf{Actors:} Vendor. \textbf{Pre:} at least one order exists for the
-vendor. \textbf{MSS:} (1) the System presents the orders in \emph{CREATED} or
+vendor. \textbf{MSS:} (1) the System provides the orders in \emph{CREATED} or
 \emph{CONFIRMED} state; (2) the Vendor updates the state of an order;
-(3) the System validates the transition (BR-04); (4) the System stores the new
-state and notifies the buyer. \textbf{Extensions:} 3a invalid transition.
+(3) the System validates the transition (BR-04); (4) the System records the new state and notifies the buyer. \textbf{Extensions:} 3a invalid transition.
 
 \subsection*{UC-07 Create Recipe}
 \textbf{Actors:} Nutritionist (the only role allowed). \textbf{Pre:}
 authenticated as nutritionist. \textbf{MSS:} (1) the Nutritionist provides the
 recipe with at least two ingredients (BR-05); (2) the System creates the
-recipe in \emph{PROPOSED} state; (3) the System stores the recipe.
+recipe in \emph{PROPOSED} state; (3) the System records the recipe.
 \textbf{Extensions:} 1a fewer than two ingredients.
 
 \subsection*{UC-08 Manage Pending Approvals}
 \textbf{Actors:} Administrator. \textbf{Pre:} administrator authenticated.
 \textbf{MSS:} (1)~the Administrator requests the pending approvals;
-(2)~the System retrieves the categorised list of pending vendor registrations
+(2)~the System obtains the categorised list of pending vendor registrations
 and recipes in \emph{PROPOSED} state; (3)~the Administrator selects a pending
-item; (4)~the System presents its details; (5)~the Administrator approves,
+item; (4)~the System provides its details; (5)~the Administrator approves,
 suspends or rejects the item; (6)~the System updates the state, notifies the
 interested actor and confirms. \textbf{Extensions:} 2a empty queue; 5a
 rejection/suspension returns to step 2. \textbf{Post:} item status updated

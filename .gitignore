@@ -6,3 +6,14 @@ data/
 *.log
 .DS_Store
 temp/
+out/
+docs/relazione/out/
+docs/relazione/main.aux
+docs/relazione/main.log
+docs/relazione/main.toc
+docs/relazione/main.lof
+docs/relazione/main.lot
+docs/relazione/main.out
+docs/relazione/main.fdb_latexmk
+docs/relazione/main.fls
+

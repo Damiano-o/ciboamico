@@ -67,40 +67,33 @@ class InventarioCatalogoControllerTest {
     }
 
     @Test
-    void testAggiungiProdottoValidoRestituisceBean() {
+    void testAggiungiProdottoValidoRestituisceBean() throws Exception {
         ProdottoBean bean = inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         assertNotNull(bean);
     }
 
     @Test
-    void testAggiungiProdottoValidoNomeCorretto() {
+    void testAggiungiProdottoValidoNomeCorretto() throws Exception {
         ProdottoBean bean = inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         assertEquals("Latte", bean.getNome());
     }
 
     @Test
-    void testAggiungiProdottoDatiMancanti() {
+    void testAggiungiProdottoDatiMancanti() throws Exception {
         ProdottoBean bean = new ProdottoBean(); // vuoto
         assertThrows(IllegalArgumentException.class,
                 () -> inventarioController.aggiungiProdotto(bean, "demo@cibo.it"));
     }
 
     @Test
-    void testInventarioOrdinatoPerScadenzaContieneOrdine() {
-
-        inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
-        List<ProdottoBean> lista = inventarioController.visualizzaInventarioOrdinato("demo@cibo.it");
-        assertFalse(lista.isEmpty());
-    }
-    @Test
-    void testInventarioOrdinatoPerScadenzaContieneOrdineParte2() {
+    void testInventarioOrdinatoPerScadenzaContieneOrdine() throws Exception {
         inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         List<ProdottoBean> lista = inventarioController.visualizzaInventarioOrdinato("demo@cibo.it");
         assertFalse(lista.isEmpty());
         assertEquals("Latte", lista.get(0).getNome());}
 
     @Test
-    void testPubblicaProdottoVenditoreNonApprovato() {
+    void testPubblicaProdottoVenditoreNonApprovato() throws Exception {
         loginVenditore(false); // IN_ATTESA
         ProdottoBean bean = beanValido();
         assertThrows(IllegalStateException.class,
@@ -108,21 +101,14 @@ class InventarioCatalogoControllerTest {
     }
 
     @Test
-    void testPubblicaProdottoVenditoreApprovato() {
-
-        loginVenditore(true);
-        ProdottoBean bean = catalogoController.pubblicaProdotto(beanValido());
-        assertNotNull(bean);
-    }
-    @Test
-    void testPubblicaProdottoVenditoreApprovatoParte2() {
+    void testPubblicaProdottoVenditoreApprovato() throws Exception {
         loginVenditore(true);
         ProdottoBean bean = catalogoController.pubblicaProdotto(beanValido());
         assertNotNull(bean);
         assertEquals("Latte", bean.getNome());}
 
     @Test
-    void testPubblicaProdottoPrezzoNonValido() {
+    void testPubblicaProdottoPrezzoNonValido() throws Exception {
         loginVenditore(true);
         ProdottoBean bean = beanValido();
         bean.setPrezzo(0.0);
@@ -131,14 +117,14 @@ class InventarioCatalogoControllerTest {
     }
 
     @Test
-    void testPubblicaProdottoUtenteNonLoggato() {
+    void testPubblicaProdottoUtenteNonLoggato() throws Exception {
         ProdottoBean bean = beanValido();
         assertThrows(IllegalStateException.class,
                 () -> catalogoController.pubblicaProdotto(bean));
     }
 
     @Test
-    void testUnitaEnumValori() {
+    void testUnitaEnumValori() throws Exception {
         assertSame(UnitaEnum.GRAMMI, UnitaEnum.valueOf("GRAMMI"));
     }
 }

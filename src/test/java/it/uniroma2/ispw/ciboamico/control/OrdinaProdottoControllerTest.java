@@ -49,22 +49,21 @@ class OrdinaProdottoControllerTest {
     }
 
     @Test
-    void testSubmitOrdineUtenteNull() {
+    void testSubmitOrdineUtenteNull() throws Exception {
         OrdineBean bean = new OrdineBean();
         assertThrows(IllegalStateException.class,
                 () -> controller.submitOrdine(bean, null));
     }
 
     @Test
-    void testSubmitOrdineProdottoNonTrovato() {
+    void testSubmitOrdineProdottoNonTrovato() throws Exception {
         OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine(999L); // non esiste nel catalogo demo
+        bean.setNomeProdotto("ProdottoInesistente");
         assertThrows(IllegalStateException.class, () -> controller.submitOrdine(bean, utenteBean()));
     }
 
     @Test
-    void testSubmitOrdineVenditoreDalProdotto() {
-
+    void testSubmitOrdineVenditoreDalProdotto() throws Exception {
         // Venditore con back-reference all'Utente
         Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");
@@ -75,65 +74,7 @@ class OrdinaProdottoControllerTest {
         factory.getProdottoDAO().save(prodotto);
 
         OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Pomodori".hashCode());
-        bean.setCompratoreId("mario@cibo.it");
-
-        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
-
-        assertNotNull(risultato);
-    }
-    @Test
-    void testSubmitOrdineVenditoreDalProdottoParte2() {
-        // Venditore con back-reference all'Utente
-        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
-        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
-        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
-
-        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
-                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
-        factory.getProdottoDAO().save(prodotto);
-
-        OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Pomodori".hashCode());
-        bean.setCompratoreId("mario@cibo.it");
-
-        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
-
-        assertNotNull(risultato);
-        assertNotNull(risultato.getIdOrdine());}
-    @Test
-    void testSubmitOrdineVenditoreDalProdottoParte3() {
-        // Venditore con back-reference all'Utente
-        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
-        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
-        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
-
-        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
-                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
-        factory.getProdottoDAO().save(prodotto);
-
-        OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Pomodori".hashCode());
-        bean.setCompratoreId("mario@cibo.it");
-
-        OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
-
-        assertNotNull(risultato);
-        assertNotNull(risultato.getIdOrdine());
-        assertEquals("CREATED", risultato.getStato());}
-    @Test
-    void testSubmitOrdineVenditoreDalProdottoParte4() {
-        // Venditore con back-reference all'Utente
-        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
-        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
-        utenteVenditore.aggiungiRuolo(rv); // setta back-reference
-
-        Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
-                LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, rv);
-        factory.getProdottoDAO().save(prodotto);
-
-        OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Pomodori".hashCode());
+        bean.setNomeProdotto("Pomodori");
         bean.setCompratoreId("mario@cibo.it");
 
         OrdineBean risultato = controller.submitOrdine(bean, utenteBean());
@@ -144,7 +85,7 @@ class OrdinaProdottoControllerTest {
         assertEquals(2.0, risultato.getTotale(), 1e-9);}
 
     @Test
-    void testSubmitOrdineRiduceDisponibilita() {
+    void testSubmitOrdineRiduceDisponibilita() throws Exception {
         Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");
         utenteVenditore.aggiungiRuolo(rv);
@@ -154,7 +95,7 @@ class OrdinaProdottoControllerTest {
         factory.getProdottoDAO().save(prodotto);
 
         OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Mele".hashCode());
+        bean.setNomeProdotto("Mele");
         bean.setCompratoreId("mario@cibo.it");
 
         controller.submitOrdine(bean, utenteBean());
@@ -162,7 +103,7 @@ class OrdinaProdottoControllerTest {
     }
 
     @Test
-    void testAcquistoQuantitaEccessivaLanciaEccezione() {
+    void testAcquistoQuantitaEccessivaLanciaEccezione() throws Exception {
         Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");
         utenteVenditore.aggiungiRuolo(rv);
@@ -174,13 +115,13 @@ class OrdinaProdottoControllerTest {
 
         // Prima acquisto: consuma l'unico pezzo disponibile
         OrdineBean bean = new OrdineBean();
-        bean.setIdOrdine((long) "Uova".hashCode());
+        bean.setNomeProdotto("Uova");
         bean.setCompratoreId("mario@cibo.it");
         controller.submitOrdine(bean, utenteBean());
 
         // Secondo acquisto: quantità non più disponibile (estensione 2a)
         OrdineBean bean2 = new OrdineBean();
-        bean2.setIdOrdine((long) "Uova".hashCode());
+        bean2.setNomeProdotto("Uova");
         bean2.setCompratoreId("mario@cibo.it");
         assertThrows(BusinessValidationException.class,
                 () -> controller.submitOrdine(bean2, utenteBean()));

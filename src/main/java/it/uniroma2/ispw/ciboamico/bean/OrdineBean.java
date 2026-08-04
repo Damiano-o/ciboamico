@@ -6,6 +6,7 @@ package it.uniroma2.ispw.ciboamico.bean;
 public class OrdineBean {
 
     private Long idOrdine;
+    private String nomeProdotto;
     private Double totale;
     private String stato;
     private String compratoreId;
@@ -15,6 +16,9 @@ public class OrdineBean {
 
     public Long getIdOrdine() { return idOrdine; }
     public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }
+    /** Prodotto selezionato dalla boundary (chiave di lookup per UC-04). */
+    public String getNomeProdotto() { return nomeProdotto; }
+    public void setNomeProdotto(String nomeProdotto) { this.nomeProdotto = nomeProdotto; }
     public Double getTotale() { return totale; }
     public void setTotale(Double totale) { this.totale = totale; }
     public String getStato() { return stato; }

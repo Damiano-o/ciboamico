@@ -42,7 +42,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginValidRestituisceBean() {
+    void testLoginValidRestituisceBean() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -53,7 +53,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginValidEmailCorretta() {
+    void testLoginValidEmailCorretta() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -64,7 +64,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginConBeanRestituisceBean() {
+    void testLoginConBeanRestituisceBean() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -78,7 +78,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginConBeanEmailCorretta() {
+    void testLoginConBeanEmailCorretta() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -92,7 +92,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginBeanEmailNonValida() {
+    void testLoginBeanEmailNonValida() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -103,7 +103,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginInvalidEmail() {
+    void testLoginInvalidEmail() throws Exception {
         AutenticazioneController controller =
                 new AutenticazioneController(mock(DAOFactory.class));
         assertThrows(AutenticazioneException.class,
@@ -111,7 +111,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginWrongPassword() {
+    void testLoginWrongPassword() throws Exception {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));

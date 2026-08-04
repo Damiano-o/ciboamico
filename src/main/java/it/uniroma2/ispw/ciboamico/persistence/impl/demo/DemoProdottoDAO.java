@@ -30,6 +30,13 @@ public class DemoProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto findByNome(String nome) {
+        return catalogo.values().stream()
+                .filter(p -> p.getNome().equalsIgnoreCase(nome))
+                .findFirst().orElse(null);
+    }
+
+    @Override
     public Prodotto save(Prodotto prodotto) {
         catalogo.put(nextId++, prodotto);
         return prodotto;

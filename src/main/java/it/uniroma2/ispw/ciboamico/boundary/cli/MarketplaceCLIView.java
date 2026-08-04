@@ -45,7 +45,7 @@ public class MarketplaceCLIView implements IView {
         }
         try {
             OrdineBean bean = new OrdineBean();
-            bean.setIdOrdine((long) nomeProdotto.hashCode());
+            bean.setNomeProdotto(nomeProdotto);
             OrdineBean risultato = controller.submitOrdine(bean, utente);
             System.out.printf("Ordine creato ✓ — stato %s, totale %.2f EUR%n",
                     risultato.getStato(), risultato.getTotale());

@@ -21,18 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DemoDAOTest {
 
     @Test
-    void testUtenteRoundtrip() {
-
-        DemoUtenteDAO dao = new DemoUtenteDAO();
-        Utente u = new Utente("Mario", "mario@cibo.it", "hash");
-        dao.save(u);
-
-        Utente trovato = dao.findByEmail("mario@cibo.it");
-
-        assertNotNull(trovato);
-    }
-    @Test
-    void testUtenteRoundtripParte2() {
+    void testUtenteRoundtrip() throws Exception {
         DemoUtenteDAO dao = new DemoUtenteDAO();
         Utente u = new Utente("Mario", "mario@cibo.it", "hash");
         dao.save(u);
@@ -43,7 +32,7 @@ class DemoDAOTest {
         assertEquals("Mario", trovato.getNome());}
 
     @Test
-    void testProdottoSaveAndFind() {
+    void testProdottoSaveAndFind() throws Exception {
         DemoProdottoDAO dao = new DemoProdottoDAO();
         RuoloVenditore venditore = new RuoloVenditore("RM", "tel");
         Prodotto p = new Prodotto("Pane", 2.0, 10, LocalDate.now().plusDays(5),
@@ -53,5 +42,30 @@ class DemoDAOTest {
         List<Prodotto> tutti = dao.findAll();
 
         assertFalse(tutti.isEmpty());
+    }
+
+    @Test
+    void testProdottoFindByNome() throws Exception {
+        DemoProdottoDAO dao = new DemoProdottoDAO();
+        RuoloVenditore venditore = new RuoloVenditore("RM", "tel");
+        dao.save(new Prodotto("Pane", 2.0, 10, LocalDate.now().plusDays(5),
+                UnitaEnum.PEZZI, venditore));
+
+        Prodotto trovato = dao.findByNome("Pane");
+
+        assertNotNull(trovato);
+        assertEquals("Pane", trovato.getNome());
+    }
+
+    @Test
+    void testProdottoFindByNomeCaseInsensitive() throws Exception {
+        DemoProdottoDAO dao = new DemoProdottoDAO();
+        RuoloVenditore venditore = new RuoloVenditore("RM", "tel");
+        dao.save(new Prodotto("Pane", 2.0, 10, LocalDate.now().plusDays(5),
+                UnitaEnum.PEZZI, venditore));
+
+        Prodotto trovato = dao.findByNome("pane");
+
+        assertNotNull(trovato);
     }
 }

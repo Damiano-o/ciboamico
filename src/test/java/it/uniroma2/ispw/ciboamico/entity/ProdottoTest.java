@@ -21,7 +21,7 @@ class ProdottoTest {
     }
 
     @Test
-    void testValidaPrezzo() {
+    void testValidaPrezzo() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
         assertThrows(BusinessValidationException.class,
@@ -29,7 +29,7 @@ class ProdottoTest {
     }
 
     @Test
-    void testValidaQuantita() {
+    void testValidaQuantita() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
         assertThrows(BusinessValidationException.class,
@@ -37,7 +37,7 @@ class ProdottoTest {
     }
 
     @Test
-    void testValidaScadenzaPassata() {
+    void testValidaScadenzaPassata() throws Exception {
         RuoloVenditore venditore = venditoreApprovato();
         LocalDate scaduta = LocalDate.now().minusDays(1);
         assertThrows(BusinessValidationException.class,
@@ -45,7 +45,7 @@ class ProdottoTest {
     }
 
     @Test
-    void testRiduciDisponibilita() {
+    void testRiduciDisponibilita() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditoreApprovato());
         p.riduciDisponibilita(3);
@@ -53,15 +53,7 @@ class ProdottoTest {
     }
 
     @Test
-    void testRiduciDisponibilitaQuantitaEccessiva() {
-
-        Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
-                UnitaEnum.PEZZI, venditoreApprovato());
-        assertThrows(BusinessValidationException.class,
-                () -> p.riduciDisponibilita(10));
-    }
-    @Test
-    void testRiduciDisponibilitaQuantitaEccessivaParte2() {
+    void testRiduciDisponibilitaQuantitaEccessiva() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditoreApprovato());
         assertThrows(BusinessValidationException.class,

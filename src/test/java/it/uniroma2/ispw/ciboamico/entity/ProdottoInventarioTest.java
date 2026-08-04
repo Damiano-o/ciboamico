@@ -20,19 +20,19 @@ class ProdottoInventarioTest {
     }
 
     @Test
-    void testVerificaScadenzaEntroTreGiorni() {
+    void testVerificaScadenzaEntroTreGiorni() throws Exception {
         ProdottoInventario p = prodotto("Latte", LocalDate.now().plusDays(2));
         assertTrue(p.inScadenza());
     }
 
     @Test
-    void testScadenzaLontana() {
+    void testScadenzaLontana() throws Exception {
         ProdottoInventario p = prodotto("Pasta", LocalDate.now().plusDays(200));
         assertFalse(p.inScadenza());
     }
 
     @Test
-    void testOrdinamentoPerScadenza() {
+    void testOrdinamentoPerScadenza() throws Exception {
         List<ProdottoInventario> lista = List.of(
                 prodotto("Pasta", LocalDate.now().plusDays(200)),
                 prodotto("Latte", LocalDate.now().plusDays(2)));
@@ -41,7 +41,7 @@ class ProdottoInventarioTest {
     }
 
     @Test
-    void testQuantitaNonValida() {
+    void testQuantitaNonValida() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         assertThrows(IllegalArgumentException.class,
                 () -> new ProdottoInventario("Latte", 0, scadenza,
@@ -49,30 +49,7 @@ class ProdottoInventarioTest {
     }
 
     @Test
-    void testEqualsStessoContenuto() {
-
-        LocalDate scadenza = LocalDate.now().plusDays(5);
-        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        assertEquals(a, a);
-    }
-    @Test
-    void testEqualsStessoContenutoParte2() {
-        LocalDate scadenza = LocalDate.now().plusDays(5);
-        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        assertEquals(a, a);            // branch this == o
-        assertEquals(a, b);}
-    @Test
-    void testEqualsStessoContenutoParte3() {
-        LocalDate scadenza = LocalDate.now().plusDays(5);
-        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
-        assertEquals(a, a);            // branch this == o
-        assertEquals(a, b);            // identità = nome+scadenza+posizione
-        assertEquals(a.hashCode(), b.hashCode());}
-    @Test
-    void testEqualsStessoContenutoParte4() {
+    void testEqualsStessoContenuto() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
         ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
@@ -82,7 +59,7 @@ class ProdottoInventarioTest {
         assertNotEquals(a, "non-un-prodotto");}
 
     @Test
-    void testEqualsDiverso() {
+    void testEqualsDiverso() throws Exception {
         ProdottoInventario a = prodotto("Latte", LocalDate.now().plusDays(5));
         ProdottoInventario b = prodotto("Pasta", LocalDate.now().plusDays(5));
         assertNotEquals(a, b);

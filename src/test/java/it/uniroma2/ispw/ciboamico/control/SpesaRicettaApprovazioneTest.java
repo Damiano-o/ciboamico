@@ -62,19 +62,13 @@ class SpesaRicettaApprovazioneTest {
     }
 
     @Test
-    void testCreaRicettaValida() {
-
-        RicettaBean bean = ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
-        assertNotNull(bean);
-    }
-    @Test
-    void testCreaRicettaValidaParte2() {
+    void testCreaRicettaValida() throws Exception {
         RicettaBean bean = ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         assertNotNull(bean);
         assertEquals("Pasta al pomodoro", bean.getNome());}
 
     @Test
-    void testCreaRicettaMenoDiDueIngredienti() {
+    void testCreaRicettaMenoDiDueIngredienti() throws Exception {
         RicettaBean bean = new RicettaBean();
         bean.setNome("Solo pasta");
         bean.setIngredientiNomi(List.of("Pasta")); // 1 solo → BR-05
@@ -83,21 +77,7 @@ class SpesaRicettaApprovazioneTest {
     }
 
     @Test
-    void testCalcolaMancanze() {
-
-        // Ricetta con 2 ingredienti nel catalogo
-        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
-        // Inventario: solo Pasta → manca Pomodoro
-        ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
-                LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
-        factory.getProdottoDAO().saveInventario("demo@cibo.it", pasta);
-
-        List<ProdottoBean> mancanti = listaSpesa.calcolaMancanze("demo@cibo.it", "Pasta al pomodoro");
-
-        assertFalse(mancanti.isEmpty());
-    }
-    @Test
-    void testCalcolaMancanzeParte2() {
+    void testCalcolaMancanze() throws Exception {
         // Ricetta con 2 ingredienti nel catalogo
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Inventario: solo Pasta → manca Pomodoro
@@ -111,34 +91,20 @@ class SpesaRicettaApprovazioneTest {
         assertEquals("Pomodoro", mancanti.get(0).getNome());}
 
     @Test
-    void testApprovazioneVenditoreNonTrovato() {
+    void testApprovazioneVenditoreNonTrovato() throws Exception {
         assertThrows(IllegalArgumentException.class,
                 () -> approvazione.approvaVenditore("nessuno@cibo.it", true));
     }
 
     @Test
-    void testRicetteInAttesa() {
-
-        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
-        List<RicettaBean> inAttesa = approvazione.ricetteInAttesa();
-        assertEquals(1, inAttesa.size());
-    }
-    @Test
-    void testRicetteInAttesaParte2() {
+    void testRicetteInAttesa() throws Exception {
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         List<RicettaBean> inAttesa = approvazione.ricetteInAttesa();
         assertEquals(1, inAttesa.size());
         assertEquals("Pasta al pomodoro", inAttesa.get(0).getNome());}
 
     @Test
-    void testApprovaRicetta() {
-
-        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
-        // Prima dell'approvazione: 1 ricetta in attesa
-        assertEquals(1, approvazione.ricetteInAttesa().size());
-    }
-    @Test
-    void testApprovaRicettaParte2() {
+    void testApprovaRicetta() throws Exception {
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Prima dell'approvazione: 1 ricetta in attesa
         assertEquals(1, approvazione.ricetteInAttesa().size());

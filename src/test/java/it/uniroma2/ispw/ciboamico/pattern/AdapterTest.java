@@ -16,33 +16,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class AdapterTest {
 
     @Test
-    void testBarcodeTrovato() {
-
-        OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
-        ProdottoBean bean = adapter.findByBarcode("8000500310427");
-        assertNotNull(bean);
-    }
-    @Test
-    void testBarcodeTrovatoParte2() {
+    void testBarcodeTrovato() throws Exception {
         OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
         ProdottoBean bean = adapter.findByBarcode("8000500310427");
         assertNotNull(bean);
         assertEquals("Latte Intero", bean.getNome());}
 
     @Test
-    void testBarcodeNonTrovato() {
+    void testBarcodeNonTrovato() throws Exception {
         OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
         assertNull(adapter.findByBarcode("9999999999999"));
     }
 
     @Test
-    void testBarcodeNonValido() {
+    void testBarcodeNonValido() throws Exception {
         OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
         assertThrows(IllegalArgumentException.class, () -> adapter.findByBarcode(""));
     }
 
     @Test
-    void testMailInvia() {
+    void testMailInvia() throws Exception {
         JakartaMailAdapter adapter = new JakartaMailAdapter();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");
@@ -51,7 +44,7 @@ class AdapterTest {
     }
 
     @Test
-    void testMailDestinatarioNonValido() {
+    void testMailDestinatarioNonValido() throws Exception {
         JakartaMailAdapter adapter = new JakartaMailAdapter();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");

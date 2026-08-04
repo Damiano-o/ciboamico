@@ -70,6 +70,13 @@ public class FSProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto findByNome(String nome) {
+        return caricaCatalogo().stream()
+                .filter(p -> p.getNome().equalsIgnoreCase(nome))
+                .findFirst().orElse(null);
+    }
+
+    @Override
     public Prodotto save(Prodotto prodotto) {
         List<Prodotto> prodotti = caricaCatalogo();
         prodotti.add(prodotto);

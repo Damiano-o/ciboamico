@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 */
 class StrictMatchingStrategyTest {
 
-    private Ricetta ricetta(String nome, Prodotto... ingredienti) {
+    private Ricetta ricetta(String nome, Prodotto... ingredienti) throws Exception {
         Ricetta r = new Ricetta(nome, "istruzioni", new RuoloNutrizionista());
         for (Prodotto p : ingredienti) {
             r.aggiungiIngrediente(new Ingrediente(p, 1, UnitaEnum.PEZZI));
@@ -25,12 +25,12 @@ class StrictMatchingStrategyTest {
         return r;
     }
 
-    private Prodotto prodotto(String nome) {
+    private Prodotto prodotto(String nome) throws Exception {
         return new Prodotto(nome, 1.0, 10, LocalDate.now().plusDays(30), UnitaEnum.PEZZI, new RuoloVenditore("RM", "x"));
     }
 
     @Test
-    void testMatchCompatible() {
+    void testMatchCompatible() throws Exception {
         ProdottoInventario uovo = new ProdottoInventario("Uovo", 5, LocalDate.now().plusDays(10), "Frigo", UnitaEnum.PEZZI, prodotto("Uovo"));
         Ricetta ricetta = ricetta("Uova al tegamino", prodotto("Uovo"));
 
@@ -40,7 +40,7 @@ class StrictMatchingStrategyTest {
     }
 
     @Test
-    void testMatchNotCompatible() {
+    void testMatchNotCompatible() throws Exception {
         ProdottoInventario uovo = new ProdottoInventario("Uovo", 5, LocalDate.now().plusDays(10), "Frigo", UnitaEnum.PEZZI, prodotto("Uovo"));
         Ricetta ricetta = ricetta("Frittata", prodotto("Uovo"), prodotto("Farina"));
 

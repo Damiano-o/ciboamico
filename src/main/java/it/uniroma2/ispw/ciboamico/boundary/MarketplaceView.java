@@ -57,9 +57,9 @@ public class MarketplaceView {
         ordina.setId("btn-ordina");
         ordina.setOnAction(e -> {
             try {
-                // id simbolico del prodotto = hash del nome (coerente con DAO demo)
+                // La boundary trasmette il prodotto selezionato per nome (bean-only, lookup esplicito)
                 OrdineBean bean = new OrdineBean();
-                bean.setIdOrdine((long) nomeProdotto.getText().hashCode());
+                bean.setNomeProdotto(nomeProdotto.getText());
                 OrdineBean risultato = ordinaController.submitOrdine(bean, utente);
                 messaggio.setText("Ordine creato ✓ — stato " + risultato.getStato()
                         + ", totale " + String.format("%.2f", risultato.getTotale()) + " EUR");

@@ -14,7 +14,7 @@
 
 ```bash
 mvn compile          # compila
-mvn test             # esegue i test (82 test)
+mvn test             # esegue i test (92 test)
 mvn jacoco:report    # report coverage (target/site/jacoco)
 mvn verify           # test + quality gate JaCoCo ≥ 80%
 mvn javafx:run       # avvia l'app GUI JavaFX (modalità DEMO con dati seed)
@@ -40,11 +40,11 @@ Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
 
 ## 🧪 Test
 
-**66 test JUnit 5 + Mockito — tutti verdi ✅**
+**92 test JUnit 5 + Mockito — tutti verdi ✅**
 
 ```bash
-mvn test          # 66 test
-mvn verify        # test + quality gate JaCoCo ≥ 80% (attuale: 82.1%)
+mvn test          # 92 test
+mvn verify        # test + quality gate JaCoCo ≥ 80% (attuale: 81.4%)
 mvn jacoco:report # report HTML in target/site/jacoco
 ```
 

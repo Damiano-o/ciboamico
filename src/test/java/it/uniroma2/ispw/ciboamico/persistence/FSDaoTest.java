@@ -40,18 +40,7 @@ class FSDaoTest {
     }
 
     @Test
-    void testUtenteFSCircolare() {
-
-        FSUtenteDAO dao = new FSUtenteDAO();
-        Utente u = new Utente("Anna", "anna@cibo.it", "hash");
-        dao.save(u);
-
-        Utente trovato = dao.findByEmail("anna@cibo.it");
-
-        assertNotNull(trovato);
-    }
-    @Test
-    void testUtenteFSCircolareParte2() {
+    void testUtenteFSCircolare() throws Exception {
         FSUtenteDAO dao = new FSUtenteDAO();
         Utente u = new Utente("Anna", "anna@cibo.it", "hash");
         dao.save(u);
@@ -62,7 +51,7 @@ class FSDaoTest {
         assertEquals("Anna", trovato.getNome());}
 
     @Test
-    void testProdottoFSCircolare() {
+    void testProdottoFSCircolare() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         RuoloVenditore v = new RuoloVenditore("RM", "tel");
         Prodotto p = new Prodotto("Pomodori", 2.0, 50, LocalDate.now().plusDays(7),
@@ -75,7 +64,20 @@ class FSDaoTest {
     }
 
     @Test
-    void testRicettaFSCircolare() {
+    void testProdottoFindByNome() throws Exception {
+        FSProdottoDAO dao = new FSProdottoDAO();
+        RuoloVenditore v = new RuoloVenditore("RM", "tel");
+        dao.save(new Prodotto("Pomodori", 2.0, 50, LocalDate.now().plusDays(7),
+                UnitaEnum.GRAMMI, v));
+
+        Prodotto trovato = dao.findByNome("Pomodori");
+
+        assertNotNull(trovato);
+        assertEquals("Pomodori", trovato.getNome());
+    }
+
+    @Test
+    void testRicettaFSCircolare() throws Exception {
         FSRicettaDAO dao = new FSRicettaDAO();
         Ricetta r = new Ricetta("Insalata", "tagliare", new RuoloNutrizionista());
         dao.save(r);
@@ -84,20 +86,7 @@ class FSDaoTest {
     }
 
     @Test
-    void testOrdineFSCircolare() {
-
-        FSOrdineDAO dao = new FSOrdineDAO();
-        Utente c = new Utente("C", "c@cibo.it", "h");
-        Utente v = new Utente("V", "v@cibo.it", "h");
-        Ordine ordine = new Ordine(99L, c, v);
-        dao.save(ordine);
-
-        Ordine trovato = dao.findById(99L);
-
-        assertNotNull(trovato);
-    }
-    @Test
-    void testOrdineFSCircolareParte2() {
+    void testOrdineFSCircolare() throws Exception {
         FSOrdineDAO dao = new FSOrdineDAO();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");
@@ -110,17 +99,7 @@ class FSDaoTest {
         assertEquals("v@cibo.it", trovato.getVenditore().getEmail());}
 
     @Test
-    void testOrdineFSByVenditore() {
-
-        FSOrdineDAO dao = new FSOrdineDAO();
-        Utente c = new Utente("C", "c@cibo.it", "h");
-        Utente v = new Utente("V", "v@cibo.it", "h");
-        dao.save(new Ordine(1L, c, v));
-
-        assertEquals(1, dao.findByVenditore("v@cibo.it").size());
-    }
-    @Test
-    void testOrdineFSByVenditoreParte2() {
+    void testOrdineFSByVenditore() throws Exception {
         FSOrdineDAO dao = new FSOrdineDAO();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");

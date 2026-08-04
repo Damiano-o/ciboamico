@@ -36,7 +36,7 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testObserverNotificaCambioStato() {
+    void testObserverNotificaCambioStato() throws Exception {
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         final boolean[] notificato = {false};
         ordine.subscribe(o -> notificato[0] = true);
@@ -47,19 +47,7 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testVisualizzaOrdiniRicevuti() {
-
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
-
-        assertEquals(1, ricevuti.size());
-    }
-    @Test
-    void testVisualizzaOrdiniRicevutiParte2() {
+    void testVisualizzaOrdiniRicevuti() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
@@ -71,7 +59,7 @@ class OrdineControllerTest {
         assertEquals(StatoOrdineEnum.CREATED.name(), ricevuti.get(0).getStato());}
 
     @Test
-    void testAggiornaStatoOrdine() {
+    void testAggiornaStatoOrdine() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
@@ -83,7 +71,7 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testAggiornaStatoNonValido() {
+    void testAggiornaStatoNonValido() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
@@ -94,7 +82,7 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testVoceOrdineParziale() {
+    void testVoceOrdineParziale() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.50, 10, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, utenteVenditore().getRuolo(RuoloVenditore.class));
         VoceOrdine voce = new VoceOrdine(p, 2);
