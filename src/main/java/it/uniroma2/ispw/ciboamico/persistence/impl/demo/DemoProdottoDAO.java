@@ -44,9 +44,9 @@ public class DemoProdottoDAO implements ProdottoDAO {
 
     @Override
     public Prodotto update(Prodotto prodotto) {
-        int id = prodotto.getNome().hashCode();
+        String nome = prodotto.getNome();
         catalogo.entrySet().stream()
-                .filter(e -> e.getValue().getNome().hashCode() == id)
+                .filter(e -> e.getValue().getNome().equalsIgnoreCase(nome))
                 .findFirst()
                 .ifPresent(e -> catalogo.put(e.getKey(), prodotto));
         return prodotto;

@@ -87,9 +87,9 @@ public class FSProdottoDAO implements ProdottoDAO {
     @Override
     public Prodotto update(Prodotto prodotto) {
         List<Prodotto> prodotti = caricaCatalogo();
-        int id = prodotto.getNome().hashCode();
+        String nome = prodotto.getNome();
         for (int i = 0; i < prodotti.size(); i++) {
-            if (prodotti.get(i).getNome().hashCode() == id) {
+            if (prodotti.get(i).getNome().equalsIgnoreCase(nome)) {
                 prodotti.set(i, prodotto);
                 salvaCatalogo(prodotti);
                 return prodotto;
