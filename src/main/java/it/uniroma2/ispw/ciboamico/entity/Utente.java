@@ -1,5 +1,8 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +10,13 @@ import java.util.List;
  * Utente — classe radice del dominio.
  * Pattern Whole-Part: aggrega dinamicamente più Ruolo per superare la metamorfosi
  * (un utente può diventare venditore a runtime senza ristrutturare le classi).
+ * Information Expert (GRASP): la Entity conosce il proprio formato password e
+ * verifica le credenziali (checkPassword), come nei progetti 30/30 di riferimento.
  */
 public class Utente {
+
+    /** Salt fisso applicato all'hash SHA-256 (NFR-03). */
+    private static final String SALT = "ciboamico-salt";
 
     private String nome;
     private String email;
@@ -19,6 +27,22 @@ public class Utente {
         this.nome = nome;
         this.email = email;
         this.passwordHash = passwordHash;
+    }
+
+    /** Hash SHA-256 con salt (NFR-03) — Information Expert: la Entity possiede il formato. */
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest((SALT + password).getBytes(StandardCharsets.UTF_8));
+            return java.util.HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** Verifica la password in chiaro contro l'hash memorizzato (UC-11). */
+    public boolean checkPassword(String password) {
+        return passwordHash.equals(hashPassword(password));
     }
 
     /** Aggiunge un ruolo all'utente (metamorfosi dinamica) con back-reference. */

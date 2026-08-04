@@ -8,13 +8,10 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 /**
  * Control di UC-11 Autenticazione (incluso dagli altri UC).
- * Validazione email, hash password, sessione in SessionManager.
+ * Validazione email, verifica credenziali (delegata alla Entity Utente,
+ * Information Expert), sessione in SessionManager.
  */
 public class AutenticazioneController {
 
@@ -36,7 +33,7 @@ public class AutenticazioneController {
             throw new AutenticazioneException("Email non valida");
         }
         Utente utente = utenteDAO.findByEmail(email);
-        if (utente == null || !utente.getPasswordHash().equals(hash(password))) {
+        if (utente == null || !utente.checkPassword(password)) {
             throw new AutenticazioneException("Credenziali non valide");
         }
 
@@ -50,16 +47,5 @@ public class AutenticazioneController {
 
     public void logout() {
         SessionManager.getInstance().logout();
-    }
-
-    /** Hash SHA-256 con salt fisso (NFR-03). */
-    private String hash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(("ciboamico-salt" + password).getBytes(StandardCharsets.UTF_8));
-            return java.util.HexFormat.of().formatHex(digest);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }

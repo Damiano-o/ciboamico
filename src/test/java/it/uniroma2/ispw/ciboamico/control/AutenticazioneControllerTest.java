@@ -9,9 +9,6 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,16 +20,6 @@ import static org.mockito.Mockito.when;
 */
 class AutenticazioneControllerTest {
 
-    private String hash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            return java.util.HexFormat.of().formatHex(
-                    md.digest(("ciboamico-salt" + password).getBytes(StandardCharsets.UTF_8)));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     private DAOFactory factoryConUtente(Utente utente) {
         DAOFactory factory = mock(DAOFactory.class);
         UtenteDAO dao = mock(UtenteDAO.class);
@@ -43,7 +30,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginValidRestituisceBean() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
@@ -54,7 +41,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginValidEmailCorretta() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
@@ -65,7 +52,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginConBeanRestituisceBean() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
@@ -79,7 +66,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginConBeanEmailCorretta() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
@@ -93,7 +80,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginBeanEmailNonValida() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
         AutenticazioneBean bean = new AutenticazioneBean();
@@ -112,7 +99,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginWrongPassword() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 

@@ -51,4 +51,22 @@ class UtenteRicettaTest {
         r.aggiungiIngrediente(new Ingrediente(pomodoro, 3, UnitaEnum.PEZZI));
 
         assertTrue(r.haAlmenoDueIngredienti());}
+
+    @Test
+    void testCheckPasswordCorretta() {
+        Utente u = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("segreta"));
+        assertTrue(u.checkPassword("segreta"));
+    }
+
+    @Test
+    void testCheckPasswordErrata() {
+        Utente u = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("segreta"));
+        assertFalse(u.checkPassword("sbagliata"));
+    }
+
+    @Test
+    void testHashPasswordDeterministico() {
+        assertEquals(Utente.hashPassword("abc"), Utente.hashPassword("abc"));
+        assertNotEquals(Utente.hashPassword("abc"), Utente.hashPassword("abd"));
+    }
 }
