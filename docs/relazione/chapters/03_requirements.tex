@@ -15,29 +15,31 @@ from the graphical interface and is objectively testable.
     measure.
     \item \textbf{FR-02:} The system shall present the inventory ordered by
     ascending expiry date.
-    \item \textbf{FR-03:} The system shall flag the products whose expiry date
-    falls within the next three days.
-    \item \textbf{FR-04:} The system shall provide the details of a product
-    associated with a scanned barcode or a specific search query.
+    \item \textbf{FR-03:} The system shall notify the household about the products whose expiry date falls within the next three days from the current date, specifying the product name and the remaining days before expiry.
+    \item \textbf{FR-04:} The system shall provide the details of a product associated with a barcode or a specific search query.
     \item \textbf{FR-05:} The system shall compute the list of ingredients
     missing from the inventory for a selected recipe.
     \item \textbf{FR-06:} The system shall publish a product on the
-    marketplace only if the vendor is approved and the price is greater than
-    zero.
+    marketplace only if the vendor is approved, the price is greater than
+    zero and the expiry date is not in the past.
     \item \textbf{FR-07:} The system shall create a single direct order for
     one buyer and one vendor, tracking the order state transitions.
     \item \textbf{FR-08:} The system shall create a recipe with at least two
-    ingredients, published in the \emph{PROPOSED} state.
+    ingredients and shall set its state to \emph{PROPOSED}.
     \item \textbf{FR-09:} The system shall approve or suspend a vendor.
     \item \textbf{FR-10:} The system shall approve or reject a proposed
     recipe.
-    \item \textbf{FR-11:} The system shall authenticate a user by e-mail and
-    password, managing a session.
+    \item \textbf{FR-11:} The system shall authenticate a client, a vendor
+    or an administrator by e-mail and password, managing a session for the
+    authenticated profile.
     \item \textbf{FR-12:} The system shall find the recipes compatible with the
-    available inventory, including equivalent ingredient substitutions.
+    available inventory, including equivalent ingredient substitutions
+    defined in \textbf{BR-07}.
     \item \textbf{FR-13:} The system shall present to a vendor the orders
-    received for their products, with their current state, and shall update
-    the state upon the vendor's action.
+    received for their products, with their current state.
+    \item \textbf{FR-14:} The system shall update the state of an order
+    according to the transitions defined in \textbf{BR-04}, upon the vendor's
+    action on that order.
 \end{reqs}
 
 \section{Business Rules}
@@ -57,6 +59,8 @@ Business rules constrain the functional behaviour:
     \item \textbf{BR-05:} A recipe must contain at least two ingredients.
     \item \textbf{BR-06:} The price of a marketplace product must be greater
     than zero.
+    \item \textbf{BR-07:} An ingredient is equivalent to another when both
+    belong to the same ingredient category defined by the system.
 \end{reqs}
 
 \section{Non-Functional Requirements}
@@ -66,7 +70,7 @@ Business rules constrain the functional behaviour:
     modes (relational database, local JSON files, in-memory demo), selectable
     at application startup.
     \item \textbf{NFR-02:} The system shall protect data access against
-    SQL-injection by using prepared statements.
+    SQL-injection attacks.
     \item \textbf{NFR-03:} The system shall store user passwords using a
     one-way cryptographic hash with salt.
     \item \textbf{NFR-04:} The line coverage of the automated test suite shall
@@ -91,6 +95,10 @@ FR-02 & UC-01 & FR-06 & UC-05 & FR-10 & UC-08 \\
 FR-03 & UC-01 & FR-07 & UC-04 & FR-11 & UC-11 \\
 FR-04 & UC-01 & FR-08 & UC-07 & FR-12 & UC-02 \\
  & & & & FR-13 & UC-06 \\
+ & & & & FR-14 & UC-06 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Use case \textbf{UC-10} is excluded from the evaluation scope and therefore
+intentionally not mapped to any functional requirement.
