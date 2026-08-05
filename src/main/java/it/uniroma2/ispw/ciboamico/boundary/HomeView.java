@@ -60,15 +60,17 @@ public class HomeView {
                 : "Benvenuto in CiboAmico");
         benvenuto.getStyleClass().add("page-title");
         Label ruolo = new Label(utente != null
-                ? "Ruolo attivo: " + utente.getRuoloAttivo()
+                ? "Ruolo attivo: " + ruoloLeggibile(utente.getRuoloAttivo())
                 : "");
         ruolo.getStyleClass().add("page-subtitle");
 
-        VBox main = new VBox(4, benvenuto, ruolo);
+        VBox main = new VBox(8, benvenuto, ruolo);
         main.getStyleClass().add("home-main");
+        main.setAlignment(javafx.geometry.Pos.CENTER);
 
         // Griglia di card di navigazione (gap orizzontale/verticale 16)
-        FlowPane grid = new FlowPane(16, 16);
+        FlowPane grid = new FlowPane(20, 20);
+        grid.setPadding(new javafx.geometry.Insets(8, 0, 0, 0));
         grid.getChildren().addAll(
                 navCard("🥗", "Trova ricette", "Ricette compatibili con la dispensa", "ricette"),
                 navCard("📦", "Inventario", "Gestisci i prodotti e le scadenze", "inventario"),
@@ -81,7 +83,20 @@ public class HomeView {
         root.setCenter(main);
         root.getStyleClass().add("home-root");
         root.setPrefSize(900, 640);
+        BorderPane.setMargin(main, new Insets(20, 24, 20, 24));
         return root;
+    }
+
+    /** Traduzione del nome ruolo in forma leggibile. */
+    private String ruoloLeggibile(String ruolo) {
+        if (ruolo == null) return "—";
+        return switch (ruolo) {
+            case "RuoloCliente" -> "Cliente";
+            case "RuoloVenditore" -> "Venditore";
+            case "RuoloNutrizionista" -> "Nutrizionista";
+            case "RuoloAmministratore" -> "Amministratore";
+            default -> ruolo;
+        };
     }
 
     /** Bottone di navigazione laterale; {@code attivo} evidenzia la sezione corrente. */
@@ -99,7 +114,7 @@ public class HomeView {
     private VBox navCard(String icona, String titolo, String sottotitolo, String vista) {
         VBox card = new VBox(6);
         card.getStyleClass().add("card");
-        card.setPrefSize(230, 130);
+        card.setPrefSize(280, 150);
         Label ic = new Label(icona);
         ic.getStyleClass().add("icon");
         Label t = new Label(titolo);
