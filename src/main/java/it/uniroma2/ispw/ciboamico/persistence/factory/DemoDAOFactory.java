@@ -75,13 +75,31 @@ public class DemoDAOFactory extends DAOFactory {
         prodottoDAO.save(miele);
         prodottoDAO.save(pomodori);
 
-        // Inventario del client (per il matching ricette)
+        // Inventario del client (per il matching ricette) — dati demo ricchi
         prodottoDAO.saveInventario("mario@cibo.it",
                 new ProdottoInventario("Pasta", 1000, LocalDate.now().plusDays(200),
                         "Dispensa", UnitaEnum.GRAMMI, null));
         prodottoDAO.saveInventario("mario@cibo.it",
                 new ProdottoInventario("Passata di pomodoro", 500, LocalDate.now().plusDays(30),
                         "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Pomodori", 800, LocalDate.now().plusDays(4),
+                        "Frigo", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Latte intero", 1000, LocalDate.now(),
+                        "Frigo", UnitaEnum.ML, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Uova", 6, LocalDate.now().plusDays(1),
+                        "Frigo", UnitaEnum.PEZZI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Riso", 750, LocalDate.now().plusDays(300),
+                        "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Pepe nero", 3, LocalDate.now().plusDays(500),
+                        "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Formaggio stagionato", 250, LocalDate.now().plusDays(2),
+                        "Frigo", UnitaEnum.GRAMMI, null));
 
         // Ricetta PROPOSTA del nutrizionista
         Ricetta ricetta = new Ricetta("Pasta al pomodoro", "Bollire la pasta e condire.",

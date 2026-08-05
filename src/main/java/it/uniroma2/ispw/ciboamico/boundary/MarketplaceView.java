@@ -8,19 +8,23 @@ import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto).
- * Elenca i prodotti pubblicati e crea un ordine singolo diretto (D-03).
+ * Elenca i prodotti pubblicati e crea un ordine (D-03).
  * Scambia SOLO OrdineBean con il controller.
+ * UI: catalogo in card + selezione prodotto + pulsante ordina.
  */
 public class MarketplaceView {
 
@@ -37,29 +41,42 @@ public class MarketplaceView {
 
     public Parent build() {
         UtenteBean utente = SessionManager.getInstance().getLoggedUser();
-        Label titolo = new Label("Marketplace locale (UC-04)");
-        ListView<String> elenco = new ListView<>();
-        TextField nomeProdotto = new TextField();
-        nomeProdotto.setPromptText("Nome prodotto da ordinare");
-        Label messaggio = new Label();
 
         Button aggiorna = new Button("Aggiorna catalogo");
         aggiorna.setId("btn-catalogo");
+        aggiorna.setMaxWidth(Double.MAX_VALUE);
+
+        FlowPane catalogo = new FlowPane(16, 16);
+        catalogo.setPadding(new Insets(4, 0, 20, 0));
+
+        // Selezione prodotto
+        ComboBox<String> prodSelez = new ComboBox<>();
+        prodSelez.setPromptText("Scegli un prodotto");
+        prodSelez.setMaxWidth(Double.MAX_VALUE);
+
+        Button ordina = new Button("Ordina prodotto");
+        ordina.setId("btn-ordina");
+        ordina.setMaxWidth(Double.MAX_VALUE);
+        Label messaggio = new Label("Carica il catalogo e scegli un prodotto.");
+        messaggio.getStyleClass().add("page-subtitle");
+        messaggio.setWrapText(true);
+
         aggiorna.setOnAction(e -> {
             List<ProdottoBean> prodotti = ordinaController.getProdottiDisponibili();
-            elenco.getItems().setAll(prodotti.stream()
-                    .map(p -> p.getNome() + " — " + p.getPrezzo() + " EUR — "
-                            + p.getQuantita() + " disponibili")
-                    .toList());
+            catalogo.getChildren().clear();
+            prodotti.forEach(p -> catalogo.getChildren()
+                    .add(UiKit.card(p.getNome(),
+                            String.format("%.2f EUR · %s disponibili",
+                                    p.getPrezzo(), p.getQuantita().intValue()))));
+            prodSelez.getItems().setAll(prodotti.stream()
+                    .map(ProdottoBean::getNome).collect(Collectors.toList()));
+            messaggio.setText(prodotti.size() + " prodotti disponibili nel marketplace locale.");
         });
 
-        Button ordina = new Button("Ordina");
-        ordina.setId("btn-ordina");
         ordina.setOnAction(e -> {
             try {
-                // La boundary trasmette il prodotto selezionato per nome (bean-only, lookup esplicito)
                 OrdineBean bean = new OrdineBean();
-                bean.setNomeProdotto(nomeProdotto.getText());
+                bean.setNomeProdotto(prodSelez.getValue());
                 OrdineBean risultato = ordinaController.submitOrdine(bean, utente);
                 messaggio.setText("Ordine creato ✓ — stato " + risultato.getStato()
                         + ", totale " + String.format("%.2f", risultato.getTotale()) + " EUR");
@@ -70,12 +87,17 @@ public class MarketplaceView {
             }
         });
 
-        Button indietro = new Button("← Home");
-        indietro.setOnAction(e -> Navigator.getInstance().switchTo("home"));
+        BorderPane area = new BorderPane();
+        VBox ordinePanel = new VBox(8,
+                UiKit.field("Prodotto da ordinare"), prodSelez, ordina);
+        ordinePanel.getStyleClass().add("form-panel");
+        BorderPane.setMargin(ordinePanel, new Insets(0, 0, 0, 16));
+        area.setCenter(catalogo);
+        area.setRight(ordinePanel);
 
-        VBox root = new VBox(10, titolo, aggiorna, elenco,
-                nomeProdotto, ordina, messaggio, indietro);
-        root.setPrefSize(900, 640);
-        return root;
+        VBox corpo = new VBox(10, aggiorna, messaggio,
+                new Label("Catalogo prodotti"), area);
+        corpo.setPadding(new Insets(16, 0, 0, 0));
+        return UiKit.pagina("Marketplace locale", "UC-04 · ordina dalla vendita locale", corpo, "marketplace");
     }
 }

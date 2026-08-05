@@ -63,16 +63,14 @@ public final class DemoDriver {
     }
 
     private static void inventario() {
-        click("home", "btn-inventario");
-        pause();
-        click("inventario", "btn-aggiorna-inventario");
+        click("home", "card-inventario");
         pause();
         snap("03-inventario");
         back("inventario");
     }
 
     private static void ricette() {
-        click("home", "btn-ricette");
+        click("home", "card-ricette");
         pause();
         click("ricette", "btn-trova");
         pause();
@@ -81,7 +79,7 @@ public final class DemoDriver {
     }
 
     private static void listaSpesa() {
-        click("home", "btn-lista");
+        click("home", "card-lista-spesa");
         pause();
         fillText("lista-spesa", null, "Pasta al pomodoro");
         click("lista-spesa", "btn-calcola");
@@ -91,7 +89,7 @@ public final class DemoDriver {
     }
 
     private static void marketplace() {
-        click("home", "btn-market");
+        click("home", "card-marketplace");
         pause();
         click("marketplace", "btn-catalogo");
         pause();
@@ -128,6 +126,13 @@ public final class DemoDriver {
             Node node = root.lookup("#" + buttonId);
             if (node instanceof Button b) {
                 b.fire();
+            } else if (node != null) {
+                // card/nodi cliccabili (VBox con setOnMouseClicked)
+                node.fireEvent(new javafx.scene.input.MouseEvent(
+                        javafx.scene.input.MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                        javafx.scene.input.MouseButton.PRIMARY, 1,
+                        false, false, false, false, true, false, false, true, true,
+                        false, null));
             }
         });
         pause();

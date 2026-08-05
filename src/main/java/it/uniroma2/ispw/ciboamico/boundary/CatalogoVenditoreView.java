@@ -4,8 +4,14 @@ import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciCatalogoVenditoreController;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
@@ -13,8 +19,8 @@ import java.time.LocalDate;
 /**
  * Boundary JavaFX — Catalogo Venditore (UC-05).
  * Il venditore approvato pubblica prodotti con prezzo (BR-02, BR-06).
- * Scambia SOLO ProdottoBean con il controller (il venditore è risolto
- * dal controller via sessione, mai passato dalla view).
+ * Scambia SOLO ProdottoBean con il controller (il venditore è risolto dal
+ * controller via sessione). UI: form in card laterale.
  */
 public class CatalogoVenditoreView {
 
@@ -31,19 +37,23 @@ public class CatalogoVenditoreView {
 
     public Parent build() {
         TextField nome = new TextField();
-        nome.setPromptText("Nome prodotto");
+        nome.setPromptText("es. Miele locale");
         TextField prezzo = new TextField();
-        prezzo.setPromptText("Prezzo (EUR)");
+        prezzo.setPromptText("es. 6.50");
         TextField quantita = new TextField();
         quantita.setPromptText("Quantità disponibile");
         DatePicker scadenza = new DatePicker(LocalDate.now().plusMonths(1));
         ComboBox<String> unita = new ComboBox<>();
-        unita.getItems().addAll("PEZZI", "GRAMMI", "LITRI");
+        unita.getItems().addAll("PEZZI", "GRAMMI", "LITRI", "ML");
         unita.setValue("PEZZI");
-        Label messaggio = new Label();
+        Label messaggio = new Label("Compila i campi e pubblica il prodotto.");
+        messaggio.getStyleClass().add("page-subtitle");
+        messaggio.setWrapText(true);
 
         Button pubblica = new Button("Pubblica prodotto");
+        pubblica.setMaxWidth(Double.MAX_VALUE);
         pubblica.setOnAction(e -> {
+            messaggio.setText("");
             try {
                 ProdottoBean bean = new ProdottoBean();
                 bean.setNome(nome.getText());
@@ -52,19 +62,28 @@ public class CatalogoVenditoreView {
                 bean.setScadenza(scadenza.getValue());
                 bean.setUnitaMisura(unita.getValue());
                 controller.pubblicaProdotto(bean);
-                messaggio.setText("Prodotto pubblicato ✓");
+                messaggio.setText("✓ Prodotto pubblicato sul marketplace.");
                 nome.clear(); prezzo.clear(); quantita.clear();
             } catch (Exception ex) {
                 messaggio.setText("Errore: " + ex.getMessage());
             }
         });
 
-        Button indietro = new Button("← Home");
-        indietro.setOnAction(e -> Navigator.getInstance().switchTo("home"));
+        VBox form = new VBox(8,
+                UiKit.field("Nome"), nome, UiKit.field("Prezzo (EUR)"), prezzo,
+                UiKit.field("Quantità"), quantita, UiKit.field("Scadenza"), scadenza,
+                UiKit.field("Unità"), unita, pubblica, messaggio);
+        form.getStyleClass().add("form-panel");
 
-        VBox root = new VBox(10, new Label("Pubblica prodotto (UC-05)"),
-                nome, prezzo, quantita, scadenza, unita, pubblica, messaggio, indietro);
-        root.setPrefSize(900, 640);
-        return root;
+        BorderPane corpo = new BorderPane();
+        corpo.setCenter(form);
+        corpo.setPadding(new Insets(16, 0, 20, 0));
+
+        Label title = new Label("Pubblica un nuovo prodotto nel tuo catalogo di vendita.");
+        title.getStyleClass().add("page-subtitle");
+        VBox left = new VBox(8, title, UiKit.homeBtn());
+
+        return UiKit.pagina("Catalogo venditore", "UC-05 · pubblica e vendi",
+                new VBox(12, left, corpo), "catalogo");
     }
 }

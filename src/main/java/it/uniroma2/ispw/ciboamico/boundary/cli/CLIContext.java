@@ -72,4 +72,9 @@ public final class CLIContext {
     public static String leggiRiga() {
         return SCANNER.nextLine().trim();
     }
+
+    /** Scanner condiviso per l'input utente (usato dal menu di avvio: un solo canale su System.in). */
+    public static Scanner scannerCondiviso() {
+        return SCANNER;
+    }
 }

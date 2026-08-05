@@ -43,7 +43,9 @@ public final class Navigator {
         }
         Parent root = factory.build();
         if (stage.getScene() == null) {
-            stage.setScene(new Scene(root, 900, 640));
+            Scene scene = new Scene(root, 900, 640);
+            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+            stage.setScene(scene);
         } else {
             stage.getScene().setRoot(root);
         }

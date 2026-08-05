@@ -20,6 +20,10 @@ public final class CLISession {
     public static boolean wantsToContinue() {
         System.out.print("\nVuoi continuare? (s/n): ");
         // Riutilizza lo scanner statico di CLIContext (un unico canale di input).
+        // EOF/assenza input = esci (mai NoSuchElementException).
+        if (!CLIContext.scannerCondiviso().hasNextLine()) {
+            return false;
+        }
         return CLIContext.leggiRiga().equalsIgnoreCase("s");
     }
 }
