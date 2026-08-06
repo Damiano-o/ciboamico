@@ -110,6 +110,10 @@ public class DemoDAOFactory extends DAOFactory {
         ricetta.aggiungiIngrediente(new Ingrediente(
                 new Prodotto("Passata di pomodoro", 1.0, 100, LocalDate.now().plusYears(1),
                         UnitaEnum.GRAMMI, null), 3, UnitaEnum.GRAMMI));
+
+        // Approvazione della ricetta (come farebbe l'Admin, UC-09):
+        // solo le ricette APPROVATE compaiono in "Trova ricette compatibili".
+        ricetta.setStato(StatoRicettaEnum.APPROVATA);
         ricettaDAO.save(ricetta);
     }
 
