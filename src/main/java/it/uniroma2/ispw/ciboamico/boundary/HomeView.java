@@ -37,10 +37,6 @@ public class HomeView {
         Button itemMarket = navItem("Marketplace", false);
         itemMarket.setOnAction(e -> Navigator.getInstance().switchTo("marketplace"));
 
-        // item non navigabili (placeholder sezione) mantenuti come separatore visivo
-        Button itemImpostazioni = navItem("Impostazioni", false);
-        Button itemProfilo = navItem("Profilo", false);
-
         Button logout = new Button("Esci");
         logout.getStyleClass().add("button-outline");
         logout.setMaxWidth(Double.MAX_VALUE);
@@ -50,9 +46,9 @@ public class HomeView {
         });
 
         VBox sidebar = new VBox(2, brand, itemDashboard, itemRicette, itemInventario,
-                itemLista, itemMarket, itemImpostazioni, itemProfilo, logout);
+                itemLista, itemMarket, logout);
         sidebar.getStyleClass().add("sidebar");
-        VBox.setMargin(itemImpostazioni, new Insets(14, 0, 0, 0));
+        VBox.setMargin(logout, new Insets(14, 0, 0, 0));
 
         // ---------- Area principale ----------
         Label benvenuto = new Label(utente != null
