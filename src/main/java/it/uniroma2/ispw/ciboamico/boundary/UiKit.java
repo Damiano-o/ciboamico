@@ -97,14 +97,6 @@ public final class UiKit {
         return b;
     }
 
-    /** Bottone outline di ritorno alla home. */
-    public static Button homeBtn() {
-        Button b = new Button("← Home");
-        b.getStyleClass().add("button-outline");
-        b.setOnAction(e -> Navigator.getInstance().switchTo("home"));
-        return b;
-    }
-
     /** Etichetta di sezione in un form. */
     public static Label field(String testo) {
         Label l = new Label(testo);

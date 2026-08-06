@@ -79,11 +79,7 @@ public class CatalogoVenditoreView {
         corpo.setCenter(form);
         corpo.setPadding(new Insets(16, 0, 20, 0));
 
-        Label title = new Label("Pubblica un nuovo prodotto nel tuo catalogo di vendita.");
-        title.getStyleClass().add("page-subtitle");
-        VBox left = new VBox(8, title, UiKit.homeBtn());
-
         return UiKit.pagina("Catalogo venditore", "UC-05 · pubblica e vendi",
-                new VBox(12, left, corpo), "catalogo");
+                corpo, "catalogo");
     }
 }

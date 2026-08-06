@@ -84,7 +84,7 @@ public class RicetteNutrizionistaView {
         form.setPrefWidth(380);
         form.setMaxWidth(420);
 
-        VBox corpo = new VBox(8, form, UiKit.homeBtn());
+        VBox corpo = new VBox(8, form);
         corpo.setPadding(new Insets(16, 0, 20, 0));
         return UiKit.pagina("Crea ricetta", "UC-07 · nutrizionista", corpo, "ricette");
     }

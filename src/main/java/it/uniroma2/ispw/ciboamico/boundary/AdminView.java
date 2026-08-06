@@ -97,8 +97,7 @@ public class AdminView {
         HBox pannelli = new HBox(16, pvs, prc);
         pannelli.setPadding(new Insets(0, 0, 20, 0));
 
-        VBox corpo = new VBox(10, aggiorna, attesa, pannelli,
-                messaggio, UiKit.homeBtn());
+        VBox corpo = new VBox(10, aggiorna, attesa, pannelli, messaggio);
         corpo.setPadding(new Insets(16, 0, 0, 0));
         return UiKit.pagina("Amministrazione", "UC-08/09 · approvazioni", corpo, "admin");
     }

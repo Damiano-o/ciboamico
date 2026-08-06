@@ -62,11 +62,9 @@ public class InventarioView {
 
         Label totVal = new Label("0");
         Label scadVal = new Label("0");
-        Label oggiVal = new Label("0");
         HBox stats = new HBox(12,
                 statChip("🗂", totVal, "prodotti", "ok"),
-                statChip("⏳", scadVal, "in scadenza", "warn"),
-                statChip("❌", oggiVal, "scaduti", "attention"));
+                statChip("⏳", scadVal, "in scadenza", "warn"));
 
         // ---------- Form aggiunta (card laterale) ----------
         TextField nome = new TextField();
@@ -105,25 +103,25 @@ public class InventarioView {
                 messaggio.setText("✓ Aggiunto: " + bean.getNome()
                         + " (" + bean.getQuantita().intValue() + " " + bean.getUnitaMisura() + ")");
                 nome.clear(); quantita.clear(); posizione.setValue("Frigo");
-                refresh(utente, griglia, totVal, scadVal, oggiVal, filtro);
+                refresh(utente, griglia, totVal, scadVal, filtro);
             } catch (Exception ex) {
                 messaggio.setText("Errore: " + ex.getMessage());
             }
         });
 
         VBox form = new VBox(8,
-                fieldLabel("Nome prodotto"), nome,
-                fieldLabel("Quantità"), quantita,
-                fieldLabel("Scadenza"), scadenza,
-                fieldLabel("Posizione"), posizione,
-                fieldLabel("Unità"), unita,
+                UiKit.field("Nome prodotto"), nome,
+                UiKit.field("Quantità"), quantita,
+                UiKit.field("Scadenza"), scadenza,
+                UiKit.field("Posizione"), posizione,
+                UiKit.field("Unità"), unita,
                 aggiungi, messaggio);
         form.getStyleClass().add("form-panel");
 
         // ---------- Filtro + lista ----------
         Label filtroLbl = new Label("Filtra per posizione");
         filtroLbl.getStyleClass().add("page-subtitle");
-        filtro.setOnAction(e -> refresh(utente, griglia, totVal, scadVal, oggiVal, filtro));
+        filtro.setOnAction(e -> refresh(utente, griglia, totVal, scadVal, filtro));
 
         VBox listaArea = new VBox(8, filtroLbl, filtro, griglia);
         listaArea.setPadding(new Insets(20, 24, 20, 24));
@@ -150,22 +148,8 @@ public class InventarioView {
         root.getStyleClass().add("home-root");
         root.setPrefSize(900, 640);
 
-        refresh(utente, griglia, totVal, scadVal, oggiVal, filtro);
+        refresh(utente, griglia, totVal, scadVal, filtro);
         return root;
-    }
-
-    private Button navItem(String testo, boolean attivo) {
-        Button b = new Button(testo);
-        b.setMaxWidth(Double.MAX_VALUE);
-        b.getStyleClass().add("nav-item");
-        if (attivo) b.getStyleClass().add("active");
-        return b;
-    }
-
-    private Label fieldLabel(String testo) {
-        Label l = new Label(testo);
-        l.getStyleClass().add("field-label");
-        return l;
     }
 
     private HBox statChip(String icona, Label value, String testo, String stato) {
@@ -182,13 +166,11 @@ public class InventarioView {
     }
 
     private void refresh(UtenteBean utente, FlowPane griglia, Label tot,
-            Label scad, Label oggi, ComboBox<String> filtro) {
+            Label scad, ComboBox<String> filtro) {
         List<ProdottoBean> ordinati = controller.visualizzaInventarioOrdinato(utente.getEmail());
         long inScad = controller.prodottiInScadenza(utente.getEmail()).size();
-        long scaduti = ordinati.stream().filter(this::scaduto).count();
         tot.setText(String.valueOf(ordinati.size()));
         scad.setText(String.valueOf(inScad));
-        oggi.setText(String.valueOf(scaduti));
 
         String f = filtro.getValue();
         griglia.getChildren().clear();

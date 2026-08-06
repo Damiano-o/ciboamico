@@ -279,13 +279,7 @@
     -fx-padding: 8 12 8 12;
 }
 
-/* ---------- Spaziatura helper ---------- */
-.gap-sm  { -fx-spacing: 8; }
-.gap-md  { -fx-spacing: 16; }
-.gap-lg  { -fx-spacing: 24; }
-
 /* ---------- Stat chip (contatori header) ---------- */
-.stat-row { -fx-spacing: 12; -fx-padding: 0 0 12 0; }
 .stat-chip {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 10;
