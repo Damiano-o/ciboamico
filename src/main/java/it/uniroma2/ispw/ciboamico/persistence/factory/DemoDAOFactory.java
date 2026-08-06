@@ -28,16 +28,25 @@ public class DemoDAOFactory extends DAOFactory {
     private final ProdottoDAO prodottoDAO = new DemoProdottoDAO();
     private final RicettaDAO ricettaDAO = new DemoRicettaDAO();
     private final OrdineDAO ordineDAO = new DemoOrdineDAO();
+    private boolean seeded;
 
     public DemoDAOFactory() {
         // Niente seed nel costruttore: i test partono da stato vuoto.
         // Il bootstrap demo chiama esplicitamente seedDemoData().
     }
 
-    /** Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO). */
-    public void seedDemoData() {
+    /**
+     * Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO).
+     * Idempotente: una sola esecuzione anche se invocata più volte
+     * (riavvio della scena, doppio start, test), così i dati non duplicano.
+     */
+    public synchronized void seedDemoData() {
+        if (seeded) {
+            return;
+        }
         try {
             seed();
+            seeded = true;
         } catch (BusinessValidationException e) {
             throw new IllegalStateException("Seed demo corrotto", e);
         }
