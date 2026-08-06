@@ -17,6 +17,10 @@ public class MainCLI {
         ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico (CLI) — modalità: " + modeManager.getActiveMode());
         MainApplication.seedDemoDataSeNecessario();
+        // Configura la LazyFactory degli ordini con la DAOFactory attiva
+        // (stessa inizializzazione di Runner.avvia: necessaria per UC-04).
+        it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory
+                .getInstance(modeManager.getDAOFactory());
         ViewFactory.configure("cli"); // famiglia CLI (Abstract Factory, Singleton)
         ViewFactory factory = ViewFactory.getFactory();
 
