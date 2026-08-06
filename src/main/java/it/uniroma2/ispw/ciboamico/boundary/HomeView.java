@@ -37,6 +37,21 @@ public class HomeView {
         Button itemMarket = navItem("Marketplace", false);
         itemMarket.setOnAction(e -> Navigator.getInstance().switchTo("marketplace"));
 
+        // Voci specifiche per ruolo (coerenti con UiKit.sidebar)
+        VBox sidebar = new VBox(2, brand, itemDashboard, itemRicette, itemInventario,
+                itemLista, itemMarket);
+        sidebar.getStyleClass().add("sidebar");
+
+        String ruoloAttivo = utente != null ? utente.getRuoloAttivo() : "";
+        if ("RuoloVenditore".equals(ruoloAttivo)) {
+            sidebar.getChildren().add(navItemLink("Pubblica prodotto", "catalogo"));
+            sidebar.getChildren().add(navItemLink("Ordini ricevuti", "ordini"));
+        } else if ("RuoloNutrizionista".equals(ruoloAttivo)) {
+            sidebar.getChildren().add(navItemLink("Crea ricetta", "crea-ricetta"));
+        } else if ("RuoloAmministratore".equals(ruoloAttivo)) {
+            sidebar.getChildren().add(navItemLink("Amministrazione", "admin"));
+        }
+
         Button logout = new Button("Esci");
         logout.getStyleClass().add("button-outline");
         logout.setMaxWidth(Double.MAX_VALUE);
@@ -44,10 +59,7 @@ public class HomeView {
             SessionManager.getInstance().logout();
             Navigator.getInstance().switchTo("login");
         });
-
-        VBox sidebar = new VBox(2, brand, itemDashboard, itemRicette, itemInventario,
-                itemLista, itemMarket, logout);
-        sidebar.getStyleClass().add("sidebar");
+        sidebar.getChildren().add(logout);
         VBox.setMargin(logout, new Insets(14, 0, 0, 0));
 
         // ---------- Area principale ----------
@@ -103,6 +115,13 @@ public class HomeView {
         if (attivo) {
             b.getStyleClass().add("active");
         }
+        return b;
+    }
+
+    /** Voce di sidebar che naviga alla vista indicata. */
+    private Button navItemLink(String testo, String vista) {
+        Button b = navItem(testo, false);
+        b.setOnAction(e -> Navigator.getInstance().switchTo(vista));
         return b;
     }
 

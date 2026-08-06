@@ -63,16 +63,30 @@ public final class UiKit {
         return pagina(titolo, sottotitolo, corpo, "home");
     }
 
-    /** Sidebar di navigazione con la voce {@code attiva}. */
+    /** Sidebar di navigazione con la voce {@code attiva}, adattata al ruolo loggato. */
     public static VBox sidebar(String attiva) {
         Label brand = new Label("CiboAmico");
         brand.getStyleClass().add("brand-title");
 
-        Button dash = nav("Dashboard", "home", attiva);
-        Button ricette = nav("Ricette", "ricette", attiva);
-        Button inv = nav("Inventario", "inventario", attiva);
-        Button lista = nav("Lista spesa", "lista-spesa", attiva);
-        Button market = nav("Marketplace", "marketplace", attiva);
+        VBox s = new VBox(2, brand);
+        s.getStyleClass().add("sidebar");
+
+        s.getChildren().add(nav("Dashboard", "home", attiva));
+        s.getChildren().add(nav("Ricette", "ricette", attiva));
+        s.getChildren().add(nav("Inventario", "inventario", attiva));
+        s.getChildren().add(nav("Lista spesa", "lista-spesa", attiva));
+        s.getChildren().add(nav("Marketplace", "marketplace", attiva));
+
+        // Voci specifiche per ruolo
+        String ruolo = ruoloAttivo();
+        if ("RuoloVenditore".equals(ruolo)) {
+            s.getChildren().add(nav("Pubblica prodotto", "catalogo", attiva));
+            s.getChildren().add(nav("Ordini ricevuti", "ordini", attiva));
+        } else if ("RuoloNutrizionista".equals(ruolo)) {
+            s.getChildren().add(nav("Crea ricetta", "crea-ricetta", attiva));
+        } else if ("RuoloAmministratore".equals(ruolo)) {
+            s.getChildren().add(nav("Amministrazione", "admin", attiva));
+        }
 
         Button esci = new Button("Esci");
         esci.getStyleClass().add("button-outline");
@@ -81,11 +95,16 @@ public final class UiKit {
             SessionManager.getInstance().logout();
             Navigator.getInstance().switchTo("login");
         });
-
-        VBox s = new VBox(2, brand, dash, ricette, inv, lista, market, esci);
-        s.getStyleClass().add("sidebar");
+        s.getChildren().add(esci);
         VBox.setMargin(esci, new Insets(14, 0, 0, 0));
         return s;
+    }
+
+    /** Nome del ruolo attivo dell'utente loggato (o vuoto se non loggato). */
+    private static String ruoloAttivo() {
+        var utente = SessionManager.getInstance().getLoggedUser();
+        return utente != null && utente.getRuoloAttivo() != null
+                ? utente.getRuoloAttivo() : "";
     }
 
     private static Button nav(String testo, String vista, String attiva) {
