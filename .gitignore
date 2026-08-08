@@ -37,3 +37,12 @@ docs/relazione_italiana/sc-*.png
 docs/relazione_italiana/verify-*.png
 # Relazione: si tiene solo la versione ITALIANA
 docs/relazione/
+# Artefatti build/debug relazione (non versionare)
+docs/relazione_italiana/main.*.png
+docs/relazione_italiana/p0-0*.png
+docs/relazione_italiana/pg*.png
+docs/relazione_italiana/vopc_page-*.png
+docs/relazione_italiana/fix_state3.py
+docs/relazione_italiana/*_bak*.txt
+docs/relazione_italiana/pgs-*.png
+docs/relazione_italiana/sc-*.png
