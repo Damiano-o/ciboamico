@@ -4,8 +4,7 @@ package it.uniroma2.ispw.ciboamico.pattern.payment;
  * Simple Factory del {@link PaymentGateway} (passo 6 UC-04, estensione 6a).
  * Disaccoppia il controller dallo specifico PSP: qui si concentra la scelta
  * dell'implementazione concreta (attualmente lo stub in-memory). Separata dal
- * mondo dei DAO (il pagamento non è persistenza), garantendo Alta Coesione:
- * concordato in audit NotebookLM 2026-08-07.
+ * mondo dei DAO: il pagamento non è una responsabilità della persistenza.
  * Open/Closed: un nuovo PSP richiede solo un nuovo ramo qui, senza toccare i DAO.
  */
 public final class PaymentGatewayFactory {

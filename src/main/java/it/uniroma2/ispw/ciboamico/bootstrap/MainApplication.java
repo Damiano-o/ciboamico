@@ -26,7 +26,7 @@ public final class MainApplication extends Application {
         navigator.init(stage);
 
         // Registrazione view (nomi simbolici, factory programmatiche)
-        // Le Boundary costruiscono i propri Controller via ServiceLocator (stile 30/30),
+        // Le Boundary costruiscono i propri controller tramite il registro applicativo,
         // senza ricevere la DAOFactory: la View non conosce la persistenza.
         navigator.register("login", new LoginView()::build);
         navigator.register("home", new HomeView()::build);

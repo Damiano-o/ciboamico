@@ -21,7 +21,7 @@ public class AutenticazioneController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator, View senza DAOFactory. */
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator, la View non conosce la DAOFactory. */
     public AutenticazioneController() {
         this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
     }

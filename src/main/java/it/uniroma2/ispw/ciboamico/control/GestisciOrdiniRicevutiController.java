@@ -23,7 +23,7 @@ public class GestisciOrdiniRicevutiController {
         this.ordineDAO = factory.getOrdineDAO();
     }
 
-    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator (ApplicationModeManager), così la View non inietta la DAOFactory. */
     public GestisciOrdiniRicevutiController() {
         this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
     }

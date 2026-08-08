@@ -10,8 +10,8 @@ import java.util.List;
  * Utente — classe radice del dominio.
  * Pattern Whole-Part: aggrega dinamicamente più Ruolo per superare la metamorfosi
  * (un utente può diventare venditore a runtime senza ristrutturare le classi).
- * Information Expert (GRASP): la Entity conosce il proprio formato password e
- * verifica le credenziali (checkPassword), come nei progetti 30/30 di riferimento.
+ * Information Expert (GRASP): l'entità conosce il formato della password e
+ * verifica autonomamente le credenziali.
  */
 public class Utente {
 

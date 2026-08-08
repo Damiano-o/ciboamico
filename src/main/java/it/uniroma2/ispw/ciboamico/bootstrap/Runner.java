@@ -30,7 +30,7 @@ public final class Runner {
         // 2) Configura la LazyFactory degli ordini con la DAOFactory attiva
         OrdineLazyFactory.configure(modeManager.getDAOFactory());
 
-        // 3) Avvia l'interfaccia scelta (doppia interfaccia, criterio 30/30)
+        // 3) Avvia l'interfaccia scelta.
         ViewFactory.configure(scelta.getInterfaccia());
         if (scelta.gui()) {
             MainApplication.main(args);

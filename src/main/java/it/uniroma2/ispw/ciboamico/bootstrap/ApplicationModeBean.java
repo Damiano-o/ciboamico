@@ -5,8 +5,8 @@ package it.uniroma2.ispw.ciboamico.bootstrap;
  * Raggruppa interfaccia (GUI/CLI) e modalità di persistenza
  * (DEMO/FS/JDBC) in un unico oggetto passato al runner.
  *
- * Segue il pattern dei progetti 30/30 (v. RouteX SelectMode):
- * Boundary di input -&gt; Bean -&gt; avvio con la config selezionata.
+ * La configurazione separa la scelta dell'interfaccia da quella della
+ * persistenza e viene passata al runner come oggetto unico.
  */
 public final class ApplicationModeBean {
 

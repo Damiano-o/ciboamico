@@ -26,7 +26,7 @@ public class TrovaRicetteController {
         this.facade = facade;
     }
 
-    /** Costruttore no-arg (stile 30/30): persistenza e facade dal ServiceLocator. */
+    /** Costruttore no-arg: persistenza e facade risolte dal ServiceLocator. */
     public TrovaRicetteController() {
         this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory(),
                 RicettaMatchingFacade.conSostituzione());

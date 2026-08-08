@@ -5,9 +5,8 @@ import it.uniroma2.ispw.ciboamico.boundary.cli.CLIContext;
 import java.util.Scanner;
 
 /**
- * Boundary di avvio: menu interattivo con cui L'UTENTE sceglie
- * come avviare l'applicazione (pattern progetti 30/30: Meal-Calendar
- * GUI/CLI + RouteX DEMO/FULL).
+ * Boundary di avvio: menu interattivo con cui l'utente sceglie
+ * l'interfaccia e la modalità di persistenza.
  *
  * Loop di validazione: input non valido -&gt; ripete la domanda
  * (mai crashare su digitazione errata).

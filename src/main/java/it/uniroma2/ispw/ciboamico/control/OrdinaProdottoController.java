@@ -19,7 +19,8 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 /**
  * Control di UC-04 Ordina Prodotto (1:1 con l'use case).
- * Stateless: l'utente corrente è passato dalla View (Opzione A); scambia solo Bean con la Boundary.
+ * Stateless: l'utente corrente viene ricevuto dalla view; il confine scambia
+ * solo bean con il controller.
  */
 public class OrdinaProdottoController {
 
@@ -39,8 +40,9 @@ public class OrdinaProdottoController {
         this.paymentGateway = PaymentGatewayFactory.createGateway();
     }
 
-    /** Costruttore no-arg (stile Habibi/30/30): la persistenza è risolta dal ServiceLocator,
-     *  la View non conosce la DAOFactory. Per il test resta il costruttore con factory. */
+    /** Costruttore no-arg usato dall'applicazione; la factory attiva viene
+     *  risolta dal gestore della modalità. Il costruttore con factory resta
+     *  disponibile per i test e l'iniezione esplicita delle dipendenze. */
     public OrdinaProdottoController() {
         this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
     }
@@ -85,8 +87,8 @@ public class OrdinaProdottoController {
 
         // Costruzione ordine singolo diretto (D-03)
         // Il venditore è risolto dal PRODOTTO acquistato: risalgo all'Utente
-        // proprietario del ruolo Venditore (whole-part bidirezionale) — fix da
-        // verifica NotebookLM 2026-08-02 (prima: ternary inutile compratore:compratore)
+        // proprietario del ruolo Venditore; se il prodotto non espone un
+        // proprietario, usa il compratore come fallback coerente col modello demo.
         Utente compratore = new Utente(utente.getUsername(), utente.getEmail(), "");
         Utente venditore = prodotto.getVenditore() != null && prodotto.getVenditore().getUtente() != null
                 ? prodotto.getVenditore().getUtente()
@@ -103,7 +105,7 @@ public class OrdinaProdottoController {
 
         // Dopo la persistenza: emette la notifica asincrona al venditore (Pattern Observer).
         // L'ordine resta in stato CREATED; la sottomissione consolidata su DB è l'evento
-        // di dominio che attiva VenditoreNotifier (coerente con il sequence diagram UC-04).
+        // di dominio che attiva il listener del venditore.
         ordine.notificaSottomissione();
 
         OrdineBean risultato = new OrdineBean();

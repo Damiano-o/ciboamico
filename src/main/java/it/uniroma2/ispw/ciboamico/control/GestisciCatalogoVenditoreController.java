@@ -29,7 +29,7 @@ public class GestisciCatalogoVenditoreController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator (ApplicationModeManager), così la View non inietta la DAOFactory. */
     public GestisciCatalogoVenditoreController() {
         this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
     }

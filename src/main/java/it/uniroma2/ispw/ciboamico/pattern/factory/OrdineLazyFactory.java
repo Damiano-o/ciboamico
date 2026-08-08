@@ -10,15 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LazyFactory (pattern Lazy Initialization + caching, come nei progetti
- * 30/30): crea gli Ordini assegnando l'id dal DAO (Information Expert)
- * e mantiene una cache in RAM degli ordini creati nella sessione.
- * Singleton thread-safe (Holder Idiom).
- *
- * Motivazione (verifica NotebookLM 2026-08-04): generare l'id nel
- * controller (System.currentTimeMillis) è un errore di accoppiamento:
- * il DAO è il creator/information expert del proprio tipo di dato.
- * La cache in RAM è una scelta di design premiata da De Angelis.
+ * Factory con inizializzazione lazy e cache degli ordini creati nella sessione.
+ * L'identificativo viene richiesto al DAO, che conosce la propria strategia
+ * di generazione degli id. L'istanza della factory usa l'Holder Idiom per
+ * garantire un singleton thread-safe.
  */
 public final class OrdineLazyFactory {
 

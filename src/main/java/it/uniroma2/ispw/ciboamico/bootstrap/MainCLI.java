@@ -3,7 +3,7 @@ package it.uniroma2.ispw.ciboamico.bootstrap;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 
 /**
- * Entry point della modalità CLI (doppia interfaccia, criterio 30/30).
+ * Entry point della modalità CLI.
  * Avvio: ApplicationModeManager → DAOFactory → ViewFactory (famiglia CLI) → login → home.
  * I controller applicativi sono gli stessi della GUI: cambia solo la famiglia
  * di boundary (Abstract Factory).
