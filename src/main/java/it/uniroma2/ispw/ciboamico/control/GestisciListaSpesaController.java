@@ -27,6 +27,11 @@ public class GestisciListaSpesaController {
         this.ricettaDAO = factory.getRicettaDAO();
     }
 
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator (ApplicationModeManager), così la View non inietta la DAOFactory. */
+    public GestisciListaSpesaController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     /**
      * Restituisce gli ingredienti mancanti (con quantità) per la ricetta scelta.
      * 4.a: se non ci sono mancanze, lista vuota.

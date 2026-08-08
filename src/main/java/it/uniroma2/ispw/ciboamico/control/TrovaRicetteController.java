@@ -26,6 +26,12 @@ public class TrovaRicetteController {
         this.facade = facade;
     }
 
+    /** Costruttore no-arg: persistenza e facade risolte dal ServiceLocator. */
+    public TrovaRicetteController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory(),
+                RicettaMatchingFacade.conSostituzione());
+    }
+
     public List<RicettaBean> findCompatible(String utenteEmail) {
         List<ProdottoInventario> inventario = prodottoDAO.findInventario(utenteEmail);
         List<Ricetta> ricetteApprovate = ricettaDAO.findByStato("APPROVATA");

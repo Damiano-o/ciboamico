@@ -1,9 +1,11 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
+import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCRicettaDAO;
@@ -25,4 +27,7 @@ public class JDBCDAOFactory extends DAOFactory {
 
     @Override
     public OrdineDAO getOrdineDAO() { return new JDBCOrdineDAO(); }
+
+    @Override
+    public BuonoDAO getBuonoDAO() { return new JDBCBuonoDAO(getUtenteDAO()); }
 }

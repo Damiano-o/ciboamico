@@ -23,7 +23,9 @@ public class FSProdottoDAO implements ProdottoDAO {
 
     private List<Prodotto> caricaCatalogo() {
         try {
-            if (!Files.exists(FILE_CATALOGO)) return new ArrayList<>();
+            if (!Files.exists(FILE_CATALOGO)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE_CATALOGO),
                     new TypeToken<List<Prodotto>>() { }.getType());
         } catch (IOException e) {
@@ -42,7 +44,9 @@ public class FSProdottoDAO implements ProdottoDAO {
 
     private List<ProdottoInventario> caricaInventario() {
         try {
-            if (!Files.exists(FILE_INVENTARIO)) return new ArrayList<>();
+            if (!Files.exists(FILE_INVENTARIO)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE_INVENTARIO),
                     new TypeToken<List<ProdottoInventario>>() { }.getType());
         } catch (IOException e) {
@@ -70,11 +74,32 @@ public class FSProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto findByNome(String nome) {
+        return caricaCatalogo().stream()
+                .filter(p -> p.getNome().equalsIgnoreCase(nome))
+                .findFirst().orElse(null);
+    }
+
+    @Override
     public Prodotto save(Prodotto prodotto) {
         List<Prodotto> prodotti = caricaCatalogo();
         prodotti.add(prodotto);
         salvaCatalogo(prodotti);
         return prodotto;
+    }
+
+    @Override
+    public Prodotto update(Prodotto prodotto) {
+        List<Prodotto> prodotti = caricaCatalogo();
+        String nome = prodotto.getNome();
+        for (int i = 0; i < prodotti.size(); i++) {
+            if (prodotti.get(i).getNome().equalsIgnoreCase(nome)) {
+                prodotti.set(i, prodotto);
+                salvaCatalogo(prodotti);
+                return prodotto;
+            }
+        }
+        throw new RuntimeException("Prodotto non trovato in catalogo per update");
     }
 
     @Override

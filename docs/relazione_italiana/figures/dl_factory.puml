@@ -1,0 +1,77 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+left to right direction
+
+' ============================================================
+' Design-level — DAO Abstract Factory (NFR-01 persistenza)
+' Stile conciso (come progetti 30/30): factory astratta,
+' concrete factory + interfacce DAO, frecce <<create>> esplicite.
+' ============================================================
+
+' ---------- Client (control) ----------
+class "OrdinaProdottoController" as CTL <<control>> {
+  - utenteDAO : UtenteDAO
+  - prodottoDAO : ProdottoDAO
+  - ricettaDAO : RicettaDAO
+  - ordineDAO : OrdineDAO
+  - buonoDAO : BuonoDAO
+}
+
+' ---------- Abstract Factory ----------
+interface "DAOFactory" {
+  + getUtenteDAO() : UtenteDAO
+  + getProdottoDAO() : ProdottoDAO
+  + getRicettaDAO() : RicettaDAO
+  + getOrdineDAO() : OrdineDAO
+  + getBuonoDAO() : BuonoDAO
+}
+
+class "DemoDAOFactory"
+class "FSDAOFactory"
+class "JDBCDAOFactory"
+DemoDAOFactory ..|> DAOFactory
+FSDAOFactory  ..|> DAOFactory
+JDBCDAOFactory ..|> DAOFactory
+
+' ---------- Abstract Products (DAO) ----------
+interface "UtenteDAO"
+interface "ProdottoDAO"
+interface "RicettaDAO"
+interface "OrdineDAO"
+interface "BuonoDAO"
+
+' ---------- Concrete Products (una famiglia esemplificativa, per concisione) ----------
+class "JDBCUtenteDAO"
+class "JDBCProdottoDAO"
+class "JDBCRicettaDAO"
+class "JDBCOrdineDAO"
+class "JDBCBuonoDAO"
+JDBCUtenteDAO ..|> UtenteDAO
+JDBCProdottoDAO ..|> ProdottoDAO
+JDBCRicettaDAO ..|> RicettaDAO
+JDBCOrdineDAO ..|> OrdineDAO
+JDBCBuonoDAO ..|> BuonoDAO
+
+' ---------- relazioni: controller -> factory -> prodotti ----------
+OrdinaProdottoController --> DAOFactory : <<use>>\nApplicationModeManager.getDAOFactory()
+JDBCDAOFactory ..> JDBCUtenteDAO : <<create>>
+JDBCDAOFactory ..> JDBCProdottoDAO : <<create>>
+JDBCDAOFactory ..> JDBCRicettaDAO : <<create>>
+JDBCDAOFactory ..> JDBCOrdineDAO : <<create>>
+JDBCDAOFactory ..> JDBCBuonoDAO : <<create>>
+
+' i DAO concrete per le altre famiglie sono omessi per concisione
+' (stessa struttura di JDBC)
+
+note bottom of DAOFactory
+  DemoDAOFactory e FSDAOFactory
+  producono la stessa famiglia di DAO
+  (Demo/FS* implementano le stesse interfacce).
+end note
+
+@enduml

@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Observer (notifier), SessionManager (singleton) e ruoli.
- */
+ 
+ * @author Michele Damiano
+*/
 class PatternTest {
 
     private Utente compratore() {
@@ -27,23 +29,23 @@ class PatternTest {
     }
 
     @Test
-    void testVenditoreNotifier() {
+    void testVenditoreNotifier() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new VenditoreNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO); // non deve lanciare
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED); // non deve lanciare
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
-    void testUtenteNotifier() {
+    void testUtenteNotifier() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new UtenteNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
-    void testSessionManager() {
+    void testSessionManager() throws Exception {
         SessionManager manager = SessionManager.getInstance();
         UtenteBean bean = new UtenteBean();
         bean.setEmail("test@cibo.it");
@@ -53,15 +55,13 @@ class PatternTest {
         assertSame(bean, SessionManager.getInstance().getLoggedUser());
 
         manager.logout();
-        assertNull(SessionManager.getInstance().getLoggedUser());
-    }
+        assertNull(SessionManager.getInstance().getLoggedUser());}
 
     @Test
-    void testRuoloVenditoreStato() {
+    void testRuoloVenditoreStato() throws Exception {
         RuoloVenditore v = new RuoloVenditore("RM", "tel");
         assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
         v.setStato(StatoVenditoreEnum.APPROVATO);
         assertEquals("RM", v.getZona());
-        assertEquals("tel", v.getRecapito());
-    }
+        assertEquals("tel", v.getRecapito());}
 }

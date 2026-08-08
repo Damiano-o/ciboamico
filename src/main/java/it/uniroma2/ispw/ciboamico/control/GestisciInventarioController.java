@@ -23,6 +23,11 @@ public class GestisciInventarioController {
         this.prodottoDAO = factory.getProdottoDAO();
     }
 
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator (ApplicationModeManager), così la View non inietta la DAOFactory. */
+    public GestisciInventarioController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     /** UC-01 MSS: valida dati, memorizza, conferma. */
     public ProdottoBean aggiungiProdotto(ProdottoBean bean, String utenteEmail) {
         if (!bean.datiObbligatoriPresenti()) {

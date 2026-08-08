@@ -1,0 +1,210 @@
+% CAPITOLO 4 — TESTING
+\chapter{Testing}
+\label{cap:testing}
+
+La verifica delle funzionalità e dei requisiti è effettuata tramite una suite di
+test automatizzati \textbf{JUnit 5} (\emph{Jupiter}) eseguita da \textbf{Maven}
+(\texttt{mvn verify}) con la copertura misurata da \textbf{JaCoCo}. La build è
+riproducibile e la soglia di copertura è imposta come \emph{quality gate}.
+
+\section{Strumenti e organizzazione}
+\label{sec:testing_strumenti}
+
+% (gia presente)
+
+I test sono scritti con \texttt{JUnit 5} e risiedono in \texttt{src/test/java},
+percorso mirror dell'architettura \textbf{BCE} del codice applicativo
+(\texttt{src/main/java}). La suite verifica i layer \emph{control} (applicativo),
+\emph{entity} e \emph{pattern} (dominio), le strategie di scontistica, i
+\textbf{DAO Filesystem} e \textbf{Demo}, la factory di persistenza e la modalità
+applicativa. I DAO \textbf{JDBC} (richiedono un MySQL reale) sono esclusi dalla
+copertura automatizzata e validati manualmente, come documentato nel
+Capitolo~\ref{cap:persistenza}.
+
+Il plugin \texttt{jacoco-maven-plugin} misura la copertura e impone il
+\emph{quality gate}: la build fallisce se la copertura del contatore
+\textbf{LINE} scende sotto l'\(80\%\). Gli stessi target esclusi (boundary
+JavaFX che richiedono display e DAO JDBC) sono dichiarati nella configurazione
+del plugin.
+
+\section{Specifiche dei casi di test}
+\label{sec:testing_specifiche}
+
+Di seguito sono descritti i casi di test più significativi. Ogni descrizione
+spiega \emph{quale comportamento} viene verificato e \emph{perché} è rilevante.
+
+\subsection{Bean e DTO}
+Il test \texttt{BeanTest} verifica la corretta creazione e il ciclo di vita dei
+\textbf{Bean} che attraversano i confini BCE (\texttt{OrdineBean},
+\texttt{UtenteBean}, \texttt{ProdottoBean}, \texttt{PaymentInfoBean}):
+costruttori, valorizionali iniziali e getter/setter.
+
+\subsection{Controller applicativi}
+Per il caso d'uso core \textbf{UC-04 Ordina un Prodotto}, la suite
+\texttt{OrdinaProdottoControllerTest} verifica i seguenti scenari in stile
+\emph{We tested that}: 
+\begin{itemize}
+  \item \emph{submit ordine con utente nullo}: verificato che venga rifiutato
+  quando non esiste una sessione autenticata;
+  \item \emph{submit ordine prodotto non trovato}: verificato che un ordine su un
+  prodotto inesistente nel catalogo venga scartato;
+  \item \emph{submit ordine venditore dal prodotto}: verificato che il venditore
+  sia risalito dal prodotto acquistato (whole-part) e l'ordine vi venga
+  associato correttamente;
+  \item \emph{riduzione disponibilità}: verificato che dopo l'acquisto la
+  scorta del prodotto sia decrementata di 1 (RF-3);
+  \item \emph{quantità eccedente la scorta}: verificato che un acquisto oltre le
+  quantità disponibili sollevi un'eccezione (estensione 3a);
+  \item \emph{pagamento autorizzato}: verificato che un pagamento approvato dal
+  \texttt{PaymentGateway} porti alla creazione dell'ordine in stato
+  \texttt{CREATED};
+  \item \emph{pagamento rifiutato}: verificato che un rifiuto del gateway
+  sollevi \texttt{BusinessValidationException} senza creare alcun ordine
+  \emph{fantasma} (estensione 6a).
+\end{itemize}
+
+\begin{description}
+    \item[\texttt{OrdinaProdottoControllerTest}] è il test del caso d'uso
+    \textbf{UC-04 Ordina un Prodotto}: verifica che un cliente possa ordinare
+    un prodotto disponibile, che le scorte vengano ridotte correttamente, che
+    l'applicazione del buono (\texttt{applicaBuonoPromozionale}) ricalcoli il
+    totale scontato e che il pagamento autorizzato crei l'ordine in stato
+    \texttt{CREATED}. Gestisce inoltre il caso di pagamento rifiutato
+    (estensione \textbf{6a}) e di utente non autenticato.
+    \item[\texttt{AutenticazioneControllerTest}] verifica l'autenticazione e la
+    registrazione utente: credenziali valide/invalide, creazione profilo con
+    ruoli (\texttt{Cliente}, \texttt{Venditore}, \texttt{Nutrizionista},
+    \texttt{Amministratore}) e sessione.
+    \item[\texttt{InventarioCatalogoControllerTest}] verifica la gestione della
+    dispensa e del catalogo, la visibilità in base al ruolo e l'aggiornamento
+    delle quantità.
+    \item[\texttt{OrdineControllerTest}] verifica il ciclo di vita
+    dell'ordine e la transizione di stato (BR-04).
+    \item[\texttt{SpesaRicettaApprovazioneTest}] verifica la lista della spesa
+    generata dalle ricette e il flusso di approvazione.
+\end{description}
+
+\subsection{Entità e dominio}
+\begin{itemize}
+    \item \texttt{OrdineTest}: transizione di \texttt{cambiaStato}, applicazione
+    del buono, ricalcolo totale e notifica;
+    \item \texttt{ProdottoTest}: riduzione della disponibilità e regole di
+    quantità;
+    \item \texttt{UtenteRicettaTest}: gestione utente, ricette e approvazione;
+    \item \texttt{ProdottoInventarioTest}: inventario e scorte.
+\end{itemize}
+
+\subsection{Pattern e factory}
+\begin{itemize}
+    \item \texttt{BuonoPromozionaleStrategyTest} e \texttt{ScontoStrategyFactoryTest}:
+    scontistica percentuale/importo fisso e Simple Factory (incluso il ramo di
+    errore su tipo ignoto);
+    \item \texttt{OrdineLazyFactoryTest}, \texttt{PatternTest},
+    \texttt{AdapterTest}: verifica delle factory e del pattern Adapter;
+    \item \texttt{ControllerNoArgConstructionTest}: tutti i controller sono
+    istanziabili col costruttore no-arg via ServiceLocator (BCE).
+\end{itemize}
+
+\subsection{Persistenza}
+\begin{itemize}
+    \item \texttt{DemoDAOTest} e \texttt{FSDaoTest}: verifica dei DAO Demo
+    (in-memory) e Filesystem (JSON);
+    \item \texttt{ApplicationModeManagerTest}: risoluzione della modalità
+    applicativa (Demo/FS/JDBC) e idempotenza del seed.
+\end{itemize}
+
+\subsection{Strategie di matching (ricette)}
+\begin{itemize}
+    \item \texttt{StrictMatchingStrategyTest}: matching esatto degli
+    ingredienti;
+    \item \texttt{SubstitutionMatchingStrategyTest}: sostituzione con
+    ingredienti alternativi;
+    \item \texttt{RicettaMatchingFacadeTest} e \texttt{TrovaRicetteControllerTest}:
+    flusso applicativo di ricerca ricette (anche a catalogo vuoto).
+\end{itemize}
+
+\section{Tracciabilità Requisiti{-}Test}
+\label{sec:testing_tracciabilita}
+
+La matrice seguente collega le \textbf{User Stories} e i \textbf{Requisiti
+Funzionali} (Capitolo~\ref{cap:srs}) alle classi di test JUnit che li
+verificano, garantendo la consistenza tra specifica e verifica
+(design/requisiti, come richiesto al 30/30).
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{}llp{4.6cm}@{}} \toprule
+        \textbf{Requirement} & \textbf{Use case} & \textbf{Classe di test}\\ \midrule
+        US-2 / RF-2 & UC-02 Ricette compatibili & \texttt{TrovaRicetteControllerTest}, \\
+        & & \texttt{RicettaMatchingFacadeTest}\\
+        US-3 / RF-3 & UC-04 Ordina Prodotto & \texttt{OrdinaProdottoControllerTest}\\
+        & passo 6 / 6a & \texttt{OrdinaProdottoControllerTest} \\
+        & Buono 4a & \texttt{BuonoPromozionaleStrategyTest}, \\ & & \texttt{ScontoStrategyFactoryTest}\\
+        US-1 / RF-1 & UC-01 Dispensa & \texttt{InventarioCatalogoControllerTest}\\
+        & UC-06 Ordini & \texttt{OrdineControllerTest}\\
+        & UC-05/08 & \texttt{SpesaRicettaApprovazioneTest}\\
+        & Autenticazione & \texttt{AutenticazioneControllerTest}\\
+        & Persistenza & \texttt{DemoDAOTest}, \texttt{FSDaoTest}\\
+        \bottomrule
+    \end{tabular}
+    \caption{Matrice di tracciabilità Requisiti{-}Test (JUnit 5/JaCoCo).}
+    \label{tab:tracciabilita_test}
+\end{table}
+
+\section{Risultati dell'esecuzione}
+\label{sec:testing_risultati}
+
+La suite viene eseguita con \texttt{mvn verify}. L'ultima esecuzione (report
+JaCoCo) riporta:
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{@{}lr@{}} \toprule
+        \textbf{Metrica} & \textbf{Valore} \\ \midrule
+        Test eseguiti & 120 \\ \midrule
+        Passati & 120 \\ \midrule
+        Falliti & 0 \\ \midrule
+        Errori & 0 \\ \midrule
+        Copertura INSTRUCTION & 81.4\% \\ \midrule
+        Copertura LINE & 81.4\% \\ \midrule
+        Copertura BRANCH & 62.4\% \\ \midrule
+        Copertura METHOD & 84.8\% \\ \midrule
+        Copertura CLASS & 95.9\% \\ \bottomrule
+    \end{tabular}
+    \caption{Risultato complessivo della suite di test (ultima esecuzione JaCoCo).}
+    \label{tab:testriassunto}
+\end{table}
+
+Tutti i \textbf{120 test passano} con \textbf{0 errori} e \textbf{0 fallimenti}.
+La copertura \textbf{LINE 81.4\%} supera la soglia richiesta (\(80\%\)),
+imposta come \emph{check} nel plugin (la build fallisce in caso contrario). La
+copertura \textbf{CLASS 95.9\%} e \textbf{METHOD 84.8\%} confermano che quasi
+tutte le classi applicative sono esercitate.
+
+\section{Copertura per sotto-sistema}
+\label{sec:testing_copertura}
+
+La copertura è distribuita sui layer applicativo e di dominio: i controller
+\texttt{OrdinaProdottoController}, \texttt{AutenticazioneController},
+\texttt{InventarioCatalogoController} e le entity del marketplace
+(\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}) superano la
+soglia, a garanzia dei requisiti core del progetto (UC-04 e gestione
+inventario).
+
+\section{SonarCloud e quality gate}
+\label{sec:testing_sonar}
+
+Come nelle relazioni di riferimento, è utilizzata l'integrazione
+\textbf{SonarCloud} per l'analisi statica (bugs, vulnerabilities, code smells e
+duplicati). Il progetto supera il \emph{Quality Gate} configurato ed è
+analizzabile con \texttt{mvn sonar:sonar} (plugin \texttt{sonar-maven-plugin}
+già presente nel \texttt{pom.xml}).
+
+\begin{quote}
+\textbf{Nota di consegna}: da includere lo screenshot del \emph{Quality Gate}
+di SonarCloud (stato PASSED) e l'URL pubblico del progetto, come visibile nelle
+relazioni Cardify/GymWizard/Sporty.
+\end{quote}

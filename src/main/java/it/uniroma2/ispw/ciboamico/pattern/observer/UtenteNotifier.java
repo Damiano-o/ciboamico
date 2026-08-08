@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.pattern.observer;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.OrdineEventListener;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -15,8 +16,10 @@ public class UtenteNotifier implements OrdineEventListener {
     @Override
     public void onStatoCambiato(Ordine ordine) {
         // Funzionale: l'utente viene informato dell'avanzamento dell'ordine.
-        LOG.info("[NOTIFICA] Ordine " + ordine.getIdOrdine()
-                + " del compratore " + ordine.getCompratore().getEmail()
-                + " -> stato " + ordine.getStato());
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("[NOTIFICA] Ordine " + ordine.getIdOrdine()
+                    + " del compratore " + ordine.getCompratore().getEmail()
+                    + " -> stato " + ordine.getStato());
+        }
     }
 }

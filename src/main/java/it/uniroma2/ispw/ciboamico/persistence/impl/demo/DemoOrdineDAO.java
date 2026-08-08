@@ -13,6 +13,10 @@ import java.util.Map;
 public class DemoOrdineDAO implements OrdineDAO {
 
     private final Map<Long, Ordine> memoria = new HashMap<>();
+    private long nextId = 1;
+
+    @Override
+    public long getNextId() { return nextId++; }
 
     @Override
     public Ordine save(Ordine ordine) {

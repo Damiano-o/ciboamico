@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
@@ -42,11 +43,31 @@ public class JDBCProdottoDAO implements ProdottoDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mappa(rs);
+                if (rs.next()) {
+                    return mappa(rs);
+                }
                 return null;
             }
         } catch (SQLException e) {
             throw new DAOException("Errore ricerca prodotto", e);
+        }
+    }
+
+    @Override
+    public Prodotto findByNome(String nome) {
+        String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
+                + "venditore_zona, venditore_recapito FROM prodotti WHERE nome = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nome);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mappa(rs);
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Errore ricerca prodotto per nome", e);
         }
     }
 
@@ -76,6 +97,24 @@ public class JDBCProdottoDAO implements ProdottoDAO {
             return prodotto;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio prodotto", e);
+        }
+    }
+
+    @Override
+    public Prodotto update(Prodotto prodotto) {
+        String sql = "UPDATE prodotti SET prezzo = ?, quantita_disponibile = ?, "
+                + "venditore_zona = ?, venditore_recapito = ? WHERE nome = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, prodotto.getPrezzo());
+            ps.setInt(2, prodotto.getQuantitaDisponibile());
+            ps.setString(3, prodotto.getVenditore() != null ? prodotto.getVenditore().getZona() : null);
+            ps.setString(4, prodotto.getVenditore() != null ? prodotto.getVenditore().getRecapito() : null);
+            ps.setString(5, prodotto.getNome());
+            ps.executeUpdate();
+            return prodotto;
+        } catch (SQLException e) {
+            throw new DAOException("Errore aggiornamento prodotto", e);
         }
     }
 
@@ -135,12 +174,16 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     private Prodotto mappa(ResultSet rs) throws SQLException {
         RuoloVenditore venditore = new RuoloVenditore(
                 rs.getString("venditore_zona"), rs.getString("venditore_recapito"));
-        return new Prodotto(
-                rs.getString("nome"),
-                rs.getDouble("prezzo"),
-                rs.getInt("quantita_disponibile"),
-                rs.getDate("scadenza").toLocalDate(),
-                UnitaEnum.valueOf(rs.getString("unita")),
-                venditore);
+        try {
+            return new Prodotto(
+                    rs.getString("nome"),
+                    rs.getDouble("prezzo"),
+                    rs.getInt("quantita_disponibile"),
+                    rs.getDate("scadenza").toLocalDate(),
+                    UnitaEnum.valueOf(rs.getString("unita")),
+                    venditore);
+        } catch (BusinessValidationException e) {
+            throw new DAOException("Dati prodotto corrotti in persistenza: " + e.getMessage(), e);
+        }
     }
 }

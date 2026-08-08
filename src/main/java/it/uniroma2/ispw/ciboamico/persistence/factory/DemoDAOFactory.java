@@ -1,19 +1,22 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
+import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoRicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoUtenteDAO;
+import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Factory DEMO: DAO in-memory con dati seed (utenti, prodotti, ricette).
@@ -27,19 +30,31 @@ public class DemoDAOFactory extends DAOFactory {
     private final ProdottoDAO prodottoDAO = new DemoProdottoDAO();
     private final RicettaDAO ricettaDAO = new DemoRicettaDAO();
     private final OrdineDAO ordineDAO = new DemoOrdineDAO();
+    private final BuonoDAO buonoDAO = new DemoBuonoDAO();
+    private boolean seeded;
 
-    public DemoDAOFactory() {
-        // Niente seed nel costruttore: i test partono da stato vuoto.
-        // Il bootstrap demo chiama esplicitamente seedDemoData().
-    }
+    @Override
+    public BuonoDAO getBuonoDAO() { return buonoDAO; }
 
-    /** Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO). */
-    public void seedDemoData() {
-        seed();
+    /**
+     * Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO).
+     * Idempotente: una sola esecuzione anche se invocata più volte
+     * (riavvio della scena, doppio start, test), così i dati non duplicano.
+     */
+    public synchronized void seedDemoData() {
+        if (seeded) {
+            return;
+        }
+        try {
+            seed();
+            seeded = true;
+        } catch (BusinessValidationException e) {
+            throw new IllegalStateException("Seed demo corrotto", e);
+        }
     }
 
     /** Carica dati dimostrativi: 4 utenti (tutti i ruoli), prodotti, ricette. */
-    private void seed() {
+    private void seed() throws BusinessValidationException {
         // Utente client
         Utente mario = new Utente("Mario", "mario@cibo.it", hash("password123"));
         mario.aggiungiRuolo(new RuoloCliente());
@@ -70,13 +85,36 @@ public class DemoDAOFactory extends DAOFactory {
         prodottoDAO.save(miele);
         prodottoDAO.save(pomodori);
 
-        // Inventario del client (per il matching ricette)
+        // Buono promozionale del venditore (es. -20% valido un mese, monouso per cliente)
+        buonoDAO.save(new BuonoPromozionale("SALUTI20", rv,
+                LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
+                new ScontoPercentualeStrategy(0.20)));
+
+        // Inventario del client (per il matching ricette) — dati demo ricchi
         prodottoDAO.saveInventario("mario@cibo.it",
                 new ProdottoInventario("Pasta", 1000, LocalDate.now().plusDays(200),
                         "Dispensa", UnitaEnum.GRAMMI, null));
         prodottoDAO.saveInventario("mario@cibo.it",
                 new ProdottoInventario("Passata di pomodoro", 500, LocalDate.now().plusDays(30),
                         "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Pomodori", 800, LocalDate.now().plusDays(4),
+                        "Frigo", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Latte intero", 1000, LocalDate.now(),
+                        "Frigo", UnitaEnum.ML, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Uova", 6, LocalDate.now().plusDays(1),
+                        "Frigo", UnitaEnum.PEZZI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Riso", 750, LocalDate.now().plusDays(300),
+                        "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Pepe nero", 3, LocalDate.now().plusDays(500),
+                        "Dispensa", UnitaEnum.GRAMMI, null));
+        prodottoDAO.saveInventario("mario@cibo.it",
+                new ProdottoInventario("Formaggio stagionato", 250, LocalDate.now().plusDays(2),
+                        "Frigo", UnitaEnum.GRAMMI, null));
 
         // Ricetta PROPOSTA del nutrizionista
         Ricetta ricetta = new Ricetta("Pasta al pomodoro", "Bollire la pasta e condire.",
@@ -87,6 +125,10 @@ public class DemoDAOFactory extends DAOFactory {
         ricetta.aggiungiIngrediente(new Ingrediente(
                 new Prodotto("Passata di pomodoro", 1.0, 100, LocalDate.now().plusYears(1),
                         UnitaEnum.GRAMMI, null), 3, UnitaEnum.GRAMMI));
+
+        // Approvazione della ricetta (come farebbe l'Admin, UC-09):
+        // solo le ricette APPROVATE compaiono in "Trova ricette compatibili".
+        ricetta.setStato(StatoRicettaEnum.APPROVATA);
         ricettaDAO.save(ricetta);
     }
 

@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Facade RicettaMatchingFacade: Strategy + conversione Entity→Bean.
- */
+ 
+ * @author Michele Damiano
+*/
 class RicettaMatchingFacadeTest {
 
-    private Ricetta ricettaCompleta() {
+    private Ricetta ricettaCompleta() throws Exception {
         Ricetta r = new Ricetta("Pasta al pomodoro", "bollire", new RuoloNutrizionista());
         Prodotto pasta = new Prodotto("Pasta", 2.0, 100, LocalDate.now().plusDays(100),
                 UnitaEnum.GRAMMI, null);
@@ -28,7 +30,7 @@ class RicettaMatchingFacadeTest {
     }
 
     @Test
-    void testFacadeConInventarioCompleto() {
+    void testFacadeConInventarioCompleto() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
                 LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
@@ -40,11 +42,10 @@ class RicettaMatchingFacadeTest {
         assertEquals(1, beans.size());
         assertEquals("Pasta al pomodoro", beans.get(0).getNome());
         assertEquals(2, beans.get(0).getIngredientiNomi().size());
-        assertTrue(beans.get(0).haAlmenoDueIngredienti());
-    }
+        assertTrue(beans.get(0).haAlmenoDueIngredienti());}
 
     @Test
-    void testFacadeConSostituzione() {
+    void testFacadeConSostituzione() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         ProdottoInventario margarina = new ProdottoInventario("Margarina", 500,
                 LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
@@ -60,7 +61,7 @@ class RicettaMatchingFacadeTest {
     }
 
     @Test
-    void testFacadeSenzaRisultati() {
+    void testFacadeSenzaRisultati() throws Exception {
         RicettaMatchingFacade facade = RicettaMatchingFacade.conSostituzione();
         List<RicettaBean> beans = facade.getRecipes(List.of(), List.of(ricettaCompleta()));
         assertTrue(beans.isEmpty());

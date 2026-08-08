@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test ListaSpesa (UC-03), Ricette Nutrizionista (UC-07), Approvazioni (UC-08/09).
- */
+ 
+ * @author Michele Damiano
+*/
 class SpesaRicettaApprovazioneTest {
 
     private DemoDAOFactory factory;
@@ -60,14 +62,13 @@ class SpesaRicettaApprovazioneTest {
     }
 
     @Test
-    void testCreaRicettaValida() {
+    void testCreaRicettaValida() throws Exception {
         RicettaBean bean = ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         assertNotNull(bean);
-        assertEquals("Pasta al pomodoro", bean.getNome());
-    }
+        assertEquals("Pasta al pomodoro", bean.getNome());}
 
     @Test
-    void testCreaRicettaMenoDiDueIngredienti() {
+    void testCreaRicettaMenoDiDueIngredienti() throws Exception {
         RicettaBean bean = new RicettaBean();
         bean.setNome("Solo pasta");
         bean.setIngredientiNomi(List.of("Pasta")); // 1 solo → BR-05
@@ -76,7 +77,7 @@ class SpesaRicettaApprovazioneTest {
     }
 
     @Test
-    void testCalcolaMancanze() {
+    void testCalcolaMancanze() throws Exception {
         // Ricetta con 2 ingredienti nel catalogo
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Inventario: solo Pasta → manca Pomodoro
@@ -87,30 +88,27 @@ class SpesaRicettaApprovazioneTest {
         List<ProdottoBean> mancanti = listaSpesa.calcolaMancanze("demo@cibo.it", "Pasta al pomodoro");
 
         assertFalse(mancanti.isEmpty());
-        assertEquals("Pomodoro", mancanti.get(0).getNome());
-    }
+        assertEquals("Pomodoro", mancanti.get(0).getNome());}
 
     @Test
-    void testApprovazioneVenditoreNonTrovato() {
+    void testApprovazioneVenditoreNonTrovato() throws Exception {
         assertThrows(IllegalArgumentException.class,
                 () -> approvazione.approvaVenditore("nessuno@cibo.it", true));
     }
 
     @Test
-    void testRicetteInAttesa() {
+    void testRicetteInAttesa() throws Exception {
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         List<RicettaBean> inAttesa = approvazione.ricetteInAttesa();
         assertEquals(1, inAttesa.size());
-        assertEquals("Pasta al pomodoro", inAttesa.get(0).getNome());
-    }
+        assertEquals("Pasta al pomodoro", inAttesa.get(0).getNome());}
 
     @Test
-    void testApprovaRicetta() {
+    void testApprovaRicetta() throws Exception {
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Prima dell'approvazione: 1 ricetta in attesa
         assertEquals(1, approvazione.ricetteInAttesa().size());
         approvazione.approvaRicetta("Pasta al pomodoro", true);
         // Dopo l'approvazione: nessuna in attesa
-        assertTrue(approvazione.ricetteInAttesa().isEmpty());
-    }
+        assertTrue(approvazione.ricetteInAttesa().isEmpty());}
 }

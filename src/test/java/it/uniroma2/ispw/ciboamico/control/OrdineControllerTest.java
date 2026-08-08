@@ -14,7 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test OrdinaProdottoController (UC-04), GestisciOrdiniRicevutiController (UC-06)
  * e GestisciListaSpesaController (UC-03).
- */
+ 
+ * @author Michele Damiano
+*/
 class OrdineControllerTest {
 
     private DemoDAOFactory factory() { return new DemoDAOFactory(); }
@@ -34,18 +36,18 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testObserverNotificaCambioStato() {
+    void testObserverNotificaCambioStato() throws Exception {
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         final boolean[] notificato = {false};
         ordine.subscribe(o -> notificato[0] = true);
 
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
 
         assertTrue(notificato[0]);
     }
 
     @Test
-    void testVisualizzaOrdiniRicevuti() {
+    void testVisualizzaOrdiniRicevuti() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
@@ -54,34 +56,33 @@ class OrdineControllerTest {
         List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
 
         assertEquals(1, ricevuti.size());
-        assertEquals(StatoOrdineEnum.CREATO.name(), ricevuti.get(0).getStato());
-    }
+        assertEquals(StatoOrdineEnum.CREATED.name(), ricevuti.get(0).getStato());}
 
     @Test
-    void testAggiornaStatoOrdine() {
+    void testAggiornaStatoOrdine() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         factory.getOrdineDAO().save(ordine);
 
-        OrdineBean aggiornato = controller.aggiornaStato(1L, StatoOrdineEnum.CONFERMATO);
+        OrdineBean aggiornato = controller.aggiornaStato(1L, "CONFIRMED");
 
-        assertEquals(StatoOrdineEnum.CONFERMATO.name(), aggiornato.getStato());
+        assertEquals(StatoOrdineEnum.CONFIRMED.name(), aggiornato.getStato());
     }
 
     @Test
-    void testAggiornaStatoNonValido() {
+    void testAggiornaStatoNonValido() throws Exception {
         DemoDAOFactory factory = factory();
         GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
         Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
         factory.getOrdineDAO().save(ordine);
 
         assertThrows(InvalidStateTransitionException.class,
-                () -> controller.aggiornaStato(1L, StatoOrdineEnum.CONSEGNATO)); // da CREATO non valido
+                () -> controller.aggiornaStato(1L, "DELIVERED")); // da CREATED non valido
     }
 
     @Test
-    void testVoceOrdineParziale() {
+    void testVoceOrdineParziale() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.50, 10, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, utenteVenditore().getRuolo(RuoloVenditore.class));
         VoceOrdine voce = new VoceOrdine(p, 2);

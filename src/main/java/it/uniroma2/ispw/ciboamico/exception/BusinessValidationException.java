@@ -8,7 +8,7 @@ package it.uniroma2.ispw.ciboamico.exception;
  * IllegalArgumentException per i vincoli di dominio, dando un'astrazione
  * espressiva nel layer di errore (cap. 9 relazione).
  */
-public class BusinessValidationException extends RuntimeException {
+public class BusinessValidationException extends Exception {
 
     public BusinessValidationException(String message) {
         super(message);

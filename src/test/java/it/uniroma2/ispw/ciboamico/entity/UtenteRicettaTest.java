@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Utente + Ruoli (whole-part, metamorfosi) e Ricetta (BR-05).
- */
+ 
+ * @author Michele Damiano
+*/
 class UtenteRicettaTest {
 
     @Test
-    void testMetamorfosiRuolo() {
+    void testMetamorfosiRuolo() throws Exception {
         Utente u = new Utente("Mario", "mario@cibo.it", "hash");
         assertFalse(u.haRuolo(RuoloVenditore.class));
 
@@ -19,26 +21,24 @@ class UtenteRicettaTest {
         u.aggiungiRuolo(rv);
 
         assertTrue(u.haRuolo(RuoloVenditore.class));
-        assertTrue(u.isVenditoreApprovato());
-    }
+        assertTrue(u.isVenditoreApprovato());}
 
     @Test
-    void testVenditoreNonApprovato() {
+    void testVenditoreNonApprovato() throws Exception {
         Utente u = new Utente("Mario", "mario@cibo.it", "hash");
         u.aggiungiRuolo(new RuoloVenditore("RM", "tel")); // stato IN_ATTESA
         assertFalse(u.isVenditoreApprovato());
     }
 
     @Test
-    void testNomeRuoliConcreti() {
+    void testNomeRuoliConcreti() throws Exception {
         assertEquals("AMMINISTRATORE", new RuoloAmministratore().getNomeRuolo());
         assertEquals("CLIENTE", new RuoloCliente().getNomeRuolo());
         assertEquals("NUTRIZIONISTA", new RuoloNutrizionista().getNomeRuolo());
-        assertEquals("VENDITORE", new RuoloVenditore("RM", "tel").getNomeRuolo());
-    }
+        assertEquals("VENDITORE", new RuoloVenditore("RM", "tel").getNomeRuolo());}
 
     @Test
-    void testRicettaHaAlmenoDueIngredienti() {
+    void testRicettaHaAlmenoDueIngredienti() throws Exception {
         RuoloNutrizionista nutrizionista = new RuoloNutrizionista();
         Ricetta r = new Ricetta("Pasta al pomodoro", "bollire", nutrizionista);
         assertFalse(r.haAlmenoDueIngredienti()); // BR-05: serve >= 2
@@ -50,6 +50,23 @@ class UtenteRicettaTest {
         r.aggiungiIngrediente(new Ingrediente(pasta, 500, UnitaEnum.GRAMMI));
         r.aggiungiIngrediente(new Ingrediente(pomodoro, 3, UnitaEnum.PEZZI));
 
-        assertTrue(r.haAlmenoDueIngredienti());
+        assertTrue(r.haAlmenoDueIngredienti());}
+
+    @Test
+    void testCheckPasswordCorretta() {
+        Utente u = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("segreta"));
+        assertTrue(u.checkPassword("segreta"));
+    }
+
+    @Test
+    void testCheckPasswordErrata() {
+        Utente u = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("segreta"));
+        assertFalse(u.checkPassword("sbagliata"));
+    }
+
+    @Test
+    void testHashPasswordDeterministico() {
+        assertEquals(Utente.hashPassword("abc"), Utente.hashPassword("abc"));
+        assertNotEquals(Utente.hashPassword("abc"), Utente.hashPassword("abd"));
     }
 }

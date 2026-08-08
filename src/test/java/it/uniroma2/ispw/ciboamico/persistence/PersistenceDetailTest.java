@@ -18,7 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test di dettaglio per FS DAO (findById, inventario) e factory.
- */
+ 
+ * @author Michele Damiano
+*/
 class PersistenceDetailTest {
 
     @BeforeEach
@@ -40,7 +42,7 @@ class PersistenceDetailTest {
     }
 
     @Test
-    void testProdottoFindById() {
+    void testProdottoFindById() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         Prodotto p = new Prodotto("Pomodori", 2.0, 50, LocalDate.now().plusDays(7),
                 UnitaEnum.GRAMMI, venditore());
@@ -49,11 +51,10 @@ class PersistenceDetailTest {
         Prodotto trovato = dao.findById((long) p.getNome().hashCode());
 
         assertNotNull(trovato);
-        assertEquals("Pomodori", trovato.getNome());
-    }
+        assertEquals("Pomodori", trovato.getNome());}
 
     @Test
-    void testInventarioFSSaveAndFind() {
+    void testInventarioFSSaveAndFind() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         ProdottoInventario pi = new ProdottoInventario("Latte", 2,
                 LocalDate.now().plusDays(10), "Frigo", UnitaEnum.LITRI, null);
@@ -62,11 +63,10 @@ class PersistenceDetailTest {
         List<ProdottoInventario> inventario = dao.findInventario("anna@cibo.it");
 
         assertEquals(1, inventario.size());
-        assertEquals("Latte", inventario.get(0).getNome());
-    }
+        assertEquals("Latte", inventario.get(0).getNome());}
 
     @Test
-    void testFactoryConcrete() {
+    void testFactoryConcrete() throws Exception {
         DAOFactory fs = new FSDAOFactory();
         assertNotNull(fs.getUtenteDAO());
         assertNotNull(fs.getProdottoDAO());
@@ -77,22 +77,19 @@ class PersistenceDetailTest {
         assertNotNull(jdbc.getUtenteDAO());
         assertNotNull(jdbc.getProdottoDAO());
         assertNotNull(jdbc.getRicettaDAO());
-        assertNotNull(jdbc.getOrdineDAO());
-    }
+        assertNotNull(jdbc.getOrdineDAO());}
 
     @Test
-    void testStatoEnum() {
+    void testStatoEnum() throws Exception {
         assertEquals("IN_ATTESA", StatoVenditoreEnum.IN_ATTESA.name());
         assertEquals("APPROVATA", StatoRicettaEnum.APPROVATA.name());
-        assertEquals("CONSEGNATO", StatoOrdineEnum.CONSEGNATO.name());
-    }
+        assertEquals("DELIVERED", StatoOrdineEnum.DELIVERED.name());}
 
     @Test
-    void testUtenteGetRuoli() {
+    void testUtenteGetRuoli() throws Exception {
         Utente u = new Utente("Mario", "m@cibo.it", "h");
         u.aggiungiRuolo(new RuoloCliente());
         assertEquals(1, u.getRuoli().size());
         assertNotNull(u.getRuolo(RuoloCliente.class));
-        assertNull(u.getRuolo(RuoloVenditore.class));
-    }
+        assertNull(u.getRuolo(RuoloVenditore.class));}
 }

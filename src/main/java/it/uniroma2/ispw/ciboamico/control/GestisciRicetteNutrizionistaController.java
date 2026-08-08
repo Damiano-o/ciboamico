@@ -9,6 +9,7 @@ import it.uniroma2.ispw.ciboamico.entity.RuoloNutrizionista;
 import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
@@ -32,7 +33,13 @@ public class GestisciRicetteNutrizionistaController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    public RicettaBean creaRicetta(RicettaBean bean) {
+    /** Costruttore no-arg: la persistenza è risolta dal ServiceLocator (ApplicationModeManager), così la View non inietta la DAOFactory. */
+    public GestisciRicetteNutrizionistaController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
+    public RicettaBean creaRicetta(RicettaBean bean)
+            throws BusinessValidationException {
         if (!bean.haAlmenoDueIngredienti()) {
             throw new IllegalArgumentException("La ricetta deve avere almeno 2 ingredienti (BR-05)");
         }

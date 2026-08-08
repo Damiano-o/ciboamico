@@ -1,5 +1,8 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,18 +10,41 @@ import java.util.List;
  * Utente — classe radice del dominio.
  * Pattern Whole-Part: aggrega dinamicamente più Ruolo per superare la metamorfosi
  * (un utente può diventare venditore a runtime senza ristrutturare le classi).
+ * Information Expert (GRASP): l'entità conosce il formato della password e
+ * verifica autonomamente le credenziali.
  */
 public class Utente {
+
+    /** Salt fisso applicato all'hash SHA-256 (NFR-03). */
+    private static final String SALT = "ciboamico-salt";
 
     private String nome;
     private String email;
     private String passwordHash;
     private final List<Ruolo> ruoli = new ArrayList<>();
+    /** Codici dei buoni promozionali già riscattati da questo utente (monouso). */
+    private final List<String> buoniUtilizzati = new ArrayList<>();
 
     public Utente(String nome, String email, String passwordHash) {
         this.nome = nome;
         this.email = email;
         this.passwordHash = passwordHash;
+    }
+
+    /** Hash SHA-256 con salt (NFR-03) — Information Expert: la Entity possiede il formato. */
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest((SALT + password).getBytes(StandardCharsets.UTF_8));
+            return java.util.HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** Verifica la password in chiaro contro l'hash memorizzato (UC-11). */
+    public boolean checkPassword(String password) {
+        return passwordHash.equals(hashPassword(password));
     }
 
     /** Aggiunge un ruolo all'utente (metamorfosi dinamica) con back-reference. */
@@ -45,6 +71,20 @@ public class Utente {
         RuoloVenditore v = getRuolo(RuoloVenditore.class);
         return v != null && v.getStato() == StatoVenditoreEnum.APPROVATO;
     }
+
+    /** True se l'utente ha già riscattato il buono con il codice indicato (monouso). */
+    public boolean haUsatoBuono(String codiceBuono) {
+        return buoniUtilizzati.contains(codiceBuono);
+    }
+
+    /** Registra il buono come riscattato (monouso). Idempotente. */
+    public void registraBuonoUtilizzato(String codiceBuono) {
+        if (!buoniUtilizzati.contains(codiceBuono)) {
+            buoniUtilizzati.add(codiceBuono);
+        }
+    }
+
+    public List<String> getBuoniUtilizzati() { return buoniUtilizzati; }
 
     public String getNome() { return nome; }
     public String getEmail() { return email; }

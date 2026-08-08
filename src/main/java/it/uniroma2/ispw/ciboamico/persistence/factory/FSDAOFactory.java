@@ -1,9 +1,11 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
+import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSRicettaDAO;
@@ -25,4 +27,7 @@ public class FSDAOFactory extends DAOFactory {
 
     @Override
     public OrdineDAO getOrdineDAO() { return new FSOrdineDAO(); }
+
+    @Override
+    public BuonoDAO getBuonoDAO() { return new FSBuonoDAO(getUtenteDAO()); }
 }

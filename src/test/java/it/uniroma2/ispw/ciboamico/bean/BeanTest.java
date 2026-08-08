@@ -8,11 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Bean: validazione sintattica e getter/setter.
- */
+ 
+ * @author Michele Damiano
+*/
 class BeanTest {
 
     @Test
-    void testProdottoBeanValidazione() {
+    void testProdottoBeanValidazione() throws Exception {
         ProdottoBean bean = new ProdottoBean();
         assertFalse(bean.datiObbligatoriPresenti());
 
@@ -24,11 +26,10 @@ class BeanTest {
 
         assertTrue(bean.datiObbligatoriPresenti());
         assertEquals("Latte", bean.getNome());
-        assertEquals(2.0, bean.getQuantita());
-    }
+        assertEquals(2.0, bean.getQuantita());}
 
     @Test
-    void testProdottoBeanNomeVuoto() {
+    void testProdottoBeanNomeVuoto() throws Exception {
         ProdottoBean bean = new ProdottoBean();
         bean.setNome("   ");
         bean.setQuantita(2.0);
@@ -39,35 +40,33 @@ class BeanTest {
     }
 
     @Test
-    void testRicettaBean() {
+    void testRicettaBean() throws Exception {
         RicettaBean bean = new RicettaBean();
         assertFalse(bean.haAlmenoDueIngredienti());
 
         bean.setIngredientiNomi(java.util.List.of("A", "B"));
         assertTrue(bean.haAlmenoDueIngredienti());
-        assertEquals("A", bean.getIngredientiNomi().get(0));
-    }
+        assertEquals("A", bean.getIngredientiNomi().get(0));}
 
     @Test
-    void testUtenteBean() {
+    void testUtenteBean() throws Exception {
         UtenteBean bean = new UtenteBean();
         bean.setRuoloAttivo("VENDITORE");
         assertEquals("VENDITORE", bean.getRuoloAttivo());
     }
 
     @Test
-    void testOrdineBean() {
+    void testOrdineBean() throws Exception {
         OrdineBean bean = new OrdineBean();
         bean.setIdOrdine(5L);
         bean.setTotale(10.0);
-        bean.setStato("CREATO");
+        bean.setStato("CREATED");
         bean.setCompratoreId("c1");
         bean.setVenditoreId("v1");
 
         assertEquals(5L, bean.getIdOrdine());
         assertEquals(10.0, bean.getTotale());
-        assertEquals("CREATO", bean.getStato());
+        assertEquals("CREATED", bean.getStato());
         assertEquals("c1", bean.getCompratoreId());
-        assertEquals("v1", bean.getVenditoreId());
-    }
+        assertEquals("v1", bean.getVenditoreId());}
 }

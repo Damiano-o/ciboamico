@@ -21,7 +21,9 @@ public class FSRicettaDAO implements RicettaDAO {
 
     private List<Ricetta> carica() {
         try {
-            if (!Files.exists(FILE)) return new ArrayList<>();
+            if (!Files.exists(FILE)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE), new TypeToken<List<Ricetta>>() { }.getType());
         } catch (IOException e) {
             throw new RuntimeException("Errore lettura ricette.json", e);

@@ -21,7 +21,9 @@ public class FSOrdineDAO implements OrdineDAO {
 
     private List<Ordine> carica() {
         try {
-            if (!Files.exists(FILE)) return new ArrayList<>();
+            if (!Files.exists(FILE)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE), new TypeToken<List<Ordine>>() { }.getType());
         } catch (IOException e) {
             throw new RuntimeException("Errore lettura ordini.json", e);
@@ -44,6 +46,14 @@ public class FSOrdineDAO implements OrdineDAO {
         ordini.add(ordine);
         salva(ordini);
         return ordine;
+    }
+
+    @Override
+    public long getNextId() {
+        return carica().stream()
+                .mapToLong(Ordine::getIdOrdine)
+                .max()
+                .orElse(0L) + 1L;
     }
 
     @Override

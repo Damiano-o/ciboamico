@@ -21,11 +21,15 @@ public class JDBCRicettaDAO implements RicettaDAO {
     @Override
     public List<Ricetta> findByStato(String stato) {
         String sql = "SELECT id, nome, istruzioni, stato, autore_email FROM ricette";
-        if (stato != null) sql += " WHERE stato = ?";
+        if (stato != null) {
+            sql += " WHERE stato = ?";
+        }
         List<Ricetta> risultati = new ArrayList<>();
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            if (stato != null) ps.setString(1, stato);
+            if (stato != null) {
+                ps.setString(1, stato);
+            }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Ricetta r = new Ricetta(rs.getString("nome"),

@@ -22,8 +22,10 @@ public class JakartaMailAdapter {
             return false;
         }
         // In produzione: Transport.send(message) verso il server SMTP configurato
-        LOG.log(Level.INFO, "[MAIL-STUB] A: {0} | Ordine {1} | {2}",
-                new Object[]{destinatarioEmail, ordine.getIdOrdine(), messaggio});
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.log(Level.INFO, "[MAIL-STUB] A: {0} | Ordine {1} | {2}",
+                    new Object[]{destinatarioEmail, ordine.getIdOrdine(), messaggio});
+        }
         return true;
     }
 }

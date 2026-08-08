@@ -20,44 +20,42 @@ public final class MainApplication extends Application {
     @Override
     public void start(Stage stage) {
         // In modalità DEMO carica i dati seed (utenti, prodotti, ricette).
-        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
-                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
-            demo.seedDemoData();
-        }
+        seedDemoDataSeNecessario();
 
         Navigator navigator = Navigator.getInstance();
         navigator.init(stage);
 
         // Registrazione view (nomi simbolici, factory programmatiche)
-        navigator.register("login", new LoginView(modeManager.getDAOFactory())::build);
+        // Le Boundary costruiscono i propri controller tramite il registro applicativo,
+        // senza ricevere la DAOFactory: la View non conosce la persistenza.
+        navigator.register("login", new LoginView()::build);
         navigator.register("home", new HomeView()::build);
-        navigator.register("inventario", new InventarioView(modeManager.getDAOFactory())::build);
-        navigator.register("ricette", new RicetteView(modeManager.getDAOFactory())::build);
-        navigator.register("lista-spesa", new ListaSpesaView(modeManager.getDAOFactory())::build);
-        navigator.register("marketplace", new MarketplaceView(modeManager.getDAOFactory())::build);
-        navigator.register("catalogo", new CatalogoVenditoreView(modeManager.getDAOFactory())::build);
-        navigator.register("ordini", new OrdiniRicevutiView(modeManager.getDAOFactory())::build);
-        navigator.register("crea-ricetta", new RicetteNutrizionistaView(modeManager.getDAOFactory())::build);
-        navigator.register("admin", new AdminView(modeManager.getDAOFactory())::build);
+        navigator.register("inventario", new InventarioView()::build);
+        navigator.register("ricette", new RicetteView()::build);
+        navigator.register("lista-spesa", new ListaSpesaView()::build);
+        navigator.register("marketplace", new MarketplaceView()::build);
+        navigator.register("payment", new PaymentView()::build);
+        navigator.register("catalogo", new CatalogoVenditoreView()::build);
+        navigator.register("ordini", new OrdiniRicevutiView()::build);
+        navigator.register("crea-ricetta", new RicetteNutrizionistaView()::build);
+        navigator.register("admin", new AdminView()::build);
 
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");
-
-        // Modalità demo: genera snapshot PNG (flag ciboamico.demo) oppure
-        // naviga con pause per la registrazione dello schermo (flag ciboamico.demorun).
-        if (System.getProperty("ciboamico.demo") != null
-                || System.getProperty("ciboamico.demorun") != null) {
-            new Thread(() -> {
-                // attende che la scena sia visibile e la cattura schermo sia partita
-                try { Thread.sleep(4000); } catch (InterruptedException ignored) { }
-                DemoDriver.run();
-            }).start();
-        }
     }
 
     public static void main(String[] args) {
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
         launch(args);
+    }
+
+    /** Seed DEMO condiviso tra GUI e CLI (doppia interfaccia). */
+    public static void seedDemoDataSeNecessario() {
+        ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
+        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
+                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
+            demo.seedDemoData();
+        }
     }
 }

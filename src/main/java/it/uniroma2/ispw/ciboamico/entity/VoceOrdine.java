@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+
 /**
  * Voce d'ordine: prodotto, quantità e prezzo snapshot al momento dell'acquisto.
  */

@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * T03/T04 — SubstitutionMatchingStrategy (elemento innovativo D-01).
- */
+ 
+ * @author Michele Damiano
+*/
 class SubstitutionMatchingStrategyTest {
 
-    private Ricetta ricetta(String nome, Prodotto... ingredienti) {
+    private Ricetta ricetta(String nome, Prodotto... ingredienti) throws Exception {
         Ricetta r = new Ricetta(nome, "istruzioni", new RuoloNutrizionista());
         for (Prodotto p : ingredienti) {
             r.aggiungiIngrediente(new Ingrediente(p, 1, UnitaEnum.GRAMMI));
@@ -23,16 +25,16 @@ class SubstitutionMatchingStrategyTest {
         return r;
     }
 
-    private Prodotto prodotto(String nome) {
+    private Prodotto prodotto(String nome) throws Exception {
         return new Prodotto(nome, 1.0, 10, LocalDate.now().plusDays(30), UnitaEnum.GRAMMI, new RuoloVenditore("RM", "x"));
     }
 
-    private ProdottoInventario inventario(String nome) {
+    private ProdottoInventario inventario(String nome) throws Exception {
         return new ProdottoInventario(nome, 100, LocalDate.now().plusDays(10), "Dispensa", UnitaEnum.GRAMMI, prodotto(nome));
     }
 
     @Test
-    void testMatchWithSubstitution() {
+    void testMatchWithSubstitution() throws Exception {
         // Margarina disponibile → sostituisce Burro (fattore 1.2)
         ProdottoInventario margarina = inventario("Margarina");
         Ricetta ricetta = ricetta("Torta", prodotto("Burro"));
@@ -43,7 +45,7 @@ class SubstitutionMatchingStrategyTest {
     }
 
     @Test
-    void testMatchWithoutSubstitute() {
+    void testMatchWithoutSubstitute() throws Exception {
         // Nessun ingrediente e nessun sostituto → lista vuota
         Ricetta ricetta = ricetta("Torta", prodotto("Burro"));
 
