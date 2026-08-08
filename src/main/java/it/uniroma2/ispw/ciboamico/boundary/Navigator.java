@@ -52,7 +52,7 @@ public final class Navigator {
         stage.show();
     }
 
-    /** Scene corrente (usata dal DemoDriver per snapshot e lookup). */
+    /** Scene corrente della GUI. */
     public Scene getScene() {
         return stage.getScene();
     }
