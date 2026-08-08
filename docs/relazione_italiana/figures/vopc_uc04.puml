@@ -1,167 +1,113 @@
 @startuml
+allowmixing
 skinparam style strictuml
 skinparam classAttributeIconSize 0
-skinparam nodesep 12
-skinparam ranksep 18
+skinparam nodesep 30
+skinparam ranksep 30
 skinparam classFontSize 13
 skinparam classAttributeFontSize 12
 left to right direction
 
-' === VOPC (analysis) — UC-04 Ordina un Prodotto — fila BCE orizzontale ===
-' colori BCE pastello: azzurro=boundary, verde=control, grigio=bean, arancio=entity, viola=dao
+' ============================================================
+' VOPC (analysis BCE) — UC-04 Ordina un Prodotto
+' Modello pre-MVC: SOLO Boundary / Control / Entity.
+' Attributi rilevanti di dominio + operazioni di business; niente
+' getter/setter, DTO/Bean o DAO (reverse engineering) in questa vista.
+' ============================================================
 
+' ---------- BOUNDARY ----------
 class "MarketplaceView" <<boundary>> #A9D6FF {
-  -ordinaController : OrdinaProdottoController
-  +build() : Parent
+  - prodottoSelezionato : String
+  - totaleCorrente : double
+  + mostraCatalogo(prodotti) : void
+  + selezioneProdotto(nome) : void
+  + applicaBuono(codice) : void
+  + ordina() : void
 }
+
 class "PaymentView" <<boundary>> #A9D6FF {
-  -ordinaController : OrdinaProdottoController
-  +build() : Parent
-  -validaCampi(carta, intestatario, scadenza, cvv)
+  - datiCarta : String
+  + inserisciDatiCarta() : void
+  + confermaPagamento() : void
+  + mostraEsito(esito) : void
 }
-class "OrdinaProdottoController" <<control>> #A9E8B0 {
-  -ordineDAO : OrdineDAO
-  -prodottoDAO : ProdottoDAO
-  -buonoDAO : BuonoDAO
-  -utenteDAO : UtenteDAO
-  -paymentGateway : PaymentGateway
-  +getProdottiDisponibili() : List<ProdottoBean>
-  +processaPagamento(bean, utente, payment) : OrdineBean
-  +applicaBuonoPromozionale(String codiceBuono, OrdineBean bean, UtenteBean utente) : OrdineBean
-}
-class "OrdineBean" <<bean>> #E3E3E3 {
-  -idOrdine : Long
-  -nomeProdotto : String
-  -totale : Double
-  -stato : String
-  -compratoreId : String
-  -venditoreId : String
-  -codiceBuono : String
-  +getTotale() : Double
-  +setTotale(Double)
-  +getStato() : String
-  +getNomeProdotto() : String
-  +setNomeProdotto(String)
-}
-class "UtenteBean" <<bean>> #E3E3E3 {
-  -username : String
-  -nome : String
-  -cognome : String
-  -email : String
-  -ruoloAttivo : String
-  +getUsername() : String
-  +getEmail() : String
-}
-class "ProdottoBean" <<bean>> #E3E3E3 {
-  - nome : String
-  - prezzo : Double
-  - quantita : Double
-  - scadenza : LocalDate
-  - posizione : String
-  - unitaMisura : String
-}
-class "PaymentInfoBean" <<bean>> #E3E3E3 {
-  -numeroCarta : String
-  -intestatario : String
-  -scadenza : String
-  -cvv : String
-  -importoInCent : long
-  +getImportoInCent() : long
-}
+
 class "PaymentGateway" <<boundary>> #D8C7F0 {
-  +autorizza(long importoInCent) : boolean
-  +fornitore() : String
+  + autorizza(importo) : boolean
 }
+
 class "VenditoreNotifier" <<boundary>> #D8C7F0 {
-  -LOG : Logger
-  +onStatoCambiato(Ordine ordine) : void
+  + notificaOrdine(ordine) : void
 }
-class "Utente" <<entity>> #FCD9A9 {
-  - username : String
-  - email : String
-  +registraBuonoUtilizzato(String)
-  +haUsatoBuono(String) : boolean
+
+' ---------- CONTROL ----------
+class "OrdinaProdottoController" <<control>> #A9E8B0 {
+  + inizializzaCatalogo() : List<Prodotto>
+  + creaOrdineProdotto(prodotto) : void
+  + applicaBuonoPromozionale(codice) : boolean
+  + autorizzaPagamento(importo) : boolean
+  + registraOrdine(ordine) : void
+  + notificaVenditore(ordine) : void
 }
-class "BuonoPromozionale" <<entity>> #FCD9A9 {
-  -codice : String
-  -venditore : RuoloVenditore
-  -dataInizio : LocalDate
-  -dataScadenza : LocalDate
-  -strategiaSconto : ScontoStrategy
-  +isValido() : boolean
-  +applicaSconto(double) : double
-}
-class "Prodotto" <<entity>> #FCD9A9 {
-  -nome : String
-  -prezzo : double
-  - quantitaDisponibile : int
-  +riduciDisponibilita(int)
-  +getVenditore() : RuoloVenditore
-}
+
+' ---------- ENTITY ----------
 class "Ordine" <<entity>> #FCD9A9 {
-  -idOrdine : Long
-  -stato : StatoOrdineEnum
-  -totale : double
-  -voci : List<VoceOrdine>
-  -buonoApplicato : BuonoPromozionale
-  +aggiungiVoce(VoceOrdine)
-  +ricalcolaTotale()
-  +applicaBuono(BuonoPromozionale)
-  +cambiaStato(StatoOrdineEnum)
-  +notificaSottomissione()
+  - idOrdine : Long
+  - stato : Stato
+  - totale : double
+  + aggiungiVoce(prodotto) : void
+  + applicaBuono(buono) : void
+  + ricalcolaTotale() : void
+  + cambiaStato(nuovoStato) : void
 }
-class "VoceOrdine" <<entity>> #FCD9A9 {
-  -prodotto : Prodotto
-  -quantita : int
-  -prezzoAcquisto : double
-  +getParziale() : double
+
+class "Prodotto" <<entity>> #FCD9A9 {
+  - nome : String
+  - prezzo : double
+  - quantitaDisponibile : int
+  + riduciDisponibilita(quantita) : void
 }
-class "OrdineDAO" <<dao>> #D8C7F0
-class "ProdottoDAO" <<dao>> #D8C7F0
-class "BuonoDAO" <<dao>> #D8C7F0
-class "UtenteDAO" <<dao>> #D8C7F0
 
-MarketplaceView -[hidden]- PaymentView
-PaymentView -[hidden]- OrdinaProdottoController
-OrdinaProdottoController -[hidden]- OrdineBean
-OrdineBean -[hidden]- UtenteBean
-UtenteBean -[hidden]- ProdottoBean
-ProdottoBean -[hidden]- PaymentInfoBean
-PaymentInfoBean -[hidden]- PaymentGateway
+class "BuonoPromozionale" <<entity>> #FCD9A9 {
+  - codice : String
+  - valido : boolean
+  + isValido() : boolean
+  + applicaSconto(subtotale) : double
+}
 
-Ordine -[hidden]- VoceOrdine
-VoceOrdine -[hidden]- Prodotto
-Prodotto -[hidden]- BuonoPromozionale
-BuonoPromozionale -[hidden]- Utente
+class "Utente" <<entity>> #FCD9A9 {
+  - nome : String
+  - email : String
+  - vouchersUsati : List<String>
+  + haUsatoBuono(codice) : boolean
+  + registraBuonoUsato(codice) : void
+}
 
-' DAO come terza riga (sotto entity)
-OrdineDAO -[hidden]- ProdottoDAO
-ProdottoDAO -[hidden]- BuonoDAO
-BuonoDAO -[hidden]- UtenteDAO
-' relazioni BCE: boundary -> bean/control; control -> bean/entity/dao
-MarketplaceView --> OrdineBean : <<create>>
-MarketplaceView --> UtenteBean : sessione
-MarketplaceView --> OrdinaProdottoController : delega
-PaymentView --> OrdineBean : legge totale
-PaymentView --> PaymentInfoBean : <<create>> dati carta
-PaymentView --> OrdinaProdottoController : processaPagamento
+' ============================================================
+' ASSOCIAZIONI BCE
+' ============================================================
+' Attore -> boundary (a margine)
+actor "Cliente" as cliente
+actor "Venditore" as venditore
+cliente --> MarketplaceView
+cliente --> PaymentView
+VenditoreNotifier --> venditore : notifica
 
-OrdinaProdottoController --> OrdineBean : legge/scrive
-OrdinaProdottoController --> ProdottoBean : catalogo
-OrdinaProdottoController --> UtenteBean : sessione
-OrdinaProdottoController --> PaymentInfoBean : importo
-OrdinaProdottoController --> PaymentGateway : autorizza (passo 6)
-OrdinaProdottoController --> Ordine : <<create>> crea
+' Boundary -> Control
+MarketplaceView --> OrdinaProdottoController
+PaymentView --> OrdinaProdottoController
+OrdinaProdottoController --> PaymentGateway : autorizza
+
+' Control -> Entity (1:1 relazioni di dominio)
+OrdinaProdottoController --> Ordine : crea/gestisce
+OrdinaProdottoController --> Prodotto : catalogo
 OrdinaProdottoController --> BuonoPromozionale : valida
-OrdinaProdottoController --> Utente : compratore/venditore
-OrdinaProdottoController --> OrdineDAO : salva
-OrdinaProdottoController --> ProdottoDAO : interroga
-OrdinaProdottoController --> BuonoDAO : findByCodice
-OrdinaProdottoController --> UtenteDAO : risolve
-OrdinaProdottoController --> VenditoreNotifier : notify
+OrdinaProdottoController --> Utente : cliente
+OrdinaProdottoController --> VenditoreNotifier : notifica
 
-Ordine --> VoceOrdine : contiene 1..*
-VoceOrdine --> Prodotto : riferisce 1..*
+' Entity <=> Entity (leggibili)
+Ordine --> Prodotto : contiene 1..*
 Ordine --> BuonoPromozionale : applica 0..1
+Ordine --> Utente : intestatario 1
 
 @enduml
