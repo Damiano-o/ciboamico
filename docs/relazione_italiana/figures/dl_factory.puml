@@ -1,10 +1,29 @@
 @startuml
 skinparam style strictuml
 skinparam classAttributeIconSize 0
-skinparam nodesep 45
-skinparam ranksep 55
-' Abstract Factory - persistenza (NFR-01): factory intercambiabili a runtime
-abstract class "DAOFactory" as DF {
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+left to right direction
+
+' ============================================================
+' Design-level — DAO Abstract Factory (NFR-01 persistenza)
+' Stile conciso (come progetti 30/30): factory astratta,
+' concrete factory + interfacce DAO, frecce <<create>> esplicite.
+' ============================================================
+
+' ---------- Client (control) ----------
+class "OrdinaProdottoController" as CTL <<control>> {
+  - utenteDAO : UtenteDAO
+  - prodottoDAO : ProdottoDAO
+  - ricettaDAO : RicettaDAO
+  - ordineDAO : OrdineDAO
+  - buonoDAO : BuonoDAO
+}
+
+' ---------- Abstract Factory ----------
+interface "DAOFactory" {
   + getUtenteDAO() : UtenteDAO
   + getProdottoDAO() : ProdottoDAO
   + getRicettaDAO() : RicettaDAO
@@ -12,57 +31,47 @@ abstract class "DAOFactory" as DF {
   + getBuonoDAO() : BuonoDAO
 }
 
-class "OrdinaProdottoController" as CTL <<control>>
-CTL ..> DF : <<use>> \n get*DAO()
+class "DemoDAOFactory"
+class "FSDAOFactory"
+class "JDBCDAOFactory"
+DemoDAOFactory ..|> DAOFactory
+FSDAOFactory  ..|> DAOFactory
+JDBCDAOFactory ..|> DAOFactory
 
-
-class "DemoDAOFactory" as DemoF
-class "FSDAOFactory" as FSF
-class "JDBCDAOFactory" as JDBCF
-DemoF -up-|> DF
-FSF -up-|> DF
-JDBCF -up-|> DF
-
+' ---------- Abstract Products (DAO) ----------
 interface "UtenteDAO"
 interface "ProdottoDAO"
 interface "RicettaDAO"
 interface "OrdineDAO"
 interface "BuonoDAO"
 
-' ciascuna concrete factory crea i prodotti concreti della propria famiglia
-DemoF ..> "DemoUtenteDAO"
-DemoF ..> "DemoProdottoDAO"
-DemoF ..> "DemoRicettaDAO"
-DemoF ..> "DemoOrdineDAO"
-DemoF ..> "DemoBuonoDAO"
+' ---------- Concrete Products (una famiglia esemplificativa, per concisione) ----------
+class "JDBCUtenteDAO"
+class "JDBCProdottoDAO"
+class "JDBCRicettaDAO"
+class "JDBCOrdineDAO"
+class "JDBCBuonoDAO"
+JDBCUtenteDAO ..|> UtenteDAO
+JDBCProdottoDAO ..|> ProdottoDAO
+JDBCRicettaDAO ..|> RicettaDAO
+JDBCOrdineDAO ..|> OrdineDAO
+JDBCBuonoDAO ..|> BuonoDAO
 
-FSF ..> "FSUtenteDAO"
-FSF ..> "FSProdottoDAO"
-FSF ..> "FSRicettaDAO"
-FSF ..> "FSOrdineDAO"
-FSF ..> "FSBuonoDAO"
+' ---------- relazioni: controller -> factory -> prodotti ----------
+OrdinaProdottoController --> DAOFactory : <<use>>\nApplicationModeManager.getDAOFactory()
+JDBCDAOFactory ..> JDBCUtenteDAO : <<create>>
+JDBCDAOFactory ..> JDBCProdottoDAO : <<create>>
+JDBCDAOFactory ..> JDBCRicettaDAO : <<create>>
+JDBCDAOFactory ..> JDBCOrdineDAO : <<create>>
+JDBCDAOFactory ..> JDBCBuonoDAO : <<create>>
 
-JDBCF ..> "JDBCUtenteDAO"
-JDBCF ..> "JDBCProdottoDAO"
-JDBCF ..> "JDBCRicettaDAO"
-JDBCF ..> "JDBCOrdineDAO"
-JDBCF ..> "JDBCBuonoDAO"
+' i DAO concrete per le altre famiglie sono omessi per concisione
+' (stessa struttura di JDBC)
 
-' realizzazione dei prodotti astratti
-DemoUtenteDAO .up.|> UtenteDAO
-FSUtenteDAO .up.|> UtenteDAO
-JDBCUtenteDAO .up.|> UtenteDAO
-DemoProdottoDAO .up.|> ProdottoDAO
-FSProdottoDAO .up.|> ProdottoDAO
-JDBCProdottoDAO .up.|> ProdottoDAO
-DemoRicettaDAO .up.|> RicettaDAO
-FSRicettaDAO .up.|> RicettaDAO
-JDBCRicettaDAO .up.|> RicettaDAO
-DemoOrdineDAO .up.|> OrdineDAO
-FSOrdineDAO .up.|> OrdineDAO
-JDBCOrdineDAO .up.|> OrdineDAO
-DemoBuonoDAO .up.|> BuonoDAO
-FSBuonoDAO .up.|> BuonoDAO
-JDBCBuonoDAO .up.|> BuonoDAO
+note bottom of DAOFactory
+  DemoDAOFactory e FSDAOFactory
+  producono la stessa famiglia di DAO
+  (Demo/FS* implementano le stesse interfacce).
+end note
 
 @enduml
