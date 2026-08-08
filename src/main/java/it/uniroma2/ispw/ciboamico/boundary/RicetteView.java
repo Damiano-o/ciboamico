@@ -3,10 +3,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 import it.uniroma2.ispw.ciboamico.bean.RicettaBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.TrovaRicetteController;
-import it.uniroma2.ispw.ciboamico.pattern.facade.RicettaMatchingFacade;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -26,14 +23,7 @@ public class RicetteView {
     private final TrovaRicetteController controller;
 
     public RicetteView() {
-        this.controller = new TrovaRicetteController(
-                ApplicationModeManager.getInstance().getDAOFactory(),
-                RicettaMatchingFacade.conSostituzione());
-    }
-
-    public RicetteView(DAOFactory factory) {
-        this.controller = new TrovaRicetteController(factory,
-                RicettaMatchingFacade.conSostituzione());
+        this.controller = new TrovaRicetteController();
     }
 
     public Parent build() {

@@ -18,3 +18,20 @@ docs/relazione/main.fdb_latexmk
 docs/relazione/main.fls
 
 cp.txt
+docs/relazione_italiana/backup-*/
+docs/relazione_italiana/*.aux
+docs/relazione_italiana/*.log
+docs/relazione_italiana/*.toc
+docs/relazione_italiana/*.fdb_latexmk
+docs/relazione_italiana/*.fls
+docs/relazione_italiana/out/
+docs/relazione_italiana/chapters/*.v7reset.tex
+docs/relazione_italiana/chapters/*.tail.tex
+docs/relazione_italiana/figures/*.drawio.svg
+docs/relazione_italiana/chk-*.png
+docs/relazione_italiana/figchk-*.png
+docs/relazione_italiana/pgs-*.png
+docs/relazione_italiana/pg1*.png
+docs/relazione_italiana/page1*.png
+docs/relazione_italiana/sc-*.png
+docs/relazione_italiana/verify-*.png

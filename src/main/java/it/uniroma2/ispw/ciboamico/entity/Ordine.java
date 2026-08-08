@@ -21,6 +21,7 @@ public class Ordine {
     private final LocalDateTime data;
     private StatoOrdineEnum stato;
     private double totale;
+    private BuonoPromozionale buonoApplicato;
     private final List<VoceOrdine> voci = new ArrayList<>();
     private final OrdineSubject subject = new OrdineSubject();
 
@@ -44,8 +45,37 @@ public class Ordine {
         ricalcolaTotale();
     }
 
+    /**
+     * Ricalcola il totale: somma delle voci, poi eventuale sconto del buono promozionale
+     * (Ordine = Context del pattern Strategy: delega lo sconto alla strategia del buono).
+     */
     public void ricalcolaTotale() {
-        totale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
+        double subtotale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
+        totale = buonoApplicato != null ? buonoApplicato.applicaSconto(subtotale) : subtotale;
+    }
+
+    /**
+     * Applica un buono promozionale all'ordine. Il buono deve appartenere al venditore
+     * dell'ordine (regola CiboAmico: coupon del medesimo commerciante).
+     * Al termine ricalcola il totale.
+     *
+     * @throws BusinessValidationException se il buono non appartiene al venditore dell'ordine
+     */
+    public void applicaBuono(BuonoPromozionale buono) throws BusinessValidationException {
+        if (buono == null) {
+            throw new BusinessValidationException("Il buono promozionale non può essere nullo");
+        }
+        BuonoPromozionale applicabile = buono.getVenditore() != null
+                && buono.getVenditore().getUtente() != null
+                && buono.getVenditore().getUtente().getEmail().equals(venditore.getEmail())
+                ? buono
+                : null;
+        if (applicabile == null) {
+            throw new BusinessValidationException(
+                    "Il buono promozionale non è associato al venditore di questo ordine");
+        }
+        this.buonoApplicato = applicabile;
+        ricalcolaTotale();
     }
 
     /**
@@ -75,6 +105,19 @@ public class Ordine {
     public void subscribe(OrdineEventListener listener) { subject.subscribe(listener); }
 
     /**
+     * Emette la notifica di avvenuta sottomissione dell'ordine (Pattern Observer).
+     * Chiamato dal controller dopo {@code ordineDAO.save(ordine)}: l'ordine resta nello
+     * stato iniziale CREATED (nessuna transizione BR-04), ma il consolidamento sul
+     * database rappresenta la chiusura del checkout e attiva i listener registrati
+     * (es. {@code VenditoreNotifier}). Non cambia lo stato: il Subject osserva la
+     * pubblicazione dell'evento di dominio, non una transizione della macchina a stati.
+     * Notifica solo a persistenza avvenuta, evitando notifiche per ordini non salvati.
+     */
+    public void notificaSottomissione() {
+        subject.notifyObservers(this);
+    }
+
+    /**
      * Ripristina lo stato senza validazione — usato SOLO dai DAO per il caricamento
      * da persistenza (lo stato salvato è già stato validato al momento della transizione).
      */
@@ -88,5 +131,6 @@ public class Ordine {
     public LocalDateTime getData() { return data; }
     public StatoOrdineEnum getStato() { return stato; }
     public double getTotale() { return totale; }
+    public BuonoPromozionale getBuonoApplicato() { return buonoApplicato; }
     public List<VoceOrdine> getVoci() { return voci; }
 }

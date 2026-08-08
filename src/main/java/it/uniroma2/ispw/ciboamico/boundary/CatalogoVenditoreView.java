@@ -2,8 +2,6 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciCatalogoVenditoreController;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -27,12 +25,7 @@ public class CatalogoVenditoreView {
     private final GestisciCatalogoVenditoreController controller;
 
     public CatalogoVenditoreView() {
-        this.controller = new GestisciCatalogoVenditoreController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public CatalogoVenditoreView(DAOFactory factory) {
-        this.controller = new GestisciCatalogoVenditoreController(factory);
+        this.controller = new GestisciCatalogoVenditoreController();
     }
 
     public Parent build() {

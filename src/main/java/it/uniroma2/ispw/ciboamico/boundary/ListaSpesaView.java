@@ -4,8 +4,6 @@ import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciListaSpesaController;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -27,12 +25,7 @@ public class ListaSpesaView {
     private final GestisciListaSpesaController controller;
 
     public ListaSpesaView() {
-        this.controller = new GestisciListaSpesaController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public ListaSpesaView(DAOFactory factory) {
-        this.controller = new GestisciListaSpesaController(factory);
+        this.controller = new GestisciListaSpesaController();
     }
 
     public Parent build() {

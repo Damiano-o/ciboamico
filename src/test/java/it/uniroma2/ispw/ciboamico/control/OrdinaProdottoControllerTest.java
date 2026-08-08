@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
@@ -30,7 +31,7 @@ class OrdinaProdottoControllerTest {
     void setup() {
         factory = new DemoDAOFactory();
         OrdineLazyFactory.reset();
-        OrdineLazyFactory.getInstance(factory);
+        OrdineLazyFactory.configure(factory);
         controller = new OrdinaProdottoController(factory);
         // Utente loggato = compratore
         UtenteBean bean = new UtenteBean();
@@ -129,5 +130,47 @@ class OrdinaProdottoControllerTest {
         bean2.setCompratoreId("mario@cibo.it");
         assertThrows(BusinessValidationException.class,
                 () -> controller.submitOrdine(bean2, utenteBean()));
+    }
+
+    @Test
+    void testProcessaPagamentoSuccessoCreaOrdine() throws Exception {
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv);
+        Prodotto prodotto = new Prodotto("Caffè", 4.50, 10,
+                LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setNomeProdotto("Caffè");
+        PaymentInfoBean payment = new PaymentInfoBean();
+        payment.setNumeroCarta("1111222233334444");
+        payment.setCvv("123");
+        payment.setImportoInCent(450L); // sotto la soglia dello stub (500 EUR)
+
+        OrdineBean risultato = controller.processaPagamento(bean, utenteBean(), payment);
+        assertNotNull(risultato.getIdOrdine());
+        assertEquals("CREATED", risultato.getStato());
+    }
+
+    @Test
+    void testProcessaPagamentoRifiutatoLanciaBusinessValidation() throws Exception {
+        Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        utenteVenditore.aggiungiRuolo(rv);
+        // Prezzo alto: 600 EUR > soglia stub 500 EUR -> estensione 6a
+        Prodotto prodotto = new Prodotto("Oro", 600.0, 10,
+                LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv);
+        factory.getProdottoDAO().save(prodotto);
+
+        OrdineBean bean = new OrdineBean();
+        bean.setNomeProdotto("Oro");
+        PaymentInfoBean payment = new PaymentInfoBean();
+        payment.setNumeroCarta("1111222233334444");
+        payment.setCvv("123");
+        payment.setImportoInCent(60_000L); // 600 EUR > soglia
+
+        assertThrows(BusinessValidationException.class,
+                () -> controller.processaPagamento(bean, utenteBean(), payment));
     }
 }

@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
@@ -15,4 +16,5 @@ public abstract class DAOFactory {
     public abstract ProdottoDAO getProdottoDAO();
     public abstract RicettaDAO getRicettaDAO();
     public abstract OrdineDAO getOrdineDAO();
+    public abstract BuonoDAO getBuonoDAO();
 }

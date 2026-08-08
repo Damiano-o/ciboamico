@@ -2,8 +2,6 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.RicettaBean;
 import it.uniroma2.ispw.ciboamico.control.ApprovazioneController;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -25,12 +23,7 @@ public class AdminView {
     private final ApprovazioneController controller;
 
     public AdminView() {
-        this.controller = new ApprovazioneController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public AdminView(DAOFactory factory) {
-        this.controller = new ApprovazioneController(factory);
+        this.controller = new ApprovazioneController();
     }
 
     public Parent build() {

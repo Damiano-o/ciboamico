@@ -28,7 +28,7 @@ public final class Runner {
                 + modeManager.getDAOFactory().getClass().getSimpleName());
 
         // 2) Configura la LazyFactory degli ordini con la DAOFactory attiva
-        OrdineLazyFactory.getInstance(modeManager.getDAOFactory());
+        OrdineLazyFactory.configure(modeManager.getDAOFactory());
 
         // 3) Avvia l'interfaccia scelta (doppia interfaccia, criterio 30/30)
         ViewFactory.configure(scelta.getInterfaccia());

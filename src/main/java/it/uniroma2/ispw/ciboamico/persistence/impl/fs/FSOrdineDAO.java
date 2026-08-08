@@ -21,7 +21,9 @@ public class FSOrdineDAO implements OrdineDAO {
 
     private List<Ordine> carica() {
         try {
-            if (!Files.exists(FILE)) return new ArrayList<>();
+            if (!Files.exists(FILE)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE), new TypeToken<List<Ordine>>() { }.getType());
         } catch (IOException e) {
             throw new RuntimeException("Errore lettura ordini.json", e);

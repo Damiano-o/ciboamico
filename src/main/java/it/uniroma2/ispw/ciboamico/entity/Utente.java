@@ -22,6 +22,8 @@ public class Utente {
     private String email;
     private String passwordHash;
     private final List<Ruolo> ruoli = new ArrayList<>();
+    /** Codici dei buoni promozionali già riscattati da questo utente (monouso). */
+    private final List<String> buoniUtilizzati = new ArrayList<>();
 
     public Utente(String nome, String email, String passwordHash) {
         this.nome = nome;
@@ -69,6 +71,20 @@ public class Utente {
         RuoloVenditore v = getRuolo(RuoloVenditore.class);
         return v != null && v.getStato() == StatoVenditoreEnum.APPROVATO;
     }
+
+    /** True se l'utente ha già riscattato il buono con il codice indicato (monouso). */
+    public boolean haUsatoBuono(String codiceBuono) {
+        return buoniUtilizzati.contains(codiceBuono);
+    }
+
+    /** Registra il buono come riscattato (monouso). Idempotente. */
+    public void registraBuonoUtilizzato(String codiceBuono) {
+        if (!buoniUtilizzati.contains(codiceBuono)) {
+            buoniUtilizzati.add(codiceBuono);
+        }
+    }
+
+    public List<String> getBuoniUtilizzati() { return buoniUtilizzati; }
 
     public String getNome() { return nome; }
     public String getEmail() { return email; }

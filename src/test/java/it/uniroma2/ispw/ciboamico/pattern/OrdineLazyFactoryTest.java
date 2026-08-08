@@ -36,7 +36,8 @@ class OrdineLazyFactoryTest {
 
     @Test
     void testNewOrdineAssegnaIdIncrementale() throws Exception {
-        OrdineLazyFactory f = OrdineLazyFactory.getInstance(factory);
+        OrdineLazyFactory.configure(factory);
+        OrdineLazyFactory f = OrdineLazyFactory.getInstance();
         Ordine primo = f.newOrdine(utente("Mario", "mario@cibo.it"), utente("Marco", "marco@cibo.it"));
         Ordine secondo = f.newOrdine(utente("Mario", "mario@cibo.it"), utente("Marco", "marco@cibo.it"));
 
@@ -47,7 +48,8 @@ class OrdineLazyFactoryTest {
 
     @Test
     void testNewOrdineStatoCreated() throws Exception {
-        OrdineLazyFactory f = OrdineLazyFactory.getInstance(factory);
+        OrdineLazyFactory.configure(factory);
+        OrdineLazyFactory f = OrdineLazyFactory.getInstance();
         Ordine ordine = f.newOrdine(utente("Mario", "mario@cibo.it"), utente("Marco", "marco@cibo.it"));
 
         assertEquals("CREATED", ordine.getStato().name());
@@ -55,7 +57,8 @@ class OrdineLazyFactoryTest {
 
     @Test
     void testCacheContieneOrdiniCreati() throws Exception {
-        OrdineLazyFactory f = OrdineLazyFactory.getInstance(factory);
+        OrdineLazyFactory.configure(factory);
+        OrdineLazyFactory f = OrdineLazyFactory.getInstance();
         f.newOrdine(utente("Mario", "mario@cibo.it"), utente("Marco", "marco@cibo.it"));
 
         assertEquals(1, f.getCacheOrdini().size());
@@ -63,8 +66,9 @@ class OrdineLazyFactoryTest {
 
     @Test
     void testSingletonStessaIstanza() {
-        OrdineLazyFactory f1 = OrdineLazyFactory.getInstance(factory);
-        OrdineLazyFactory f2 = OrdineLazyFactory.getInstance(factory);
+        OrdineLazyFactory.configure(factory);
+        OrdineLazyFactory f1 = OrdineLazyFactory.getInstance();
+        OrdineLazyFactory f2 = OrdineLazyFactory.getInstance();
 
         assertSame(f1, f2);
     }

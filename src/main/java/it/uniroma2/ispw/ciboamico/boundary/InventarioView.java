@@ -4,8 +4,6 @@ import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciInventarioController;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -42,12 +40,7 @@ public class InventarioView {
     private final GestisciInventarioController controller;
 
     public InventarioView() {
-        this.controller = new GestisciInventarioController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public InventarioView(DAOFactory factory) {
-        this.controller = new GestisciInventarioController(factory);
+        this.controller = new GestisciInventarioController();
     }
 
     public Parent build() {
@@ -198,13 +191,17 @@ public class InventarioView {
     }
 
     private String badgeTesto(ProdottoBean p) {
-        if (scaduto(p)) return "SCADUTO";
+        if (scaduto(p)) {
+            return "SCADUTO";
+        }
         long g = ChronoUnit.DAYS.between(LocalDate.now(), p.getScadenza());
         return g <= SOGLIA_URGENZA ? "Scade tra " + g + "g" : "OK";
     }
 
     private String badgeClasse(ProdottoBean p) {
-        if (scaduto(p)) return "badge-scaduto";
+        if (scaduto(p)) {
+            return "badge-scaduto";
+        }
         long g = ChronoUnit.DAYS.between(LocalDate.now(), p.getScadenza());
         return g <= SOGLIA_URGENZA ? "badge-urgente" : "badge-ok";
     }

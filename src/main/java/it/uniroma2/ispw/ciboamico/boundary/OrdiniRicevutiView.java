@@ -5,8 +5,6 @@ import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciOrdiniRicevutiController;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -28,12 +26,7 @@ public class OrdiniRicevutiView {
     private final GestisciOrdiniRicevutiController controller;
 
     public OrdiniRicevutiView() {
-        this.controller = new GestisciOrdiniRicevutiController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public OrdiniRicevutiView(DAOFactory factory) {
-        this.controller = new GestisciOrdiniRicevutiController(factory);
+        this.controller = new GestisciOrdiniRicevutiController();
     }
 
     public Parent build() {
@@ -100,7 +93,9 @@ public class OrdiniRicevutiView {
     }
 
     private String badgeFor(String stato) {
-        if (stato == null) return "badge-ok";
+        if (stato == null) {
+            return "badge-ok";
+        }
         return switch (stato) {
             case "CREATED", "CONFIRMED" -> "badge-urgente";
             case "IN_DELIVERY" -> "badge-ok";

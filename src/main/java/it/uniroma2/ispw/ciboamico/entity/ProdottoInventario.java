@@ -45,8 +45,12 @@ public class ProdottoInventario implements Comparable<ProdottoInventario> {
     /** Coerente con compareTo: l'identità è data da nome+scadenza+posizione. */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProdottoInventario altro)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProdottoInventario altro)) {
+            return false;
+        }
         return nome.equals(altro.nome)
                 && scadenza.equals(altro.scadenza)
                 && posizione.equals(altro.posizione);
@@ -65,7 +69,9 @@ public class ProdottoInventario implements Comparable<ProdottoInventario> {
     public Prodotto getRiferimento() { return riferimento; }
 
     public void setQuantita(int quantita) {
-        if (quantita < 0) throw new IllegalArgumentException("Quantità negativa");
+        if (quantita < 0) {
+            throw new IllegalArgumentException("Quantità negativa");
+        }
         this.quantita = quantita;
     }
 }

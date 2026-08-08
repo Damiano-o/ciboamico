@@ -33,6 +33,11 @@ public class GestisciRicetteNutrizionistaController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    public GestisciRicetteNutrizionistaController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     public RicettaBean creaRicetta(RicettaBean bean)
             throws BusinessValidationException {
         if (!bean.haAlmenoDueIngredienti()) {

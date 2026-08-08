@@ -78,7 +78,7 @@ public class HomeView {
 
         // Griglia di card di navigazione (gap orizzontale/verticale 16)
         FlowPane grid = new FlowPane(20, 20);
-        grid.setPadding(new javafx.geometry.Insets(8, 0, 0, 0));
+        grid.setPadding(new Insets(8, 0, 0, 0));
         grid.getChildren().addAll(
                 navCard("🥗", "Trova ricette", "Ricette compatibili con la dispensa", "ricette"),
                 navCard("📦", "Inventario", "Gestisci i prodotti e le scadenze", "inventario"),
@@ -97,7 +97,9 @@ public class HomeView {
 
     /** Traduzione del nome ruolo in forma leggibile. */
     private String ruoloLeggibile(String ruolo) {
-        if (ruolo == null) return "—";
+        if (ruolo == null) {
+            return "—";
+        }
         return switch (ruolo) {
             case "RuoloCliente" -> "Cliente";
             case "RuoloVenditore" -> "Venditore";

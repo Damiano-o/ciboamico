@@ -1,0 +1,167 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam nodesep 12
+skinparam ranksep 18
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+left to right direction
+
+' === VOPC (analysis) — UC-04 Ordina un Prodotto — fila BCE orizzontale ===
+' colori BCE pastello: azzurro=boundary, verde=control, grigio=bean, arancio=entity, viola=dao
+
+class "MarketplaceView" <<boundary>> #A9D6FF {
+  -ordinaController : OrdinaProdottoController
+  +build() : Parent
+}
+class "PaymentView" <<boundary>> #A9D6FF {
+  -ordinaController : OrdinaProdottoController
+  +build() : Parent
+  -validaCampi(carta, intestatario, scadenza, cvv)
+}
+class "OrdinaProdottoController" <<control>> #A9E8B0 {
+  -ordineDAO : OrdineDAO
+  -prodottoDAO : ProdottoDAO
+  -buonoDAO : BuonoDAO
+  -utenteDAO : UtenteDAO
+  -paymentGateway : PaymentGateway
+  +getProdottiDisponibili() : List<ProdottoBean>
+  +processaPagamento(bean, utente, payment) : OrdineBean
+  +applicaBuonoPromozionale(String codiceBuono, OrdineBean bean, UtenteBean utente) : OrdineBean
+}
+class "OrdineBean" <<bean>> #E3E3E3 {
+  -idOrdine : Long
+  -nomeProdotto : String
+  -totale : Double
+  -stato : String
+  -compratoreId : String
+  -venditoreId : String
+  -codiceBuono : String
+  +getTotale() : Double
+  +setTotale(Double)
+  +getStato() : String
+  +getNomeProdotto() : String
+  +setNomeProdotto(String)
+}
+class "UtenteBean" <<bean>> #E3E3E3 {
+  -username : String
+  -nome : String
+  -cognome : String
+  -email : String
+  -ruoloAttivo : String
+  +getUsername() : String
+  +getEmail() : String
+}
+class "ProdottoBean" <<bean>> #E3E3E3 {
+  - nome : String
+  - prezzo : Double
+  - quantita : Double
+  - scadenza : LocalDate
+  - posizione : String
+  - unitaMisura : String
+}
+class "PaymentInfoBean" <<bean>> #E3E3E3 {
+  -numeroCarta : String
+  -intestatario : String
+  -scadenza : String
+  -cvv : String
+  -importoInCent : long
+  +getImportoInCent() : long
+}
+class "PaymentGateway" <<boundary>> #D8C7F0 {
+  +autorizza(long importoInCent) : boolean
+  +fornitore() : String
+}
+class "VenditoreNotifier" <<boundary>> #D8C7F0 {
+  -LOG : Logger
+  +onStatoCambiato(Ordine ordine) : void
+}
+class "Utente" <<entity>> #FCD9A9 {
+  - username : String
+  - email : String
+  +registraBuonoUtilizzato(String)
+  +haUsatoBuono(String) : boolean
+}
+class "BuonoPromozionale" <<entity>> #FCD9A9 {
+  -codice : String
+  -venditore : RuoloVenditore
+  -dataInizio : LocalDate
+  -dataScadenza : LocalDate
+  -strategiaSconto : ScontoStrategy
+  +isValido() : boolean
+  +applicaSconto(double) : double
+}
+class "Prodotto" <<entity>> #FCD9A9 {
+  -nome : String
+  -prezzo : double
+  - quantitaDisponibile : int
+  +riduciDisponibilita(int)
+  +getVenditore() : RuoloVenditore
+}
+class "Ordine" <<entity>> #FCD9A9 {
+  -idOrdine : Long
+  -stato : StatoOrdineEnum
+  -totale : double
+  -voci : List<VoceOrdine>
+  -buonoApplicato : BuonoPromozionale
+  +aggiungiVoce(VoceOrdine)
+  +ricalcolaTotale()
+  +applicaBuono(BuonoPromozionale)
+  +cambiaStato(StatoOrdineEnum)
+  +notificaSottomissione()
+}
+class "VoceOrdine" <<entity>> #FCD9A9 {
+  -prodotto : Prodotto
+  -quantita : int
+  -prezzoAcquisto : double
+  +getParziale() : double
+}
+class "OrdineDAO" <<dao>> #D8C7F0
+class "ProdottoDAO" <<dao>> #D8C7F0
+class "BuonoDAO" <<dao>> #D8C7F0
+class "UtenteDAO" <<dao>> #D8C7F0
+
+MarketplaceView -[hidden]- PaymentView
+PaymentView -[hidden]- OrdinaProdottoController
+OrdinaProdottoController -[hidden]- OrdineBean
+OrdineBean -[hidden]- UtenteBean
+UtenteBean -[hidden]- ProdottoBean
+ProdottoBean -[hidden]- PaymentInfoBean
+PaymentInfoBean -[hidden]- PaymentGateway
+
+Ordine -[hidden]- VoceOrdine
+VoceOrdine -[hidden]- Prodotto
+Prodotto -[hidden]- BuonoPromozionale
+BuonoPromozionale -[hidden]- Utente
+
+' DAO come terza riga (sotto entity)
+OrdineDAO -[hidden]- ProdottoDAO
+ProdottoDAO -[hidden]- BuonoDAO
+BuonoDAO -[hidden]- UtenteDAO
+' relazioni BCE: boundary -> bean/control; control -> bean/entity/dao
+MarketplaceView --> OrdineBean : <<create>>
+MarketplaceView --> UtenteBean : sessione
+MarketplaceView --> OrdinaProdottoController : delega
+PaymentView --> OrdineBean : legge totale
+PaymentView --> PaymentInfoBean : <<create>> dati carta
+PaymentView --> OrdinaProdottoController : processaPagamento
+
+OrdinaProdottoController --> OrdineBean : legge/scrive
+OrdinaProdottoController --> ProdottoBean : catalogo
+OrdinaProdottoController --> UtenteBean : sessione
+OrdinaProdottoController --> PaymentInfoBean : importo
+OrdinaProdottoController --> PaymentGateway : autorizza (passo 6)
+OrdinaProdottoController --> Ordine : <<create>> crea
+OrdinaProdottoController --> BuonoPromozionale : valida
+OrdinaProdottoController --> Utente : compratore/venditore
+OrdinaProdottoController --> OrdineDAO : salva
+OrdinaProdottoController --> ProdottoDAO : interroga
+OrdinaProdottoController --> BuonoDAO : findByCodice
+OrdinaProdottoController --> UtenteDAO : risolve
+OrdinaProdottoController --> VenditoreNotifier : notify
+
+Ordine --> VoceOrdine : contiene 1..*
+VoceOrdine --> Prodotto : riferisce 1..*
+Ordine --> BuonoPromozionale : applica 0..1
+
+@enduml

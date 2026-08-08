@@ -1,0 +1,37 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 60
+' Observer - notifiche cambio stato Ordine (utente + venditore)
+' Allineato al codice reale: Ordine concreta con notificaSottomissione()
+class "OrdinaProdottoController" as CTL <<control>>
+class "Ordine" as O <<entity>> {
+  - subject : OrdineSubject
+  + subscribe(OrdineEventListener)
+  + notificaSottomissione()
+}
+class "OrdineSubject" as OS {
+  - listeners : List<OrdineEventListener>
+  + subscribe(OrdineEventListener)
+  + unsubscribe(OrdineEventListener)
+  + notifyObservers(Ordine)
+}
+interface "OrdineEventListener" as EL {
+  + onStatoCambiato(Ordine) : void
+}
+class "VenditoreNotifier" as VN {
+  + onStatoCambiato(Ordine) : void
+}
+class "UtenteNotifier" as UN {
+  + onStatoCambiato(Ordine) : void
+}
+O "1" o-- "1" OS : soggetto
+OS "1" o-- "*" EL : listeners
+VN -up-|> EL
+UN -up-|> EL
+VN ..> O : <<use>>
+UN ..> O : <<use>>
+CTL ..> O : <<use>>\nsubscribe + notificaSottomissione
+CTL ..> VN : <<create>>
+@enduml

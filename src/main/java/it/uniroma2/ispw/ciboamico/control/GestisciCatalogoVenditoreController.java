@@ -29,6 +29,11 @@ public class GestisciCatalogoVenditoreController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    public GestisciCatalogoVenditoreController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     public ProdottoBean pubblicaProdotto(ProdottoBean bean)
             throws BusinessValidationException {
         RuoloVenditore venditore = risolviVenditoreCorrente();

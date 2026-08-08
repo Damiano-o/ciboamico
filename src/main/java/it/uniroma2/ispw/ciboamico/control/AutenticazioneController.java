@@ -21,6 +21,11 @@ public class AutenticazioneController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator, View senza DAOFactory. */
+    public AutenticazioneController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     public UtenteBean login(AutenticazioneBean bean) throws AutenticazioneException {
         if (bean == null || bean.getEmail() == null || !bean.isEmailValida()) {
             throw new AutenticazioneException("Email non valida");

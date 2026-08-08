@@ -23,7 +23,9 @@ public class FSProdottoDAO implements ProdottoDAO {
 
     private List<Prodotto> caricaCatalogo() {
         try {
-            if (!Files.exists(FILE_CATALOGO)) return new ArrayList<>();
+            if (!Files.exists(FILE_CATALOGO)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE_CATALOGO),
                     new TypeToken<List<Prodotto>>() { }.getType());
         } catch (IOException e) {
@@ -42,7 +44,9 @@ public class FSProdottoDAO implements ProdottoDAO {
 
     private List<ProdottoInventario> caricaInventario() {
         try {
-            if (!Files.exists(FILE_INVENTARIO)) return new ArrayList<>();
+            if (!Files.exists(FILE_INVENTARIO)) {
+                return new ArrayList<>();
+            }
             return GSON.fromJson(Files.readString(FILE_INVENTARIO),
                     new TypeToken<List<ProdottoInventario>>() { }.getType());
         } catch (IOException e) {

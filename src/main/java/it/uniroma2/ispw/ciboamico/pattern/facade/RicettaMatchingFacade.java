@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.pattern.facade;
 
 import it.uniroma2.ispw.ciboamico.bean.RicettaBean;
+import it.uniroma2.ispw.ciboamico.entity.Ingrediente;
 import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.Ricetta;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.MatchingStrategy;
@@ -39,7 +40,7 @@ public class RicettaMatchingFacade {
         bean.setIngredientiNomi(r.getIngredienti().stream()
                 .map(i -> i.getProdotto().getNome()).toList());
         bean.setDosi(r.getIngredienti().stream()
-                .map(i -> i.getQuantita()).toList());
+                .map(Ingrediente::getQuantita).toList());
         return bean;
     }
 }

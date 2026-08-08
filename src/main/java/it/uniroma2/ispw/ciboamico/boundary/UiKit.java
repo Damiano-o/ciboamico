@@ -111,7 +111,9 @@ public final class UiKit {
         Button b = new Button(testo);
         b.setMaxWidth(Double.MAX_VALUE);
         b.getStyleClass().add("nav-item");
-        if (vista.equals(attiva)) b.getStyleClass().add("active");
+        if (vista.equals(attiva)) {
+            b.getStyleClass().add("active");
+        }
         b.setOnAction(e -> Navigator.getInstance().switchTo(vista));
         return b;
     }

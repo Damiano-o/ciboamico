@@ -4,6 +4,8 @@ import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -14,7 +16,8 @@ import java.util.Scanner;
 public final class CLIContext {
 
     /** Unico canale di input per tutte le view CLI (evita Scanner multipli su System.in). */
-    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Scanner SCANNER =
+            new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     private final DAOFactory factory;
 
@@ -60,7 +63,7 @@ public final class CLIContext {
 
     public boolean leggiSiNo(String prompt) {
         System.out.print(prompt + " (s/n): ");
-        return SCANNER.nextLine().trim().equalsIgnoreCase("s");
+        return "s".equalsIgnoreCase(SCANNER.nextLine().trim());
     }
 
     /** Riga successiva dall'input (usata dal loop principale). */

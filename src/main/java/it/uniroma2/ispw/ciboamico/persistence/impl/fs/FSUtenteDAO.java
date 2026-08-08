@@ -20,7 +20,9 @@ public class FSUtenteDAO implements UtenteDAO {
 
     private List<Utente> carica() {
         try {
-            if (!Files.exists(FILE)) return new ArrayList<>();
+            if (!Files.exists(FILE)) {
+                return new ArrayList<>();
+            }
             String json = Files.readString(FILE);
             return GSON.fromJson(json, new com.google.gson.reflect.TypeToken<List<Utente>>() {}.getType());
         } catch (IOException e) {

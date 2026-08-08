@@ -23,6 +23,11 @@ public class GestisciInventarioController {
         this.prodottoDAO = factory.getProdottoDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    public GestisciInventarioController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     /** UC-01 MSS: valida dati, memorizza, conferma. */
     public ProdottoBean aggiungiProdotto(ProdottoBean bean, String utenteEmail) {
         if (!bean.datiObbligatoriPresenti()) {

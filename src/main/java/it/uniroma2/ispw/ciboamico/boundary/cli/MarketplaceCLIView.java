@@ -5,6 +5,7 @@ import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
+import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
 import java.util.List;
 
@@ -43,14 +44,19 @@ public class MarketplaceCLIView implements IView {
         if (nomeProdotto.isEmpty()) {
             return;
         }
-        try {
-            OrdineBean bean = new OrdineBean();
-            bean.setNomeProdotto(nomeProdotto);
-            OrdineBean risultato = controller.submitOrdine(bean, utente);
-            System.out.printf("Ordine creato ✓ — stato %s, totale %.2f EUR%n",
-                    risultato.getStato(), risultato.getTotale());
-        } catch (Exception e) {
-            System.out.println("Errore: " + e.getMessage());
+        // passa al checkout: crea l'ordine in corso con il totale pieno e delega al pagamento
+        ProdottoBean selezionato = controller.getProdottiDisponibili().stream()
+                .filter(p -> nomeProdotto.equals(p.getNome()))
+                .findFirst()
+                .orElse(null);
+        if (selezionato == null) {
+            System.out.println("Prodotto non trovato.");
+            return;
         }
+        OrdineBean inCorso = new OrdineBean();
+        inCorso.setNomeProdotto(selezionato.getNome());
+        inCorso.setTotale(selezionato.getPrezzo());
+        SessionManager.getInstance().setOrdineInCorso(inCorso);
+        new PaymentCLIView(ctx).display();
     }
 }

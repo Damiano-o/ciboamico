@@ -2,19 +2,21 @@ package it.uniroma2.ispw.ciboamico.persistence.factory;
 
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
+import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoRicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoUtenteDAO;
+import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Factory DEMO: DAO in-memory con dati seed (utenti, prodotti, ricette).
@@ -28,12 +30,11 @@ public class DemoDAOFactory extends DAOFactory {
     private final ProdottoDAO prodottoDAO = new DemoProdottoDAO();
     private final RicettaDAO ricettaDAO = new DemoRicettaDAO();
     private final OrdineDAO ordineDAO = new DemoOrdineDAO();
+    private final BuonoDAO buonoDAO = new DemoBuonoDAO();
     private boolean seeded;
 
-    public DemoDAOFactory() {
-        // Niente seed nel costruttore: i test partono da stato vuoto.
-        // Il bootstrap demo chiama esplicitamente seedDemoData().
-    }
+    @Override
+    public BuonoDAO getBuonoDAO() { return buonoDAO; }
 
     /**
      * Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO).
@@ -83,6 +84,11 @@ public class DemoDAOFactory extends DAOFactory {
                 LocalDate.now().plusDays(10), UnitaEnum.GRAMMI, rv);
         prodottoDAO.save(miele);
         prodottoDAO.save(pomodori);
+
+        // Buono promozionale del venditore (es. -20% valido un mese, monouso per cliente)
+        buonoDAO.save(new BuonoPromozionale("SALUTI20", rv,
+                LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
+                new ScontoPercentualeStrategy(0.20)));
 
         // Inventario del client (per il matching ricette) — dati demo ricchi
         prodottoDAO.saveInventario("mario@cibo.it",

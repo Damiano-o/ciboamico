@@ -43,7 +43,9 @@ public class JDBCProdottoDAO implements ProdottoDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mappa(rs);
+                if (rs.next()) {
+                    return mappa(rs);
+                }
                 return null;
             }
         } catch (SQLException e) {
@@ -59,7 +61,9 @@ public class JDBCProdottoDAO implements ProdottoDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nome);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mappa(rs);
+                if (rs.next()) {
+                    return mappa(rs);
+                }
                 return null;
             }
         } catch (SQLException e) {

@@ -43,6 +43,11 @@ public class JavaFXViewFactory extends ViewFactory {
     }
 
     @Override
+    public IView createPaymentView() {
+        return () -> Navigator.getInstance().switchTo("payment");
+    }
+
+    @Override
     public IView createCatalogoVenditoreView() {
         return () -> Navigator.getInstance().switchTo("catalogo");
     }

@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
+import java.util.Locale;
+
 /**
  * Abstract Factory delle Boundary (pattern GoF, doppia interfaccia CLI/GUI).
  * Classe astratta con metodo statico {@code getFactory()} (integra Singleton):
@@ -14,7 +16,10 @@ public abstract class ViewFactory {
     /** Family selezionata a runtime (default: GUI/JavaFX). */
     private static String family = "gui";
 
-    protected ViewFactory() { }
+    /** Costruttore protetto: classe astratta, istanziata solo dalle sottoclassi (GUI/CLI). */
+    protected ViewFactory() {
+        // niente lavoro: classe astratta con solo state statico (family)
+    }
 
     /**
      * Punto d'accesso globale (Singleton lazy): restituisce la factory della
@@ -32,7 +37,7 @@ public abstract class ViewFactory {
 
     /** Seleziona la family di view (\"gui\" o \"cli\") prima del primo accesso. */
     public static synchronized void configure(String uiFamily) {
-        family = uiFamily == null ? "gui" : uiFamily.toLowerCase();
+        family = uiFamily == null ? "gui" : uiFamily.toLowerCase(Locale.ROOT);
         instance = null; // invalidate: la prossima getFactory() ricrea la factory giusta
     }
 
@@ -47,6 +52,8 @@ public abstract class ViewFactory {
     public abstract IView createListaSpesaView();
 
     public abstract IView createMarketplaceView();
+
+    public abstract IView createPaymentView();
 
     public abstract IView createCatalogoVenditoreView();
 

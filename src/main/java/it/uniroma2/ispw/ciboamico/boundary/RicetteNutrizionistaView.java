@@ -2,8 +2,6 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.RicettaBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciRicetteNutrizionistaController;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -26,12 +24,7 @@ public class RicetteNutrizionistaView {
     private final GestisciRicetteNutrizionistaController controller;
 
     public RicetteNutrizionistaView() {
-        this.controller = new GestisciRicetteNutrizionistaController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public RicetteNutrizionistaView(DAOFactory factory) {
-        this.controller = new GestisciRicetteNutrizionistaController(factory);
+        this.controller = new GestisciRicetteNutrizionistaController();
     }
 
     public Parent build() {
@@ -63,7 +56,9 @@ public class RicetteNutrizionistaView {
                 List<Double> dosiList = new ArrayList<>();
                 for (String d : dosi.getText().split(",")) {
                     String t = d.trim();
-                    if (!t.isBlank()) dosiList.add(Double.parseDouble(t));
+                    if (!t.isBlank()) {
+                        dosiList.add(Double.parseDouble(t));
+                    }
                 }
                 bean.setDosi(dosiList);
                 controller.creaRicetta(bean);

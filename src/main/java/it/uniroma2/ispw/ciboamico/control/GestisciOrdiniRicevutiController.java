@@ -23,6 +23,11 @@ public class GestisciOrdiniRicevutiController {
         this.ordineDAO = factory.getOrdineDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator. */
+    public GestisciOrdiniRicevutiController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     /** UC-06 MSS: recupera ordini CREATED/CONFIRMED del venditore (Bean-only). */
     public List<OrdineBean> visualizzaOrdiniRicevuti(String emailVenditore) {
         return ordineDAO.findByVenditore(emailVenditore).stream()

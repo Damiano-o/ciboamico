@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
+import java.util.Locale;
+
 /**
  * Entry point dell'applicazione (doppia interfaccia CLI/GUI).
  *
@@ -11,10 +13,14 @@ package it.uniroma2.ispw.ciboamico.bootstrap;
  * quell'interfaccia in modalità config.properties, senza menu
  * (utile per automazione test/demo).
  */
-public class Main {
+public final class Main {
+
+    private Main() {
+        // classe utility: solo entry point statico
+    }
 
     public static void main(String[] args) {
-        String ui = args.length > 0 ? args[0].toLowerCase() : null;
+        String ui = args.length > 0 ? args[0].toLowerCase(Locale.ROOT) : null;
 
         if ("gui".equals(ui) || "cli".equals(ui)) {
             // avvio diretto (senza menu) — interfaccia dall'argomento,

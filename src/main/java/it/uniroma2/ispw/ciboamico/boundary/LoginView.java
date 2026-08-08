@@ -1,10 +1,8 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,12 +24,7 @@ public class LoginView {
     private final AutenticazioneController controller;
 
     public LoginView() {
-        this.controller = new AutenticazioneController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public LoginView(DAOFactory factory) {
-        this.controller = new AutenticazioneController(factory);
+        this.controller = new AutenticazioneController();
     }
 
     public Parent build() {

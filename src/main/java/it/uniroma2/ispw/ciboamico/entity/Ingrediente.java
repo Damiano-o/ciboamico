@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+
 /**
  * Ingrediente di una ricetta: associa un Prodotto a quantità e unità.
  * I sostituti sono gestiti SOLO dentro SubstitutionMatchingStrategy (Low Coupling).

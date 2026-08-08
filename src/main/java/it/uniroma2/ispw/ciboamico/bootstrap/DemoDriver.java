@@ -1,7 +1,6 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
 import it.uniroma2.ispw.ciboamico.boundary.Navigator;
-import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
@@ -98,29 +97,50 @@ public final class DemoDriver {
         click("marketplace", "btn-ordina");
         pause();
         snap("07-ordine");
-        back("marketplace");
+        // Estensione 4a: applicazione del buono promozionale (SALUTI20 dal seed demo)
+        fillField("marketplace", "buonoField", "SALUTI20");
+        click("marketplace", "btn-applica-buono");
+        pause();
+        snap("08-ordine-buono");
+        // Passo 6: navigate alla PaymentView e cattura la schermata di pagamento
+        click("marketplace", "btn-ordina");
+        pause();
+        snap("09-payment");
+        back("payment");
+    }
+
+    /** Riempie un campo di testo individuato per id. */
+    // viewName: nome della vista corrente per la tracciabilità dello scenario (non usato nel lookup by id)
+    private static void fillField(String viewName, String fieldId, String text) {
+        runOnFx(() -> {
+            Parent root = Navigator.getInstance().getScene().getRoot();
+            Node node = root.lookup("#" + fieldId);
+            if (node instanceof TextField tf) { tf.setText(text); }
+        });
+        pause();
     }
 
     private static void admin() {
-        // logout e login come admin
-        click("home", null); // no-op per sicurezza
+        // login come admin e vista solo approvazioni (AdminView: UC-08/UC-09)
         switchView("login");
         pause();
         fillTextIndex(1, "admin@cibo.it");
         fillTextIndex(2, "password123");
         click("login", "btn-login");
         pause();
-        snap("08-admin-home");
         switchView("admin");
         pause();
         click("admin", "btn-attesa");
         pause();
-        snap("09-admin");
+        snap("08-admin-approvazioni");
     }
 
     // ------------------------------------------------------------
     private static void click(String viewName, String buttonId) {
-        if (buttonId == null) return;
+        // viewName: nome della vista corrente per tracciabilità scenario (non usato nel lookup by id)
+        if (buttonId == null) {
+            return;
+        }
         runOnFx(() -> {
             Parent root = Navigator.getInstance().getScene().getRoot();
             Node node = root.lookup("#" + buttonId);
@@ -160,7 +180,9 @@ public final class DemoDriver {
                 count++;
                 if (count == index) { target = (TextField) n; break; }
             }
-            if (target != null) target.setText(text);
+            if (target != null) {
+                target.setText(text);
+            }
         });
         pause();
     }
@@ -171,7 +193,7 @@ public final class DemoDriver {
             result.add(root);
             return result;
         }
-        if (root instanceof javafx.scene.Parent p) {
+        if (root instanceof Parent p) {
             for (Node n : p.getChildrenUnmodifiable()) {
                 result.addAll(collectTextInputs(n));
             }
@@ -180,11 +202,15 @@ public final class DemoDriver {
     }
 
     private static Node findFirstTextInput(Node root) {
-        if (root instanceof TextField) return root;
-        if (root instanceof javafx.scene.Parent p) {
+        if (root instanceof TextField) {
+            return root;
+        }
+        if (root instanceof Parent p) {
             for (Node n : p.getChildrenUnmodifiable()) {
                 Node r = findFirstTextInput(n);
-                if (r != null) return r;
+                if (r != null) {
+                    return r;
+                }
             }
         }
         return null;

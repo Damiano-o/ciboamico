@@ -1,6 +1,5 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
-import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 
 /**
@@ -9,7 +8,7 @@ import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
  * I controller applicativi sono gli stessi della GUI: cambia solo la famiglia
  * di boundary (Abstract Factory).
  */
-public class MainCLI {
+public final class MainCLI {
 
     private MainCLI() { }
 
@@ -20,7 +19,7 @@ public class MainCLI {
         // Configura la LazyFactory degli ordini con la DAOFactory attiva
         // (stessa inizializzazione di Runner.avvia: necessaria per UC-04).
         it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory
-                .getInstance(modeManager.getDAOFactory());
+                .configure(modeManager.getDAOFactory());
         ViewFactory.configure("cli"); // famiglia CLI (Abstract Factory, Singleton)
         ViewFactory factory = ViewFactory.getFactory();
 

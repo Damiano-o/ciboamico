@@ -61,7 +61,9 @@ public class Prodotto {
     public RuoloVenditore getVenditore() { return venditore; }
 
     public void setPrezzo(double prezzo) throws BusinessValidationException {
-        if (prezzo <= 0) throw new BusinessValidationException("Prezzo non valido (BR-06)");
+        if (prezzo <= 0) {
+            throw new BusinessValidationException("Prezzo non valido (BR-06)");
+        }
         this.prezzo = prezzo;
     }
 }

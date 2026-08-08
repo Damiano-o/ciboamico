@@ -52,6 +52,11 @@ public class CLIViewFactory extends ViewFactory {
     }
 
     @Override
+    public IView createPaymentView() {
+        return new PaymentCLIView(ctx);
+    }
+
+    @Override
     public IView createCatalogoVenditoreView() {
         return new CatalogoVenditoreCLIView(ctx);
     }

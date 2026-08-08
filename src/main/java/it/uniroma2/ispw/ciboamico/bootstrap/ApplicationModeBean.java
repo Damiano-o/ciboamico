@@ -13,10 +13,6 @@ public final class ApplicationModeBean {
     private String interfaccia;
     private String persistenza;
 
-    public ApplicationModeBean() {
-        // costruttore no-arg (convenzione bean)
-    }
-
     public String getInterfaccia() {
         return interfaccia;
     }

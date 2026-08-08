@@ -65,6 +65,13 @@
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- JavaParser: reverse-engineering del codice per generare diagrammi UML consistenti (tool ausiliario) -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>3.25.10</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

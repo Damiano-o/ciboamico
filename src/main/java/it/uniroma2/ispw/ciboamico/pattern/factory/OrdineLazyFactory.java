@@ -33,18 +33,22 @@ public final class OrdineLazyFactory {
         private static OrdineLazyFactory INSTANCE;
     }
 
-    /** Factory configurata con la DAOFactory attiva (chiamata una volta al bootstrap). */
-    public static synchronized OrdineLazyFactory getInstance(DAOFactory factory) {
-        if (Container.INSTANCE == null) {
-            Container.INSTANCE = new OrdineLazyFactory(factory);
+    /** Configura la factory con la DAOFactory attiva (chiamata UNA volta al bootstrap).
+     *  Separate from getInstance() per evitare doppia responsabilità (PMD SingleMethodSingleton). */
+    public static synchronized void configure(DAOFactory factory) {
+        if (factory == null) {
+            throw new IllegalArgumentException("La DAOFactory di configurazione non può essere nulla.");
         }
-        return Container.INSTANCE;
+        if (Container.INSTANCE != null) {
+            throw new IllegalStateException("OrdineLazyFactory già configurata: chiamare configure una sola volta (bootstrap).");
+        }
+        Container.INSTANCE = new OrdineLazyFactory(factory);
     }
 
-    /** Istanza già configurata (da usare dopo il bootstrap). */
-    public static OrdineLazyFactory getInstance() {
+    /** Istanza configurata (da usare dopo il bootstrap); fallisce se non è stata chiamata configure(). */
+    public static synchronized OrdineLazyFactory getInstance() {
         if (Container.INSTANCE == null) {
-            throw new IllegalStateException("OrdineLazyFactory non configurata: chiamare getInstance(DAOFactory) prima");
+            throw new IllegalStateException("OrdineLazyFactory non configurata: chiamare configure(DAOFactory) prima (bootstrap).");
         }
         return Container.INSTANCE;
     }

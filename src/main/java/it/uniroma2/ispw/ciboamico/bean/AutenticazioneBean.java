@@ -10,8 +10,6 @@ public class AutenticazioneBean {
     private String email;
     private String password;
 
-    public AutenticazioneBean() { }
-
     /** Validazione sintattica dell'email (regex, formato standard). */
     private static final String EMAIL_REGEX = "^[\\w.+-]+@[\\w-]+\\.[\\w.]+$";
 

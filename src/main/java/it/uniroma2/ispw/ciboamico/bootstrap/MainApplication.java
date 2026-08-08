@@ -26,16 +26,19 @@ public final class MainApplication extends Application {
         navigator.init(stage);
 
         // Registrazione view (nomi simbolici, factory programmatiche)
-        navigator.register("login", new LoginView(modeManager.getDAOFactory())::build);
+        // Le Boundary costruiscono i propri Controller via ServiceLocator (stile 30/30),
+        // senza ricevere la DAOFactory: la View non conosce la persistenza.
+        navigator.register("login", new LoginView()::build);
         navigator.register("home", new HomeView()::build);
-        navigator.register("inventario", new InventarioView(modeManager.getDAOFactory())::build);
-        navigator.register("ricette", new RicetteView(modeManager.getDAOFactory())::build);
-        navigator.register("lista-spesa", new ListaSpesaView(modeManager.getDAOFactory())::build);
-        navigator.register("marketplace", new MarketplaceView(modeManager.getDAOFactory())::build);
-        navigator.register("catalogo", new CatalogoVenditoreView(modeManager.getDAOFactory())::build);
-        navigator.register("ordini", new OrdiniRicevutiView(modeManager.getDAOFactory())::build);
-        navigator.register("crea-ricetta", new RicetteNutrizionistaView(modeManager.getDAOFactory())::build);
-        navigator.register("admin", new AdminView(modeManager.getDAOFactory())::build);
+        navigator.register("inventario", new InventarioView()::build);
+        navigator.register("ricette", new RicetteView()::build);
+        navigator.register("lista-spesa", new ListaSpesaView()::build);
+        navigator.register("marketplace", new MarketplaceView()::build);
+        navigator.register("payment", new PaymentView()::build);
+        navigator.register("catalogo", new CatalogoVenditoreView()::build);
+        navigator.register("ordini", new OrdiniRicevutiView()::build);
+        navigator.register("crea-ricetta", new RicetteNutrizionistaView()::build);
+        navigator.register("admin", new AdminView()::build);
 
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");

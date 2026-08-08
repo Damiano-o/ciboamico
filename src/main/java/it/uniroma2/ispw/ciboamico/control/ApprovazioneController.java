@@ -26,6 +26,11 @@ public class ApprovazioneController {
         this.ricettaDAO = factory.getRicettaDAO();
     }
 
+    /** Costruttore no-arg (stile 30/30): persistenza dal ServiceLocator, View senza DAOFactory. */
+    public ApprovazioneController() {
+        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+    }
+
     /** UC-08: approva/sospende un venditore (cambia stato ruolo). */
     public void approvaVenditore(String emailVenditore, boolean approva) {
         Utente utente = utenteDAO.findByEmail(emailVenditore);

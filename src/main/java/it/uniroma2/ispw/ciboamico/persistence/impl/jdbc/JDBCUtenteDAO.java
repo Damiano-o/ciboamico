@@ -12,8 +12,9 @@ import java.sql.*;
 public class JDBCUtenteDAO implements UtenteDAO {
 
     private Connection getConnection() throws SQLException {
-        // Configurazione reale in application.properties
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/ciboamico", "root", "root");
+        // Connessione centralizzata (config da system property ciboamico.db.* / default locale) —
+        // le credenziali NON sono hardcoded qui (vedi ConnectionManager, DMI_CONSTANT_DB_PASSWORD).
+        return ConnectionManager.getConnection();
     }
 
     @Override
